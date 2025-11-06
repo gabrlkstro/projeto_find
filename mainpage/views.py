@@ -51,3 +51,7 @@ def register_view(request):
 @login_required(login_url='login')
 def menu_view(request):
     return render(request, 'mainpage/menu.html')
+
+@login_required(login_url='login')
+def cadastrar_item(request):
+    return render(request, 'mainpage/cadastrar_item.html')
