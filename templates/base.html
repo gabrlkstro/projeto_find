@@ -7,11 +7,29 @@
     <link rel="stylesheet" href="{% static 'mainpage/css/style.css' %}">
 </head>
 <body>
+
+{% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li>{{ message }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
+{% if user.is_authenticated %}
+    <p>Foto usuáro {{ user.username }} | <a href="{% url 'logout' %}">Sair</a></p>
+{% else %}
+    <a href="{% url 'login' %}">Entrar</a>
+{% endif %}
+
+
     <header>
-        <h1>Meu Site</h1>
+        <h1>FIND</h1>
         <nav>
             <a href="/">Início</a> |
-            <a href="/sobre/">Sobre</a>
+            <a href="">Perdidos</a> |
+            <a href="">Encontrados</a> |
+            <a href="">Sobre</a>
         </nav>
     </header>
 
