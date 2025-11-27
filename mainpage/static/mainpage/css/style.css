@@ -1,7 +1,9 @@
 body {
-    background-color: #121212;
-    color: #00ffff;
-    font-family: Arial, sans-serif;
-    text-align: center;
-    margin-top: 100px;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f5feff;
+}
+.text-title{
+    font-size: 40px;
 }

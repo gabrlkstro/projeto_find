@@ -1,0 +1,63 @@
+/* ===== RESET BÁSICO ===== */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f5feff !important;
+}
+
+/* ===== NAVBAR ===== */
+.navbar {
+    background-color: #abe8ff !important;
+    height: 90px;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.navbar-brand img {
+    margin-left: 20px;
+}
+
+/* Menu aparecendo alinhado à direita */
+.nav-links {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap:80px;
+}
+
+/* Links */
+.navbar a {
+    text-decoration: none;
+    font-weight: bold;
+    background: linear-gradient(90deg, #000102, #0385b4);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.navbar a:hover {
+    text-decoration: underline;
+}
+
+/* Ícone do usuário */
+.navbar img.user-icon {
+    width: 60px;
+    height: 60px;
+    margin-right: 40px;
+}
+
+/* ===== CONTEÚDO ===== */
+main {
+    min-height: calc(100vh - 160px);
+    padding: 30px;
+}
+
+/* ===== FOOTER ===== */
+footer {
+    text-align: center;
+    padding: 20px 0;
+    margin-top: 30px;
+    background: #abe8ff;
+    font-weight: bold;
+}
