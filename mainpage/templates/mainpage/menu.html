@@ -1,30 +1,94 @@
 {% extends 'base.html' %}
+{% load static %}
+{% block title %}Início - FIND{% endblock %}
+
 {% block content %}
-<h2>Bem-vindo, {{ user.username }}!</h2>
 
-<h1>Perdeu algo importante?</h1>
-<h2>O FIND conecta pessoas que perderam itens com aquelas que os encontraram.</h2>
+<link rel="stylesheet" href="{% static 'mainpage/css/menu.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css">
 
-<div>
-    <p>Total de itens</p>
-</div>
+<!-- HEADER -->
+<header class="header-main text-center py-5">
 
-<div>
-    <p>Itens perdidos</p>
-</div>
+    <!-- TÍTULO -->
+    <div class="container-fluid title-gradient">
+        <h1 class="fw-bold">Perdeu algo importante?</h1>
+        <p class="lead">
+            O FIND conecta pessoas que perderam itens <br>
+            com aquelas que os encontraram.
+        </p>
+    </div>
 
-<div>
-    <p>Itens encontrados</p>
-</div>
+    <!-- BARRA DE BUSCA -->
+    <div class="d-flex justify-content-center mt-4">
+        <div class="input-group search-bar">
+            <span class="input-group-text">
+                <i class="bi bi-search"></i>
+            </span>
+            <input type="text" class="form-control" placeholder="Buscar itens" aria-label="Buscar itens">
+        </div>
+    </div>
 
-<div>
-    <p>Correspondências</p>
-</div>
+    <!-- CARDS -->
+    <div class="container text-center mt-5">
+        <div class="row row-cols-1 row-cols-md-4 g-4 justify-content-center">
 
-<div>
-    <a href="{% url 'cadastrar_item' %}">
-        <button>CADASTRAR ITEM</button>
-    </a>
-</div>
+            <!-- TOTAL DE ITENS -->
+            <div class="col">
+                <div class="card h-100 shadow-sm border-0 py-4">
+                    <div class="card-body">
+                        <i class="bi bi-box-seam icon-total"></i>
+                        <h3 class="mt-3">{{ total_itens }}</h3>
+                        <p class="text-muted mb-0">TOTAL DE ITENS</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ITENS PERDIDOS -->
+            <div class="col">
+                <div class="card h-100 shadow-sm border-0 py-4">
+                    <div class="card-body">
+                        <i class="bi bi-exclamation-triangle icon-perdidos"></i>
+                        <h3 class="mt-3">{{ perdidos }}</h3>
+                        <p class="text-muted mb-0">ITENS PERDIDOS</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ITENS ENCONTRADOS -->
+            <div class="col">
+                <div class="card h-100 shadow-sm border-0 py-4">
+                    <div class="card-body">
+                        <i class="bi bi-check-circle icon-encontrados"></i>
+                        <h3 class="mt-3">{{ encontrados }}</h3>
+                        <p class="text-muted mb-0">ITENS ENCONTRADOS</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CORRESPONDÊNCIAS -->
+            <div class="col">
+                <div class="card h-100 shadow-sm border-0 py-4">
+                    <div class="card-body">
+                        <i class="fa-solid fa-handshake icon-corresp"></i>
+                        <h3 class="mt-3">{{ correspondencias }}</h3>
+                        <p class="text-muted mb-0">CORRESPONDÊNCIAS</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- BOTÃO CADASTRAR ITEM -->
+     <div class="button">
+        <a href="{% url 'cadastrar_item' %}">
+            <button class="btn btn-primary mt-3 mx-auto d-block fw-bold">
+                <i class="fa-solid fa-plus me-2"></i>CADASTRAR ITEM
+            </button>
+        </a>
+     </div>
+
+
+</header>
 
 {% endblock %}

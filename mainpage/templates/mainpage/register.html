@@ -1,21 +1,93 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Cadastro - FIND{% endblock %}
+
 {% block content %}
-<form method="POST">
-    {% csrf_token %}
-    <label for="username">Usuário:</label><br>
-    <input type="text" name="username" required><br><br>
 
-    <label for="email">E-mail:</label><br>
-    <input type="email" name="email" required><br><br>
+<link rel="stylesheet" href="{% static 'mainpage/css/cadastro.css' %}">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded" />
 
-    <label for="password">Senha:</label><br>
-    <input type="password" name="password" required><br><br>
+<div class="container d-flex justify-content-center align-items-center vh-100">
+    <div class="card shadow login-card p-4">
 
-    <label for="confirm_password">Confirmar senha:</label><br>
-    <input type="password" name="confirm_password" required><br><br>
+        <!-- Logo -->
+        <div class="image-logo">
+            <img src="{% static 'mainpage/img/logo-find.png' %}" 
+                 alt="logo-find"
+                 class="mx-auto d-block mb-4" 
+                 style="width: 100px; height: 50px;">
+        </div>
+        
+        <hr class="hr-custom mx-auto d-block">
+        <h2 class="text-center fw-bold title-gradient">Cadastre-se</h2>
 
-    <button type="submit">Registrar</button>
-</form>
+        <!-- Formulário -->
+        <form method="POST">
+            {% csrf_token %}
 
-<p>Já tem conta? <a href="{% url 'login' %}">Entre aqui</a></p>
+            <!-- Nome de usuário -->
+            <div class="mb-3">
+                <div class="input-group rounded-pill">
+                    <span class="material-symbols-rounded">person</span>
+                    <input type="text" 
+                           name="username" 
+                           class="form-control border-0 rounded-end-pill"
+                           placeholder="Nome de usuário"
+                           required>
+                </div>
+            </div>
+
+            <!-- Email -->
+            <div class="mb-3">
+                <div class="input-group rounded-pill">
+                    <span class="material-symbols-rounded">email</span>
+                    <input type="email" 
+                           name="email" 
+                           class="form-control border-0 rounded-end-pill"
+                           placeholder="Email"
+                           required>
+                </div>
+            </div>
+
+            <!-- Senha -->
+            <div class="mb-3">
+                <div class="input-group rounded-pill">
+                    <span class="material-symbols-rounded">lock</span>
+                    <input type="password" 
+                           name="password" 
+                           class="form-control border-0 rounded-end-pill"
+                           placeholder="Senha"
+                           required>
+                </div>
+            </div>
+
+            <!-- Confirmar senha -->
+            <div class="mb-3">
+                <div class="input-group rounded-pill">
+                    <span class="material-symbols-rounded">lock</span>
+                    <input type="password" 
+                           name="confirm_password" 
+                           class="form-control border-0 rounded-end-pill"
+                           placeholder="Confirmar senha"
+                           required>
+                </div>
+            </div>
+
+            <!-- Botão -->
+            <button class="btn btn-primary w-50 mt-3 mx-auto d-block rounded-pill fw-bold" type="submit">
+                REGISTRAR
+            </button>
+
+        </form>
+
+        <p class="text-center mt-3 text-register">
+            Já tem conta?
+            <a href="{% url 'login' %}" class="small-password-link">Entre aqui</a>
+        </p>
+
+    </div>
+</div>
+
 {% endblock %}

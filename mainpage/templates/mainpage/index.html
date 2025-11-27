@@ -4,13 +4,42 @@
 {% block title %}Início{% endblock %}
 
 {% block content %}
-<h2>LOGO</h2>
-<p>SE você perdeu algo acaba de ENCONTRAR a plataforma certa!</p>
-<p>
-    <a href="{% url 'register' %}">CADASTRE-SE</a>
-</p>
-<p>
-    Já tem uma conta?
-    <a href="{% url 'login' %}">Entrar</a>
-</p>
+
+<link rel="stylesheet" href="{% static 'mainpage/css/index.css' %}">
+
+<div class="container text-center py-5">
+
+    <!-- LOGO -->
+    <div class="mb-4">
+        <img src="{% static 'mainpage/img/logo-find.png' %}" 
+             alt="Logo" 
+             class="img-fluid" 
+             style="max-width: 280px;">
+    </div>
+
+    <!-- TEXTO PRINCIPAL -->
+    <div class="mb-4">
+        <h1 class="fw-bold">
+            Se você <span class="title-color">PERDEU</span> algo acaba de
+            <span class="title-color">ENCONTRAR</span> a plataforma certa!
+        </h1>
+    </div>
+
+    <!-- BOTÃO DE CADASTRO PERSONALIZADO -->
+    <div class="mb-1">
+        <a href="{% url 'register' %}" class="Button">
+            CADASTRE-SE
+        </a>
+    </div>
+
+    <!-- LOGIN -->
+    <div class="text2">
+        <h5>
+            Já tem uma conta?
+            <a href="{% url 'login' %}" class="fw-bold">Entrar</a>
+        </h5>
+    </div>
+
+</div>
+
 {% endblock %}
