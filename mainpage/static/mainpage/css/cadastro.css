@@ -1,8 +1,47 @@
-/* ====== FUNDO ====== */
-body {
-    margin: 0;
-    height: 50vh;
+/* ================= RESET BÁSICO ================= */
+* {
+    box-sizing: border-box;
 }
+
+/* ================= BODY / FUNDO ================= */
+body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f5feff 50%, #e4f7ff 100%);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    position: relative;
+}
+
+
+/* ================= BLURS DECORATIVOS ================= */
+body::before,
+body::after {
+    content: "";
+    position: fixed; /* 🔥 não quebra layout */
+    width: 500px;
+    height: 500px;
+    border-radius: 50%;
+    filter: blur(100px);
+    opacity: 0.1;
+    pointer-events: none; /* 🔥 não bloqueia clique */
+    z-index: -1;
+}
+
+body::before {
+    background: #00d5ff;
+    top: -140px;
+    left: -140px;
+}
+
+body::after {
+    background: #90dbf4;
+    bottom: -140px;
+    right: -140px;
+}
+
 
 /* ====== CARD ====== */
 .login-card {

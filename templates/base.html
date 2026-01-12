@@ -16,6 +16,9 @@
 
     <!-- CSS da BASE -->
     <link rel="stylesheet" href="{% static 'mainpage/css/base.css' %}">
+
+    <link rel="icon" type="image/png" href="{% static 'mainpage/img/find.png' %}">
+
 </head>
 <body>
 
@@ -24,19 +27,18 @@
         <div class="container-fluid">
 
             <a class="navbar-brand" href="/">
-                <img src="{% static 'mainpage/img/logo-find.png' %}" alt="Logo FIND" width="80">
+                <img src="{% static 'mainpage/img/logo-find.png' %}" alt="Logo FIND" width="110">
             </a>
 
             {% if user.is_authenticated %}
             <div class="nav-links">
-                <a href="/">Início</a>
-                <a href="/encontrados/">Encontrados</a>
-                <a href="/perdidos/">Perdidos</a>
-
-                <a href="#">
-                    <img src="{% static 'mainpage/img/user.png' %}" class="user-icon">
-                </a>
+                <a href="/menu" class="icon">Início<i class="bi bi-house-door-fill"></i></a>
+                <a href="/encontrados/" class="icon">Encontrados<i class="bi bi-check-circle-fill"></i></a>
+                <a href="/perdidos/" class="icon">Perdidos<i class="bi bi-exclamation-circle-fill"></i></a>
+                <a href="/chat" class="icon">Chat<i class="bi bi-chat-dots-fill"></i></a>
+                <a href="/tela"><img src="{% static 'mainpage/img/user.png' %}" class="user-icon"></a>
             </div>
+
             {% endif %}
         </div>
     </nav>

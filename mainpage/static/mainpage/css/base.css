@@ -1,63 +1,161 @@
-/* ===== RESET BÁSICO ===== */
-body {
-    margin: 0;
-    padding: 0;
-    font-family: Arial, Helvetica, sans-serif;
-    background: #f5feff !important;
+/* ================= RESET BÁSICO ================= */
+* {
+    box-sizing: border-box;
 }
 
-/* ===== NAVBAR ===== */
+/* ================= BODY / FUNDO ================= */
+body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f5feff 50%, #e4f7ff 100%);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    position: relative;
+}
+
+
+/* ================= BLURS DECORATIVOS ================= */
+body::before,
+body::after {
+    content: "";
+    position: fixed; /* 🔥 não quebra layout */
+    width: 500px;
+    height: 500px;
+    border-radius: 50%;
+    filter: blur(100px);
+    opacity: 0.1;
+    pointer-events: none; /* 🔥 não bloqueia clique */
+    z-index: -1;
+}
+
+body::before {
+    background: #00d5ff;
+    top: -140px;
+    left: -140px;
+}
+
+body::after {
+    background: #90dbf4;
+    bottom: -140px;
+    right: -140px;
+}
+
+/* ================= NAVBAR ================= */
 .navbar {
-    background-color: #abe8ff !important;
+    background-color: #7adafd !important;
     height: 90px;
     display: flex;
     align-items: center;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 0 30px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .navbar-brand img {
-    margin-left: 20px;
+    height: 55px;
 }
 
-/* Menu aparecendo alinhado à direita */
+/* Menu à direita */
 .nav-links {
     margin-left: auto;
     display: flex;
     align-items: center;
-    gap:80px;
+    gap: 60px;
 }
 
-/* Links */
+/* Links da navbar */
+/* Links da navbar */
 .navbar a {
+    position: relative;
+    font-weight: 700;
     text-decoration: none;
-    font-weight: bold;
     background: linear-gradient(90deg, #000102, #0385b4);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
+
+/* hover */
 .navbar a:hover {
-    text-decoration: underline;
+    opacity: 1;
+    transform: translateY(-2px);
 }
 
-/* Ícone do usuário */
+.navbar a:hover::after {
+    width: 100%;
+}
+
+
 .navbar img.user-icon {
-    width: 60px;
-    height: 60px;
-    margin-right: 40px;
+    width: 55px;
+    height: 55px;
+    object-fit: cover;
+    border-radius: 50%;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
-/* ===== CONTEÚDO ===== */
+.navbar img.user-icon:hover {
+    transform: scale(1.08);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+
+.icon {
+    font-weight: 700;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    background: linear-gradient(90deg, #000102, #0385b4);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    transition: opacity 0.2s ease;
+}
+
+
+/* linha animada embaixo */
+.icon:after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -6px;
+    width: 0%;
+    height: 2px;
+    background: linear-gradient(90deg, #464646, #0385b4);
+    transition: width 0.25s ease;
+}
+
+
+/* ================= MAIN ================= */
 main {
-    min-height: calc(100vh - 160px);
-    padding: 30px;
+    min-height: calc(100vh - 180px);
+    padding: 40px 20px;
 }
 
-/* ===== FOOTER ===== */
+/* ================= FOOTER ================= */
 footer {
+    background: #7adafd;
     text-align: center;
-    padding: 20px 0;
-    margin-top: 30px;
-    background: #abe8ff;
-    font-weight: bold;
+    padding: 20px 10px;
+    font-weight: 700;
+    color: #000;
+    box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.05);
+}
+
+/* ================= RESPONSIVO ================= */
+@media (max-width: 768px) {
+    .navbar {
+        height: auto;
+        padding: 15px 20px;
+    }
+
+    .nav-links {
+        gap: 30px;
+    }
+
+    main {
+        padding: 25px 15px;
+    }
 }

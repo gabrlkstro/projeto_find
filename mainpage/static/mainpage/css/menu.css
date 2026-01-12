@@ -1,52 +1,4 @@
-/* ===== Fundo ===== */
-body {
-    margin: 0;
-    height: 100vh;
-    background: #f5feff;
-}
-
-/* ===== Navbar ===== */
-.navbar {
-    background-color: #abe8ff !important;
-    height: 100px;
-}
-
-.navbar .container-fluid {
-    height: 100%;
-    display: flex;
-    align-items: center;
-}
-
-.nav-links {
-    display: flex;
-    align-items: center;
-    gap: 30px;
-}
-
-/* Logo alinhado */
-.navbar-brand img {
-    margin-left: 40px;
-}
-
-/* Links */
-.navbar a {
-    text-decoration: none;
-    background: linear-gradient(90deg, #000102, #0385b4fa);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    margin-left: 30px;
-    display: inline-flex;
-    align-items: center;
-    gap: 30px;
-}
-.navbar a:hover {
-    text-decoration: underline;
-}
-
-.navbar .bi-person-fill:hover {
-    background: #e0e0e0;
-}
-
+/* ================= MENU PAGE ================= */
 .container-fluid {
     color: white;
 }
@@ -63,7 +15,7 @@ body {
     max-width: 800px;
     border-radius: 40px;
     overflow: hidden;
-
+    border: 1px solid rgba(0,0,0,0.1);
     background: rgba(171, 232, 255, 0.40); /* Transparência 40% */
 
     box-shadow: 0px 3px 10px rgba(0,0,0,0.15);
@@ -117,7 +69,7 @@ body {
     margin-top: 30px;
     
     background:
-        linear-gradient(#ffffff, #ffffff) padding-box,
+        linear-gradient(135deg, #f5feff, #e4f7ff) padding-box,
         linear-gradient(90deg, #000102, #0385b4fa) border-box !important;
     height: 180px !important;
     width: 270px !important;

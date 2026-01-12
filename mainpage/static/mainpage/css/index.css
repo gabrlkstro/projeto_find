@@ -1,90 +1,215 @@
-/* ===== Fundo ===== */
-body {
-    background-color: #f5feff !important;
-    font-family: 'Poppins', sans-serif !important;
+/* ================= RESET BÁSICO ================= */
+* {
+    box-sizing: border-box;
 }
 
-/* ===== LOGO ===== */
+/* ================= BODY / FUNDO ================= */
+body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f5feff 50%, #e4f7ff 100%);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* ================= BLURS DECORATIVOS ================= */
+body::before,
+body::after {
+    content: "";
+    position: fixed; /* 🔥 não quebra layout */
+    width: 500px;
+    height: 500px;
+    border-radius: 50%;
+    filter: blur(100px);
+    opacity: 0.1;
+    pointer-events: none; /* 🔥 não bloqueia clique */
+    z-index: -1;
+}
+
+body::before {
+    background: #00d5ff;
+    top: -140px;
+    left: -140px;
+}
+
+body::after {
+    background: #90dbf4;
+    bottom: -140px;
+    right: -140px;
+}
+
+/* ================= LOGO ================= */
 .logo {
-    display: flex !important;
-    justify-content: center !important;
-    margin-top: 60px !important;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+}
+
+/* Radar */
+.logo::before {
+    content: "";
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: radial-gradient(
+        circle,
+        rgba(0, 180, 216, 0.35),
+        rgba(0, 180, 216, 0.08),
+        transparent
+    );
+    animation: radarPulse 3s infinite ease-in-out;
+    z-index: 0;
 }
 
 .logo img {
-    max-width: 350px !important;
-    width: 100% !important;
+    position: relative;
+    max-width: 360px;
+    width: 100%;
+    z-index: 1;
 }
 
-/* ===== TEXTO PRINCIPAL ===== */
-.text-title h1 {
-    font-size: 26px !important;
-    font-weight: 700 !important;
-    margin-top: -20px !important;
-    color: rgb(9, 3, 3) !important;
-    text-shadow: 0 0 5px white !important;
-    animation: neon 1.5s infinite alternate !important;
-    line-height: 1.4 !important;
+/* ================= TEXTO PRINCIPAL ================= */
+.text-title {
+    font-size: 44px;
+    font-weight: 800;
+    line-height: 1.35;
+    margin-bottom: 25px;
+
+    background: linear-gradient(90deg, #000102, #05739b);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .title-color {
-    color: #007bff !important;
-    font-weight: 800 !important;
+    color: #0156b1;
+    font-weight: 900;
 }
 
-/* ===== BOTÃO CADASTRE-SE ===== */
-.Button {
-    background-color: #63c3ff !important;
-    color: white !important;
-    border: none !important;
-    border-radius: 20px !important;
-    padding: 12px 28px !important;
-    font-size: 16px !important;
-    font-weight: bold !important;
-    text-transform: uppercase !important;
-    cursor: pointer !important;
-    display: block !important;
-    margin: 20px auto !important;
-    transition: 0.3s ease !important;
-    box-shadow: 0 4px 8px rgba(99, 206, 255, 0.28) !important;
-    letter-spacing: 1px !important;
+/* ================= BOTÃO ================= */
+.btn-primary {
+    position: relative;
+    overflow: hidden;
+
+    border: none;
+    padding: 15px 60px;
+    font-size: 1.3rem;
+    font-weight: 700;
+    border-radius: 50px;
+    cursor: pointer;
+    color: #fff;
+
+    background: linear-gradient(90deg, #000102, #008abd);
+    background-size: 200% 100%;
+
+    transition: transform 0.25s ease,
+                box-shadow 0.25s ease,
+                background-position 0.6s ease;
 }
 
-.Button:hover {
-    background-color: #5a52d5 !important;
-    transform: translateY(-2px) !important;
-    box-shadow: 0 6px 12px rgba(108, 99, 255, 0.4) !important;
+/* Brilho */
+.btn-primary::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(
+        120deg,
+        transparent,
+        rgba(255, 255, 255, 0.4),
+        transparent
+    );
+    transform: skewX(-25deg);
+    transition: left 0.6s ease;
 }
 
-.Button:active {
-    transform: translateY(0) !important;
-    box-shadow: 0 2px 4px rgba(9, 9, 15, 0.3) !important;
+.btn-primary:hover {
+    transform: scale(1.04);
+    background-position: right;
+    box-shadow: 0 15px 35px rgba(2, 119, 161, 0.473);
 }
 
-/* ===== TEXTO DO LOGIN ===== */
+.btn-primary:hover::before {
+    left: 150%;
+}
+
+/* ================= TEXTO LOGIN ================= */
 .text2 {
-    margin-top: 10px !important;
-    font-family: 'Arial', sans-serif !important;
-    color: #000 !important;
-    text-align: center !important;
+    margin-top: 25px;
+    font-size: 22px;
+    color: #000;
 }
 
 .text2 a {
-    color: #007bff !important;
-    font-weight: bold !important;
-    text-decoration: none !important;
+    color: #018ab4;
+    font-weight: 700;
+    text-decoration: none;
 }
 
-.text2 a:hover {
-    text-decoration: underline !important;
+
+/* ================= ANIMAÇÕES ================= */
+@keyframes radarPulse {
+    0% {
+        transform: scale(0.9);
+        opacity: 0.6;
+    }
+    50% {
+        transform: scale(1.1);
+        opacity: 0.9;
+    }
+    100% {
+        transform: scale(0.9);
+        opacity: 0.6;
+    }
 }
 
-/* ===== ANIMAÇÃO ===== */
-@keyframes neon {
+@keyframes fadeUp {
     from {
-        text-shadow: 0 0 5px white;
+        opacity: 0;
+        transform: translateY(30px);
     }
     to {
-        text-shadow: 0 0 12px #9bdcff;
+        opacity: 1;
+        transform: translateY(0);
     }
 }
+
+/* ================= RESPONSIVO ================= */
+@media (max-width: 768px) {
+    .hero-container {
+        padding: 40px 25px;
+    }
+
+    .logo img {
+        max-width: 260px;
+    }
+
+    .logo::before {
+        width: 160px;
+        height: 160px;
+    }
+
+    .text-title {
+        font-size: 30px;
+    }
+
+    .btn-primary {
+        font-size: 1.1rem;
+        padding: 14px 45px;
+    }
+
+    .text2 {
+        font-size: 18px;
+    }
+}
+

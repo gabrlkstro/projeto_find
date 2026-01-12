@@ -125,3 +125,12 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Configurações de e-mail para redefinição de senha
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'sandbox.smtp.mailtrap.io'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'SEU_USER_MAILTRAP'
+EMAIL_HOST_PASSWORD = 'SUA_SENHA_MAILTRAP'
+DEFAULT_FROM_EMAIL = 'Find <no-reply@find.com>'
