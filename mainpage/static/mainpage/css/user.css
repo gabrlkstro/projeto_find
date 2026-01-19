@@ -1,0 +1,191 @@
+/* ================= CARD USUÁRIO ================= */
+.user-card {
+    background-color: rgba(171, 232, 255, 0.45);
+    border-radius: 18px;
+    overflow: visible;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px 20px;
+    text-align: center;
+}
+
+.user-card .avatar {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    margin-bottom: 20px;
+    border: 2px solid transparent;
+    background-image: 
+        linear-gradient(white, white),
+        linear-gradient(90deg, #000102, #0385b4);
+    background-origin: border-box;
+    background-clip: content-box, border-box;
+}
+
+.user-card .avatar img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* Badge câmera */
+.upload-badge {
+    position: absolute;
+    bottom: 6px;
+    right: 6px;
+    background: #01627a;
+    color: white;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.upload-badge:hover {
+    transform: scale(1.1);
+    background: #032e38;
+}
+
+.user-card .btn {
+    margin-top: 25px;
+    border-radius: 30px;
+    background: linear-gradient(90deg, #002a35, #01627ad3);
+    border: none;
+}
+
+.user-card .btn:hover {
+    background: linear-gradient(90deg, #001f24, #01404ad3);
+}
+
+/* ================= MEUS ITENS ================= */
+.items-card {
+    background-color: rgba(171, 232, 255, 0.45);
+    border-radius: 12px;
+}
+
+.items-card .card-header {
+    background: #004254;
+    color: #fff;
+    padding: 24px 40px;
+}
+
+.items-card .card-body {
+    padding: 30px;
+}
+
+.btn-sm {
+    padding: 6px 20px;
+    background-color: #ffffff;
+    color: black;
+    font-size: 0.85rem;
+}
+
+.item-img-container {
+    width: 80px;         /* Largura fixa */
+    height: 80px;        /* Altura fixa (Quadrada) */
+    min-width:80px;     /* Garante que não amasse no mobile */
+    overflow: hidden;    /* Corta o que sobrar da imagem */
+    border-radius: 10px;
+    background: #f0f0f0; /* Fundo cinza caso não tenha foto */
+}
+
+.item-img-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;   /* ESSENCIAL: Corta a foto para caber sem esticar */
+    display: block;
+}
+
+/* ================= STATUS HORIZONTAL ================= */
+.status-badge-horizontal {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    color: white;
+    font-size: 0.9rem;
+    margin-right: 8px;
+    flex-shrink: 0;
+}
+
+.status-badge-horizontal.status-perdido {
+    background-color: #ff4d4d;
+}
+
+.status-badge-horizontal.status-achado {
+    background-color: #28c76f;
+}
+
+/* ================= BOTÃO VER ITEM (LISTA) ================= */
+.btn-ver-lista {
+    background-color: #002a35;
+    color: white;
+    border-radius: 50px;
+    font-size: 0.7rem;
+    font-weight: 800;
+    padding: 8px 18px;
+    border: none;
+    text-transform: uppercase;
+}
+
+.btn-ver-lista:hover {
+    background-color: #004d61;
+}
+
+/* ================= BOTÃO VER TODOS ================= */
+.btn-ver-todos-custom {
+    background-color: transparent;
+    color: #004254;
+    border: 2px solid #004254;
+    border-radius: 50px;
+    padding: 10px 25px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.btn-ver-todos-custom:hover {
+    background-color: #004254;
+    color: #ffffff;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 66, 84, 0.3);
+}
+
+/* ================= ESTATÍSTICAS ================= */
+.stats-card {
+    background-color: rgba(171, 232, 255, 0.45);
+    border-radius: 18px;
+}
+
+.stat-box {
+    border: 2px solid #004d61;
+    border-radius: 15px;
+    padding: 20px 10px;
+}
+
+.stat-box h3,
+.stat-box small {
+    color: #004d61;
+    font-weight: 600;
+}
+
+/* ================= RESPONSIVO ================= */
+@media (max-width: 768px) {
+    .items-card .card-header {
+        padding: 18px 20px;
+    }
+
+    .item-lista-horizontal {
+        padding: 10px;
+    }
+}

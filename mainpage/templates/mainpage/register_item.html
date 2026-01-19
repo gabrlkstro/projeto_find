@@ -1,0 +1,108 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'mainpage/css/modal-item.css' %}">
+
+<div class="modal fade" id="modalNovoItem" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content shadow-lg">
+
+      <!-- HEADER -->
+      <div class="modal-header text-center position-relative">
+        <img src="{% static 'mainpage/img/logo-find.png' %}" alt="Find" />
+        <h5 class="modal-title mt-2">Cadastrar Item</h5>
+        <button type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"></button>
+      </div>
+
+      <!-- FORM -->
+      <form method="POST" action="{% url 'register_item' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="modal-body">
+
+          <!-- TÍTULO + STATUS -->
+          <div class="row mb-3">
+            <div class="col-md-8">
+              <label class="form-label">Título do item *</label>
+              <input type="text" name="titulo" class="form-control" required>
+            </div>
+
+            <div class="col-md-4">
+              <label class="form-label">Status *</label>
+              <select name="status" class="form-select" required>
+                <option value="">---------</option>
+                <option value="perdido">Perdido</option>
+                <option value="achado">Achado</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- DESCRIÇÃO -->
+          <div class="mb-3">
+            <label class="form-label">Descrição *</label>
+            <textarea name="descricao"
+                      class="form-control"
+                      rows="4"
+                      placeholder="Descreva o item com o máximo de detalhes possível"
+                      required></textarea>
+          </div>
+
+          <!-- CATEGORIA + DATA -->
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label class="form-label">Categoria *</label>
+              <select name="categoria" class="form-select" required>
+                <option value="">---------</option>
+                {% for cat in categorias %}
+                  <option value="{{ cat.id }}">{{ cat.nome }}</option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Data *</label>
+              <input type="date" name="data" class="form-control" required>
+            </div>
+          </div>
+
+          <!-- LOCAL -->
+          <div class="mb-3">
+            <label class="form-label">Local *</label>
+            <input type="text"
+                   name="local"
+                   class="form-control"
+                   placeholder="Onde o item foi perdido ou encontrado"
+                   required>
+          </div>
+
+          <!-- IMAGEM -->
+          <div class="mb-3">
+            <label class="form-label">Foto do item (opcional)</label>
+            <input type="file"
+                   name="imagem"
+                   class="form-control"
+                   accept="image/*">
+            <small class="text-muted">
+              Uma foto ajuda outras pessoas a identificarem o item
+            </small>
+          </div>
+
+        </div>
+
+        <!-- FOOTER -->
+        <div class="modal-footer d-flex justify-content-center gap-3">
+          <button type="submit" class="btn btn-salvar">
+            <u>SALVAR ITEM</u>
+          </button>
+  
+          <button type="button" class="btn btn-cancelar" data-bs-dismiss="modal">
+            <u>CANCELAR</u>
+          </button>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+</div>

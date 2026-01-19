@@ -1,0 +1,16 @@
+<h1>Itens cadastrados</h1>
+
+{% for item in itens %}
+    <div>
+        <h3>{{ item.titulo }}</h3>
+        <p>{{ item.descricao }}</p>
+        <small>
+            {{ item.status }} |
+            {{ item.categoria|default:"Sem categoria" }} |
+            Cadastrado por {{ item.usuario.username }}
+        </small>
+    </div>
+    <hr>
+{% empty %}
+    <p>Nenhum item cadastrado.</p>
+{% endfor %}

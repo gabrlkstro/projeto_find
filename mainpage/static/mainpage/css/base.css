@@ -114,6 +114,19 @@ body::after {
     transition: opacity 0.2s ease;
 }
 
+.user-icon {
+    width: 65px;
+    height: 65px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid transparent; /* Cria o espaço da borda */
+    background-image: linear-gradient(white, white), 
+                      linear-gradient(90deg, #000102, #0385b4); /* O seu gradiente */
+    background-origin: border-box;
+    background-clip: content-box, border-box;
+    
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
 
 /* linha animada embaixo */
 .icon:after {
@@ -143,6 +156,16 @@ footer {
     color: #000;
     box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.05);
 }
+
+.modal {
+    position: fixed !important;
+    z-index: 9999 !important;
+}
+
+.modal-backdrop {
+    z-index: 9998 !important;
+}
+
 
 /* ================= RESPONSIVO ================= */
 @media (max-width: 768px) {

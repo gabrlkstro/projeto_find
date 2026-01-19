@@ -1,0 +1,133 @@
+body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f5feff 50%, #e4f7ff 100%);
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-card {
+    width: 100%;
+    max-width: 470px; /* Reduzi um pouco para ficar mais elegante */
+    background: rgba(171, 232, 255, 0.67) !important;
+    border-radius: 20px;
+    backdrop-filter: blur(8px);
+    border: none;
+}
+
+/* Container para cada campo para controlar o espaçamento */
+.field-wrapper {
+    margin-bottom: 20px; /* Espaço fixo entre os campos */
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.input-group {
+    width: 100%;
+    max-width: 380px !important;
+    background: rgba(255, 255, 255, 0.7);
+    overflow: hidden;
+}
+
+.material-symbols-rounded {
+    color: #0b8ad0;
+    padding: 10px 15px;
+}
+
+.form-control {
+    height: 45px;
+    background: transparent !important;
+    border: none !important;
+}
+
+/* O SEGREDO: Mensagem de erro elegante e minimalista */
+.error-msg-absolute {
+    position: absolute;
+    bottom: -22px; /* Ajustado para não tocar no input de baixo */
+    left: 50%;
+    transform: translateX(-50%);
+    
+    /* Cores e Estilo que combinam com o Glassmorphism */
+    background: linear-gradient(135deg, rgba(255, 77, 79, 0.9), rgba(255, 46, 49, 1));
+    color: #ffffff;
+    
+    /* Tipografia Profissional */
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    text-transform: none; /* Mantém a leitura natural */
+    
+    /* Shape e Efeito */
+    padding: 3px 15px;
+    border-radius: 50px; /* Estilo pílula igual aos seus inputs */
+    box-shadow: 0 4px 15px rgba(255, 77, 79, 0.3); /* Brilho suave externo */
+    
+    /* Comportamento */
+    white-space: nowrap;
+    z-index: 100;
+    pointer-events: none;
+    
+    /* Pequeno triângulo (indicador) apontando para o input acima */
+}
+
+.error-msg-absolute::before {
+    content: '';
+    position: absolute;
+    top: -4px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-bottom: 5px solid rgba(255, 77, 79, 0.9);
+}
+.btn-primary {
+    /* Gradiente um pouco maior para podermos mover ele no hover */
+    background: linear-gradient(90deg, #000102, #005C7E, #000102) !important;
+    background-size: 200% auto !important;
+    
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    height: 45px;
+    opacity: 1;
+    cursor: pointer;
+    transition: 0.5s all ease-in-out !important; /* Transição mais suave */
+    position: relative;
+}
+
+/* EFEITO AO PASSAR O MOUSE */
+.btn-primary:hover {
+    /* Move o gradiente para o lado, dando efeito de iluminação */
+    background-position: right center !important;
+    transform: translateY(-2px); /* Sobe um pouquinho (estilo moderno) */
+    box-shadow: 0 5px 15px rgba(0, 92, 126, 0.4) !important; /* Brilho azul sutil */
+}
+
+/* EFEITO AO CLICAR */
+.btn-primary:active {
+    transform: translateY(0); /* Volta ao normal ao clicar */
+    filter: brightness(1.2); /* Dá um flash de brilho */
+}
+
+/* Mantém o bloqueio da borda azul */
+.btn-primary:focus {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+/* Adicione isso para o botão tremer se a idade for inválida (opcional) */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    50% { transform: translateX(5px); }
+    75% { transform: translateX(-5px); }
+}
+
+.title-gradient {
+    background: linear-gradient(90deg, #000, #005c7e);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}

@@ -1,0 +1,43 @@
+/* Estilização Geral do Modal para combinar com o User-Card */
+.modal-content-custom {
+    background-color: #f5feff !important; /* Fundo sólido para leitura */
+    border-radius: 18px !important;
+    border: none !important;
+    overflow: hidden;
+}
+
+/* Header com o mesmo gradiente do seu .items-card .card-header */
+.modal-header-custom {
+    background: linear-gradient(90deg, #002a35, #016179d3) !important;
+    color: #fff !important;
+    padding: 20px 30px !important;
+    border: none !important;
+}
+
+.modal-header-custom .btn-close {
+    filter: invert(1) grayscale(100%) brightness(200%); /* Deixa o X branco */
+}
+
+/* Inputs com a borda no tom azul escuro que você usa */
+.modal-body-custom .form-control {
+    border: 2px solid #003b4a !important;
+    border-radius: 12px !important;
+    padding: 12px !important;
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+/* Botão de salvar com o mesmo gradiente do seu .user-card .btn */
+.btn-salvar-modal {
+    background: linear-gradient(90deg, #002a35, #01627ad3) !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 30px !important;
+    padding: 10px 30px !important;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-salvar-modal:hover {
+    transform: scale(1.02);
+    opacity: 0.9;
+}

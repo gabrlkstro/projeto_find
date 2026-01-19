@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ item.titulo }} - Detalhes{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'mainpage/css/item_detail.css' %}">
+
+<div class="container py-5">
+    <div class="row g-4">
+
+        <!-- CARD ITEM -->
+        <div class="col-lg-8">
+            <div class="card shadow-sm p-4 item-card">
+
+                <!-- IMAGEM -->
+                <div class="item-image mb-3 text-center">
+                    <img 
+                        src="{% if item.imagem %}{{ item.imagem.url }}{% else %}{% static 'mainpage/img/item-default.png' %}{% endif %}"
+                        class="img-fluid rounded"
+                        alt="{{ item.titulo }}">
+                </div>
+
+                <!-- STATUS -->
+                <span class="badge 
+                    {% if item.status == 'perdido' %}bg-danger
+                    {% else %}bg-success{% endif %} mb-2">
+                    {{ item.get_status_display }}
+                </span>
+
+                <!-- TITULO -->
+                <h4 class="mt-2">{{ item.titulo }}</h4>
+
+                <!-- DESCRIÇÃO -->
+                <p class="text-muted">{{ item.descricao }}</p>
+
+
+                <!-- INFO GRID -->
+                <div class="row text-sm">
+                    <div class="row text-sm info-grid">
+                        <div class="col-md-6 mb-3 info-item text-gradient">
+                            <div class="info-top">
+                                <i class="bi bi-tag"></i>
+                                <span class="info-label">Categoria</span>
+                            </div>
+                            <span class="info-value">{{ item.categoria }}</span>
+                        </div>
+
+                        <div class="col-md-6 mb-2 info-item text-gradient">
+                            <div class="info-top">
+                                <i class="bi bi-geo-alt"></i>
+                                <span class="info-label">Local</span>
+                            </div>
+                            <span class="info-value">{{ item.local }}</span>
+                        </div>
+
+                        <div class="col-md-6 mb-2 info-item text-gradient">
+                            <div class="info-top">
+                                <i class="bi bi-calendar"></i>
+                                <span class="info-label">Data</span>
+                            </div>
+                            
+                            <span class="info-value">{{ item.data|date:"d/m/Y" }}</span>
+                        </div>
+
+                        <div class="col-md-6 mb-2 info-item text-gradient">
+                            <div class="info-top">
+                                <i class="bi bi-clock"></i>
+                                <span class="info-label">Hora</span>
+                            </div>
+                            
+                            <span class="info-value">{{ item.hora }}</span>
+                        </div>
+                </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- CARD CONTATO -->
+        <div class="col-lg-4">
+            <div class="card shadow-sm p-4 contact-card">
+
+                <h1 class="text-center mb-3 text-gradient">CONTATO</h1>
+
+                <p class="text-gradient">
+                    📧 <strong>Email:</strong><br>
+                    {{ item.usuario.email }}
+                </p>
+
+                <p class="text-gradient">
+                    👤 <strong>Nome:</strong><br>
+                    {{ item.usuario.get_full_name|default:item.usuario.username }}
+                </p>
+
+                {% if item.usuario.profile.telefone %}
+                <p class="text-gradient">
+                    📞 <strong>Telefone:</strong><br>
+                    {{ item.usuario.profile.telefone }}
+                </p>
+                {% endif %}
+
+                <div class="d-grid mt-4">
+                    <a href="#" class="btn btn-dark rounded-pill">
+                        💬 Iniciar conversa
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <a href="{% url 'screen_user' %}" class="btn btn-secondary mt-4">
+        ← Voltar
+    </a>
+</div>
+{% endblock %}

@@ -1,0 +1,165 @@
+{% load static %}
+
+<!-- MODAL EDITAR PERFIL -->
+<div class="modal fade" id="modalEditarPerfil" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 20px; overflow: hidden;">
+
+            <!-- HEADER -->
+            <div class="modal-header border-0 p-4"
+                 style="background: linear-gradient(135deg, #0d4e5d 0%, #1a7a8c 100%);">
+                <h5 class="modal-title fw-bold text-white">Editar Perfil</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+
+            <!-- FORM -->
+            <form action="{% url 'update_profile' %}" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <div class="modal-body p-4" style="background: #f8fdff;">
+
+                    <!-- FOTO -->
+                    <div class="text-center mb-4">
+                        <div class="position-relative d-inline-block">
+                            <img 
+                                src="{% if user.profile.image %}{{ user.profile.image.url }}{% else %}{% static 'img/default-user.png' %}{% endif %}"
+                                class="rounded-circle border border-3 border-info shadow-sm"
+                                style="width: 100px; height: 100px; object-fit: cover;"
+                            >
+
+                            <div class="mt-2">
+                                <label for="file-upload"
+                                       class="btn btn-sm btn-outline-primary rounded-pill px-3"
+                                       style="font-size: 0.75rem;">
+                                    Alterar Foto
+                                </label>
+                                <input id="file-upload" type="file" name="image" hidden>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- NOME -->
+                    <div class="mb-3">
+                        <label class="form-label fw-bold small text-muted text-uppercase">
+                            Nome Completo
+                        </label>
+                        <input 
+                            type="text"
+                            name="nome"
+                            class="form-control border-info-subtle shadow-sm"
+                            value="{{ user.first_name }}"
+                            style="border-radius: 12px; padding: 10px 15px;"
+                        >
+                    </div>
+
+                    <!-- EMAIL -->
+                    <div class="mb-3">
+                        <label class="form-label fw-bold small text-muted text-uppercase">
+                            E-mail
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-info-subtle">
+                                <i class="bi bi-lock-fill text-muted"></i>
+                            </span>
+                            <input 
+                                type="email"
+                                class="form-control bg-light text-muted border-info-subtle"
+                                value="{{ user.email }}"
+                                readonly
+                                style="cursor: not-allowed;"
+                            >
+                        </div>
+                        <small class="form-text text-muted" style="font-size: 0.7rem;">
+                            O e-mail não pode ser alterado por segurança.
+                        </small>
+                    </div>
+
+                    <!-- TELEFONE -->
+                    <div class="mb-3">
+                        <label class="form-label fw-bold small text-muted text-uppercase">
+                            Telefone / WhatsApp
+                        </label>
+                        <input 
+                            type="text"
+                            name="telefone"
+                            id="telefone_mask"
+                            class="form-control border-info-subtle shadow-sm"
+                            placeholder="(00) 00000-0000"
+                            value="{{ user.profile.telefone|default:'' }}"
+                            style="border-radius: 12px; padding: 10px 15px;"
+                        >
+                    </div>
+
+                    <!-- ENDEREÇO -->
+                    <div class="row">
+
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label fw-bold small text-muted text-uppercase">
+                                CEP
+                            </label>
+                            <input 
+                                type="text"
+                                id="cep"
+                                name="cep"
+                                class="form-control border-info-subtle"
+                                placeholder="00000-000"
+                                maxlength="9"
+                                style="border-radius: 12px;"
+                            >
+                        </div>
+
+                        <div class="col-md-5 mb-3">
+                            <label class="form-label fw-bold small text-muted text-uppercase">
+                                Cidade
+                            </label>
+                            <input 
+                                type="text"
+                                id="cidade"
+                                name="cidade"
+                                class="form-control border-info-subtle"
+                                value="{{ user.profile.cidade|default:'' }}"
+                                style="border-radius: 12px;"
+                            >
+                        </div>
+
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label fw-bold small text-muted text-uppercase">
+                                UF
+                            </label>
+                            <input 
+                                type="text"
+                                id="estado"
+                                name="estado"
+                                class="form-control border-info-subtle text-center"
+                                value="{{ user.profile.estado|default:'' }}"
+                                maxlength="2"
+                                style="border-radius: 12px;"
+                            >
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- FOOTER -->
+                <div class="modal-footer border-0 p-4 pt-0" style="background: #f8fdff;">
+                    <button type="button"
+                            class="btn btn-light px-4 fw-semibold"
+                            data-bs-dismiss="modal"
+                            style="border-radius: 15px;">
+                        Cancelar
+                    </button>
+
+                    <button type="submit"
+                            class="btn text-white px-4 fw-bold shadow"
+                            style="background: linear-gradient(to right, #0d4e5d, #1a7a8c);
+                                   border-radius: 15px; border: none;">
+                        Salvar Alterações
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,194 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Perfil do Usuário{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'mainpage/css/user.css' %}">
+
+<div class="container py-5">
+    <div class="row g-4">
+
+        <!-- PERFIL -->
+        <div class="col-lg-4 col-md-5">
+            <div class="card shadow-sm h-100 text-center p-4 user-card border-0">
+                <div class="avatar mx-auto mb-3 position-relative">
+                    <img src="{% if user.profile.image %}{{ user.profile.image.url }}{% else %}{% static 'mainpage/img/user.png' %}{% endif %}"
+                         class="profile-pic">
+
+                    <form action="{% url 'upload_photo' %}" method="POST" enctype="multipart/form-data" id="form-foto">
+                        {% csrf_token %}
+                        <label for="input-foto" class="upload-badge shadow">
+                            <i class="bi bi-camera-fill"></i>
+                        </label>
+                        <input type="file" name="image" id="input-foto" hidden
+                               onchange="document.getElementById('form-foto').submit();">
+                    </form>
+                </div>
+
+                <h4 class="fw-bold mb-0">{{ nome }}</h4>
+                <p class="text-muted small mb-2">{{ email }}</p>
+
+                <div class="row small text-start g-1 mt-2 px-3">
+                    <div class="col-5 text-muted">Telefone:</div>
+                    <div class="col-7">{{ user.profile.telefone|default:"---" }}</div>
+                    <div class="col-5 text-muted">Localização:</div>
+                    <div class="col-7">
+                        {% if user.profile.cidade %}
+                            {{ user.profile.cidade }} - {{ user.profile.estado }}
+                        {% else %}
+                            <span class="text-muted fst-italic">Não informada</span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <button class="btn btn-primary w-100 rounded-pill mt-4"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modalEditarPerfil">
+                    <i class="bi bi-pencil-square me-2"></i> Editar perfil
+                </button>
+            </div>
+        </div>
+
+        <!-- ITENS -->
+        <div class="col-lg-8 col-md-7">
+            <div class="card shadow-sm h-100 items-card border-0">
+                <div class="card-header d-flex justify-content-between align-items-center border-0 py-3">
+                    <h5 class="fw-bold mb-0 text-white">Meus itens</h5>
+                    <button class="btn btn-light btn-sm rounded-pill"
+                            data-bs-toggle="modal"
+                            data-bs-target="#modalNovoItem">
+                        <i class="bi bi-plus-lg"></i> Novo item
+                    </button>
+                </div>
+
+                <div class="card-body">
+                    {% if itens %}
+                        <div class="d-flex flex-column gap-3">
+                            {% for item in itens|slice:":3" %}
+                            <div class="item-lista-horizontal shadow-sm">
+                                <div class="row g-0 align-items-center">
+
+                                    <div class="col-3 col-md-2 p-2">
+                                        <div class="item-img-container">
+                                            <img src="{% if item.imagem %}{{ item.imagem.url }}{% else %}{% static 'mainpage/img/item-default.png' %}{% endif %}">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-5 col-md-7 px-3">
+                                        <h6 class="fw-bold mb-0 text-truncate">{{ item.titulo }}</h6>
+                                        <p class="text-muted small mb-0">{{ item.categoria }}</p>
+                                        <small class="text-muted">
+                                            <i class="bi bi-geo-alt"></i> {{ item.local|default:"---" }}
+                                        </small>
+                                    </div>
+
+                                    <div class="col-4 col-md-3 text-end pe-3">
+                                        <a href="{% url 'item_detail' item.id %}"
+                                           class="btn btn-dark btn-ver-lista mb-2">
+                                            VER ITEM
+                                        </a>
+
+                                        <div class="d-flex justify-content-end gap-2">
+                                            <button class="btn btn-sm btn-outline-primary rounded-pill"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#modalEditarItem{{ item.id }}">
+                                                <i class="bi bi-pencil"></i>
+                                            </button>
+
+                                            <button class="btn btn-sm btn-outline-danger rounded-pill"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#modalDeletarItem{{ item.id }}">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </div>
+
+                                        {% if item.status == 'perdido' %}
+                                            <span class="status-badge-horizontal status-perdido">
+                                                <i class="bi bi-exclamation-triangle-fill"></i>
+                                            </span>
+                                        {% else %}
+                                            <span class="status-badge-horizontal status-achado">
+                                                <i class="bi bi-check-circle-fill"></i>
+                                            </span>
+                                        {% endif %}
+                                    </div>
+
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                        {% if itens|length > 3 %}
+                        <div class="text-center mt-4">
+                            <a href="{% url 'item_list' %}" class="btn-ver-todos-custom">
+                                VER TODOS ({{ itens|length }})
+                            </a>
+                        </div>
+                        {% endif %}
+                    {% else %}
+                        <p class="text-center text-muted">Nenhum item cadastrado.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- MODAIS EDITAR / DELETAR ITEM -->
+{% for item in itens %}
+
+<!-- EDITAR -->
+<div class="modal fade" id="modalEditarItem{{ item.id }}" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0 shadow-lg" style="border-radius:20px;">
+            <form method="POST" action="{% url 'item_edit' item.id %}">
+                {% csrf_token %}
+                <div class="modal-header text-white"
+                     style="background:linear-gradient(135deg,#0d4e5d,#1a7a8c);">
+                    <h5 class="modal-title">Editar Item</h5>
+                    <button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    <input class="form-control mb-3" name="titulo" value="{{ item.titulo }}">
+                    <textarea class="form-control mb-3" name="descricao">{{ item.descricao }}</textarea>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
+                    <button class="btn btn-primary">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- DELETAR -->
+<div class="modal fade" id="modalDeletarItem{{ item.id }}" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg" style="border-radius:20px;">
+            <form method="POST" action="{% url 'item_delete' item.id %}">
+                {% csrf_token %}
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title">Excluir Item</h5>
+                    <button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body text-center">
+                    Tem certeza que deseja excluir <strong>{{ item.titulo }}</strong>?
+                </div>
+
+                <div class="modal-footer justify-content-center">
+                    <button class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
+                    <button class="btn btn-danger">Excluir</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endfor %}
+
+{% endblock %}
