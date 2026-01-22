@@ -1,4 +1,5 @@
 from datetime import date
+
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -6,8 +7,11 @@ from django.contrib.auth.models import User
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
+from django.utils import timezone
+from django.views.decorators.http import require_POST
+
 from .forms import ProfileupdateForm
-from .models import Categoria, Item, Profile
+from .models import Categoria, Item, Profile, Chat, Mensagem
 
 
 def home(request):
@@ -209,7 +213,6 @@ def register_item(request):
     return redirect(next_url)
 
 
-
 @login_required(login_url='login')
 def edit_item(request, id):
     item = get_object_or_404(Item, id=id, usuario=request.user)
@@ -242,7 +245,6 @@ def edit_item(request, id):
         'categorias': categorias,
         'next': next_url
     })
-
 
 
 @login_required(login_url='login')
@@ -326,3 +328,102 @@ def view_item(request, id):
         'item': item,
         'next': next_url
     })
+
+
+
+def _usuario_participa(chat, user):
+    return user.id in [chat.criado_por_id, chat.dono_item_id]
+
+
+@login_required(login_url='login')
+def chat_start(request, item_id):
+    item = get_object_or_404(Item, id=item_id)
+
+    # não deixa criar chat consigo mesmo
+    if item.usuario_id == request.user.id:
+        messages.error(request, "Você não pode iniciar um chat com você mesmo.")
+        return redirect('item_detail', slug=item.slug)
+
+    # cria ou pega chat único por item + interessado
+    chat, created = Chat.objects.get_or_create(
+        item=item,
+        criado_por=request.user,
+        dono_item=item.usuario,
+        defaults={'status': 'ativo'}
+    )
+
+    return redirect('chat_detail', chat_id=chat.id)
+
+
+@login_required(login_url='login')
+def chats_list(request):
+    chats = Chat.objects.filter(
+        criado_por=request.user
+    ) | Chat.objects.filter(
+        dono_item=request.user
+    )
+    chats = chats.select_related('item', 'criado_por', 'dono_item').order_by('-criado_em')
+
+    return render(request, 'mainpage/chats_list.html', {'chats': chats})
+
+
+@login_required(login_url='login')
+def chat_detail(request, chat_id):
+    chat = get_object_or_404(Chat, id=chat_id)
+
+    if not _usuario_participa(chat, request.user):
+        messages.error(request, "Você não tem acesso a esse chat.")
+        return redirect('chats_list')
+
+    mensagens = chat.mensagens.select_related('remetente').order_by('data_envio')
+
+    return render(request, 'mainpage/chat_detail.html', {
+        'chat': chat,
+        'mensagens': mensagens
+    })
+
+
+@login_required(login_url='login')
+def chat_send_message(request, chat_id):
+    chat = get_object_or_404(Chat, id=chat_id)
+
+    if not _usuario_participa(chat, request.user):
+        messages.error(request, "Você não tem acesso a esse chat.")
+        return redirect('chats_list')
+
+    if chat.status != 'ativo':
+        messages.error(request, "Esse chat está fechado.")
+        return redirect('chat_detail', chat_id=chat.id)
+
+    if request.method == 'POST':
+        conteudo = (request.POST.get('conteudo') or '').strip()
+        if not conteudo:
+            messages.error(request, "Digite uma mensagem.")
+            return redirect('chat_detail', chat_id=chat.id)
+
+        Mensagem.objects.create(
+            chat=chat,
+            remetente=request.user,
+            conteudo=conteudo
+        )
+
+    return redirect('chat_detail', chat_id=chat.id)
+
+
+@login_required(login_url='login')
+def chat_close(request, chat_id):
+    chat = get_object_or_404(Chat, id=chat_id)
+
+    if not _usuario_participa(chat, request.user):
+        messages.error(request, "Você não tem acesso a esse chat.")
+        return redirect('chats_list')
+
+    # só o dono do item fecha (ou muda se quiser)
+    if request.user.id != chat.dono_item_id:
+        messages.error(request, "Apenas o dono do item pode fechar o chat.")
+        return redirect('chat_detail', chat_id=chat.id)
+
+    chat.status = 'fechado'
+    chat.save()
+    messages.info(request, "Chat fechado.")
+    return redirect('chat_detail', chat_id=chat.id)

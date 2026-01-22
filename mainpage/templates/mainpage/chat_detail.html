@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}Meus Chats - FIND{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+      <h4 class="mb-0">Meus chats</h4>
+      <small class="text-muted">Conversas dos itens</small>
+    </div>
+  </div>
+
+  <div class="card shadow-sm">
+    <div class="card-body">
+
+      {% if chats %}
+        <div class="list-group">
+
+          {% for c in chats %}
+            <a href="{% url 'chat_detail' c.id %}" class="list-group-item list-group-item-action">
+              <div class="d-flex justify-content-between align-items-start">
+                <div>
+                  <div class="fw-bold">
+                    {{ c.item.titulo }}
+                    <span class="badge text-bg-{% if c.status == 'ativo' %}success{% else %}secondary{% endif %} ms-2">
+                      {{ c.get_status_display }}
+                    </span>
+                  </div>
+
+                  <div class="text-muted small mt-1">
+                    {% if request.user.id == c.dono_item_id %}
+                      Interessado: {{ c.criado_por.username }}
+                    {% else %}
+                      Dono: {{ c.dono_item.username }}
+                    {% endif %}
+                    • Atualizado em {{ c.atualizado_em|date:"d/m/Y H:i" }}
+                  </div>
+                </div>
+
+                <i class="bi bi-chevron-right"></i>
+              </div>
+            </a>
+          {% endfor %}
+
+        </div>
+      {% else %}
+        <div class="text-muted">
+          Você ainda não tem chats. Abra um item e clique em <b>“Falar com o dono”</b>.
+        </div>
+      {% endif %}
+
+    </div>
+  </div>
+
+</div>
+{% endblock %}

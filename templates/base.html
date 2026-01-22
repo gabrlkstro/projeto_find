@@ -2,71 +2,90 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <title>{% block title %}FIND{% endblock %}</title>
-    <!-- Bootstrap-->
-   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Javacrypt -->
-     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-   <!-- Ícones -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css">
-    
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-Xx..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <title>{% block title %}FIND{% endblock %}</title>
 
-    <!-- CSS da BASE -->
-    <link rel="stylesheet" href="{% static 'mainpage/css/base.css' %}">
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-    <link rel="icon" type="image/png" href="{% static 'mainpage/img/find.png' %}">
+  <!-- Ícones -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css">
 
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <!-- CSS da BASE -->
+  <link rel="stylesheet" href="{% static 'mainpage/css/base.css' %}">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="{% static 'mainpage/img/find.png' %}">
+
+  {% block extra_css %}{% endblock %}
 </head>
+
 <body>
 
-    <!-- NAVBAR -->
-    <nav class="navbar navbar-expand-lg">
-        <div class="container-fluid">
+  <!-- NAVBAR -->
+  <nav class="navbar navbar-expand-lg">
+    <div class="container-fluid">
 
-            <a class="navbar-brand" href="/">
-                <img src="{% static 'mainpage/img/logo-find.png' %}" alt="Logo FIND" width="110">
+      <a class="navbar-brand" href="{% url 'home' %}">
+        <img src="{% static 'mainpage/img/logo-find.png' %}" alt="Logo FIND" width="110">
+      </a>
+
+      {% if user.is_authenticated %}
+        <!-- Botão do menu (mobile) -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarFind"
+                aria-controls="navbarFind" aria-expanded="false" aria-label="Alternar navegação">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse justify-content-end" id="navbarFind">
+          <div class="nav-links d-flex align-items-center gap-2">
+
+            <a href="{% url 'menu' %}" class="icon">Início <i class="bi bi-house-door-fill"></i></a>
+
+            <!-- Se ainda não tem rotas, deixa como # ou cria depois -->
+            <a href="#" class="icon">Encontrados <i class="bi bi-check-circle-fill"></i></a>
+            <a href="#" class="icon">Perdidos <i class="bi bi-exclamation-circle-fill"></i></a>
+
+            <!-- CHAT -->
+            <a href="{% url 'chats_list' %}" class="icon">Chat <i class="bi bi-chat-dots-fill"></i></a>
+
+            <!-- PERFIL -->
+            <a href="{% url 'screen_user' %}" class="d-flex align-items-center">
+              {% if user.profile and user.profile.image %}
+                <img src="{{ user.profile.image.url }}" class="user-icon" alt="Foto do usuário">
+              {% else %}
+                <i class="bi bi-person-circle" style="font-size: 1.7rem;"></i>
+              {% endif %}
             </a>
 
-            {% if user.is_authenticated %}
-            <div class="nav-links">
-                <a href="/menu" class="icon">Início<i class="bi bi-house-door-fill"></i></a>
-                <a href="/encontrados/" class="icon">Encontrados<i class="bi bi-check-circle-fill"></i></a>
-                <a href="/perdidos/" class="icon">Perdidos<i class="bi bi-exclamation-circle-fill"></i></a>
-                <a href="/chat" class="icon">Chat<i class="bi bi-chat-dots-fill"></i></a>
-                <a href="/tela">
-                    {% if user.profile.image %}
-                        <img src="{{ user.profile.image.url }}" class="user-icon">
-                    {% else %}
-                        <i class="bi bi-person-circle" style="font-size: 1.5rem;"></i>
-                    {% endif %}
-                </a>
-            </div>
-
-            {% endif %}
+          </div>
         </div>
-    </nav>
+      {% endif %}
 
-    <!-- CONTEÚDO -->
-    <main>
-        {% block content %}{% endblock %}
-    </main>
+    </div>
+  </nav>
 
-    <!-- RODAPÉ -->
-    <footer>
-        FIND © 2025 — Todos os direitos reservados.
-    </footer>
+  <!-- CONTEÚDO -->
+  <main>
+    {% block content %}{% endblock %}
+  </main>
 
-    <style>
-        .modal { z-index: 1060 !important; }
-        .modal-backdrop { z-index: 1050 !important; }
-    </style>
+  <!-- RODAPÉ -->
+  <footer>
+    FIND © 2025 — Todos os direitos reservados.
+  </footer>
 
+  {% if user.is_authenticated %}
     {% include 'mainpage/edit_profile.html' %}
     {% include 'mainpage/register_item.html' %}
-    
+  {% endif %}
+
+  {% block extra_js %}{% endblock %}
 </body>
 </html>

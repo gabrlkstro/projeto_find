@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils.text import slugify
 
+
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     image = models.ImageField(default='profile_pics/user.png', upload_to="profile_pics")
@@ -11,9 +12,9 @@ class Profile(models.Model):
     data_nascimento = models.DateField(null=True, blank=True)
     cep = models.CharField(max_length=9, blank=True, null=True)
 
-    
     def __str__(self):
         return f'Perfil de {self.user.username}'
+
 
 class Categoria(models.Model):
     nome = models.CharField(max_length=45)
@@ -21,7 +22,7 @@ class Categoria(models.Model):
 
     def __str__(self):
         return self.nome
-    
+
 
 class Item(models.Model):
     STATUS_CHOICES = [
@@ -58,37 +59,43 @@ class Item(models.Model):
 
     def __str__(self):
         return self.titulo
-        
+
+
 class Chat(models.Model):
     STATUS_CHOICES = [
         ('ativo', 'Ativo'),
-        ('Fechado', 'Fechado'),
+        ('fechado', 'Fechado'),
     ]
 
-    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    item = models.ForeignKey(Item, on_delete=models.CASCADE, related_name='chats')
+    criado_por = models.ForeignKey(User, on_delete=models.CASCADE, related_name='chats_criados')
+    dono_item = models.ForeignKey(User, on_delete=models.CASCADE, related_name='chats_como_dono')
+
     criado_em = models.DateTimeField(auto_now_add=True)
-    atualizado_em = models.DateTimeField(auto_now_add=True)
-    status =  models.CharField(max_length=20, choices=STATUS_CHOICES)
+    atualizado_em = models.DateTimeField(auto_now=True)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='ativo')
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['item', 'criado_por', 'dono_item'], name='unique_chat_por_item_e_usuarios')
+        ]
 
     def __str__(self):
-        return f"chat - {self.usuario.username}"
-    
-class Mensagem(models.Model):
+        return f"Chat #{self.id} - {self.item.titulo}"
 
+
+class Mensagem(models.Model):
     TIPO_CHOICES = [
         ('texto', 'Texto'),
         ('imagem', 'Imagem'),
     ]
 
-    chat = models.ForeignKey(
-        Chat,
-        on_delete=models.CASCADE,
-        related_name='mensagens'
-    )
+    chat = models.ForeignKey(Chat, on_delete=models.CASCADE, related_name='mensagens')
     remetente = models.ForeignKey(User, on_delete=models.CASCADE)
     conteudo = models.TextField(max_length=200)
     data_envio = models.DateTimeField(auto_now_add=True)
-    tipo = models.CharField(max_length=20, choices=TIPO_CHOICES)
+
+    tipo = models.CharField(max_length=20, choices=TIPO_CHOICES, default='texto')
     lida = models.BooleanField(default=False)
 
     def __str__(self):
