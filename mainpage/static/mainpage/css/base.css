@@ -97,13 +97,13 @@ body::after  { background:#90dbf4; bottom:-140px; right:-140px; }
   right: 6px;
   bottom: 2px;
 
-  height: 2px;
+  height: 0px;
   width: 0%;
-  background: linear-gradient(90deg, #464646, #0385b4);
+  background: transparent;
   transition: width .25s ease;
 }
 .nav-links .icon:hover::after{
-  width: calc(100% - 12px);
+  width: 0%;
 }
 
 /* Avatar */

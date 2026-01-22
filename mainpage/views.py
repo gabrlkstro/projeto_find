@@ -138,10 +138,10 @@ def menu_view(request):
     if categoria.isdigit():
         itens = itens.filter(categoria_id=int(categoria))
 
-    # contadores (do resultado filtrado)
-    total_itens = itens.count()
-    perdidos = itens.filter(status='perdido').count()
-    encontrados = itens.filter(status='achado').count()
+    # contadores (sempre do sistema inteiro)
+    total_itens = Item.objects.all().count()
+    perdidos = Item.objects.filter(status='perdido').count()
+    encontrados = Item.objects.filter(status='achado').count()
 
     return render(request, 'mainpage/menu.html', {
         'categorias': categorias,
@@ -265,8 +265,149 @@ def delete_item(request, id):
 
 @login_required(login_url='login')
 def list_item(request):
+    categorias = Categoria.objects.all()
+
+    q = (request.GET.get('q') or '').strip()
+    status = (request.GET.get('status') or 'todos').strip()
+    categoria = (request.GET.get('categoria') or 'todas').strip()
+    page = int(request.GET.get('page', 1))
+
     itens = Item.objects.all().order_by('-id')
-    return render(request, 'mainpage/item_list.html', {'itens': itens})
+
+    if q:
+        itens = itens.filter(
+            Q(titulo__icontains=q) |
+            Q(descricao__icontains=q) |
+            Q(local__icontains=q)
+        )
+
+    if status in ['perdido', 'achado']:
+        itens = itens.filter(status=status)
+
+    if categoria.isdigit():
+        itens = itens.filter(categoria_id=int(categoria))
+
+    per_page = 8
+    start = (page - 1) * per_page
+    end = start + per_page
+    itens_list = list(itens[start:end + 1])
+    has_more = len(itens_list) > per_page
+    itens_page = itens_list[:per_page]
+
+    total_itens = Item.objects.all().count()
+    perdidos = Item.objects.filter(status='perdido').count()
+    encontrados = Item.objects.filter(status='achado').count()
+
+    return render(request, 'mainpage/item_list.html', {
+        'categorias': categorias,
+        'itens': itens_page,
+        'total_itens': total_itens,
+        'perdidos': perdidos,
+        'encontrados': encontrados,
+        'q': q,
+        'status': status,
+        'categoria': categoria,
+        'has_more': has_more,
+        'next_page': page + 1,
+    })
+
+
+@login_required(login_url='login')
+def items_perdidos(request):
+    categorias = Categoria.objects.all()
+
+    q = (request.GET.get('q') or '').strip()
+    categoria = (request.GET.get('categoria') or 'todas').strip()
+    page = int(request.GET.get('page', 1))
+
+    itens = Item.objects.filter(status='perdido').order_by('-id')
+
+    if q:
+        itens = itens.filter(
+            Q(titulo__icontains=q) |
+            Q(descricao__icontains=q) |
+            Q(local__icontains=q)
+        )
+
+    if categoria.isdigit():
+        itens = itens.filter(categoria_id=int(categoria))
+
+    per_page = 8
+    start = (page - 1) * per_page
+    end = start + per_page
+    itens_list = list(itens[start:end + 1])
+    has_more = len(itens_list) > per_page
+    itens_page = itens_list[:per_page]
+
+    itens_recentes = Item.objects.all().order_by('-id')[:8]
+
+    total_itens = Item.objects.all().count()
+    perdidos = Item.objects.filter(status='perdido').count()
+    encontrados = Item.objects.filter(status='achado').count()
+
+    return render(request, 'mainpage/item_list.html', {
+        'categorias': categorias,
+        'itens': itens_page,
+        'itens_recentes': itens_recentes,
+        'total_itens': total_itens,
+        'perdidos': perdidos,
+        'encontrados': encontrados,
+        'q': q,
+        'status': 'perdido',
+        'categoria': categoria,
+        'page_title': 'Itens Perdidos',
+        'has_more': has_more,
+        'next_page': page + 1,
+    })
+
+
+@login_required(login_url='login')
+def items_encontrados(request):
+    categorias = Categoria.objects.all()
+
+    q = (request.GET.get('q') or '').strip()
+    categoria = (request.GET.get('categoria') or 'todas').strip()
+    page = int(request.GET.get('page', 1))
+
+    itens = Item.objects.filter(status='achado').order_by('-id')
+
+    if q:
+        itens = itens.filter(
+            Q(titulo__icontains=q) |
+            Q(descricao__icontains=q) |
+            Q(local__icontains=q)
+        )
+
+    if categoria.isdigit():
+        itens = itens.filter(categoria_id=int(categoria))
+
+    per_page = 8
+    start = (page - 1) * per_page
+    end = start + per_page
+    itens_list = list(itens[start:end + 1])
+    has_more = len(itens_list) > per_page
+    itens_page = itens_list[:per_page]
+
+    itens_recentes = Item.objects.all().order_by('-id')[:8]
+
+    total_itens = Item.objects.all().count()
+    perdidos = Item.objects.filter(status='perdido').count()
+    encontrados = Item.objects.filter(status='achado').count()
+
+    return render(request, 'mainpage/item_list.html', {
+        'categorias': categorias,
+        'itens': itens_page,
+        'itens_recentes': itens_recentes,
+        'total_itens': total_itens,
+        'perdidos': perdidos,
+        'encontrados': encontrados,
+        'q': q,
+        'status': 'achado',
+        'categoria': categoria,
+        'page_title': 'Itens Encontrados',
+        'has_more': has_more,
+        'next_page': page + 1,
+    })
 
 
 @login_required

@@ -26,7 +26,7 @@
 .search-bar {
   width: 70%;
   height: 50px;
-  margin-top: 60px;
+  margin-top: 30px;
   max-width: 900px;
   border-radius: 14px;
   background: rgba(171, 232, 255, 0.45);
@@ -90,14 +90,18 @@
   padding: 10px 22px;
 }
 
-/* ================= FILTROS (APÓS O HERO) ================= */
+/* ================= FILTROS (DENTRO DO HERO) ================= */
 .filters-section {
   padding: 26px 0 0;
 }
 
+.hero-main .filters-box {
+  margin-top: 20px;
+}
+
 .filters-box {
   background: rgba(171, 232, 255, 0.45);
-  border: 1px solid rgba(0, 42, 53, 0.35);
+  border: 1px solid rgba(3, 133, 180, 0.55);
   border-radius: 6px;
   padding: 18px 18px;
   box-shadow: 0 2px 10px rgba(0,0,0,.08);
@@ -144,37 +148,37 @@
   margin-top: 30px;
   background: rgba(171, 232, 255, 0.45);
   border: 1px solid rgba(0, 42, 53, 0.45);
-  border-radius: 4px;
+  border-radius: 6px;
   overflow: hidden;
   height: 100%;
 }
 
 .menu-item-img {
-  padding: 12px;
+  padding: 14px;
 }
 
 .menu-item-img img {
   width: 100%;
-  height: 140px;
+  height: 180px;
   object-fit: cover;
-  border-radius: 3px;
+  border-radius: 4px;
   display: block;
 }
 
 .menu-item-body {
-  padding: 0 12px 12px;
+  padding: 0 14px 14px;
 }
 
 .menu-item-title {
   font-weight: 800;
-  font-size: 13px;
+  font-size: 15px;
   margin: 0;
   color: #0b0b0b;
 }
 
 .menu-item-desc {
   margin: 6px 0 10px;
-  font-size: 11px;
+  font-size: 12.5px;
   color: #111;
   line-height: 1.25;
   min-height: 34px;

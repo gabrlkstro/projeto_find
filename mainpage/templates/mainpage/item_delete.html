@@ -1,5 +1,5 @@
 
-<form id="deleteForm{{ item.id }}" method="post" action="{% url 'item_delete' item.id %}" class="d-none">
+<form id="deleteForm{{ item.id }}" method="post" action="{% url 'item_delete' item.id %}?next={{ request.path }}" class="d-none">
   {% csrf_token %}
 </form>
 

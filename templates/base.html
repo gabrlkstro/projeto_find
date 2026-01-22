@@ -48,9 +48,9 @@
 
             <a href="{% url 'menu' %}" class="icon">Início <i class="bi bi-house-door-fill"></i></a>
 
-            <!-- Se ainda não tem rotas, deixa como # ou cria depois -->
-            <a href="#" class="icon">Encontrados <i class="bi bi-check-circle-fill"></i></a>
-            <a href="#" class="icon">Perdidos <i class="bi bi-exclamation-circle-fill"></i></a>
+            <a href="{% url 'item_list' %}" class="icon">Todos os Itens <i class="bi bi-list-ul"></i></a>
+            <a href="{% url 'items_encontrados' %}" class="icon">Encontrados <i class="bi bi-check-circle-fill"></i></a>
+            <a href="{% url 'items_perdidos' %}" class="icon">Perdidos <i class="bi bi-exclamation-circle-fill"></i></a>
 
             <!-- CHAT -->
             <a href="{% url 'chats_list' %}" class="icon">Chat <i class="bi bi-chat-dots-fill"></i></a>

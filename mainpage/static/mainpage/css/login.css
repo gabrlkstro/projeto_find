@@ -177,7 +177,7 @@ body::after {
 }
 
 .small-password-link:hover {
-    text-decoration: underline;
+    text-decoration: none;
 }
 
 /* ====== HR ====== */

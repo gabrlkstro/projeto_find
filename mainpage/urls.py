@@ -54,6 +54,8 @@ urlpatterns = [
 
     path('perfil/item/novo/', views.register_item, name='register_item'),
     path('itens/', views.list_item, name='item_list'),
+    path('itens/perdidos/', views.items_perdidos, name='items_perdidos'),
+    path('itens/encontrados/', views.items_encontrados, name='items_encontrados'),
     path('item/<slug:slug>/', views.item_detail, name='item_detail'),
     path('item/editar/<int:id>/', views.edit_item, name='item_edit'),
     path('item/deletar/<int:id>/', views.delete_item, name='item_delete'),
