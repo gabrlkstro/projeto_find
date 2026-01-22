@@ -3,7 +3,6 @@ from .models import (
     Profile,
     Categoria,
     Item,
-    Registro,
     Chat,
     Mensagem
 )
@@ -11,6 +10,5 @@ from .models import (
 admin.site.register(Profile)
 admin.site.register(Categoria)
 admin.site.register(Item)
-admin.site.register(Registro)
 admin.site.register(Chat)
 admin.site.register(Mensagem)

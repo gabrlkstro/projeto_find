@@ -17,7 +17,7 @@ urlpatterns = [
     path('perfil/atualizar/', views.update_profile, name='update_profile'),
     path('perfil/item/novo/', views.register_item, name='register_item'),
     path('itens/', views.list_item, name='item_list'),
-    path('item/<int:id>/', views.item_detail, name='item_detail'),
+    path('item/<slug:slug>/', views.item_detail, name='item_detail'),
     path('item/editar/<int:id>/', views.edit_item, name='item_edit'),
     path('item/deletar/<int:id>/', views.delete_item, name='item_delete'),
 ]

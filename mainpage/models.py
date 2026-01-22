@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-# Create your models here.
+from django.utils.text import slugify
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -9,6 +9,8 @@ class Profile(models.Model):
     cidade = models.CharField(max_length=100, blank=True, null=True)
     estado = models.CharField(max_length=2, blank=True, null=True)
     data_nascimento = models.DateField(null=True, blank=True)
+    cep = models.CharField(max_length=9, blank=True, null=True)
+
     
     def __str__(self):
         return f'Perfil de {self.user.username}'
@@ -20,35 +22,43 @@ class Categoria(models.Model):
     def __str__(self):
         return self.nome
     
+
 class Item(models.Model):
-    STATUS_CHOICES = {
+    STATUS_CHOICES = [
         ('achado', 'Achado'),
         ('perdido', 'Perdido'),
-        ('devolvido', 'devolvido')
-    }
+        ('devolvido', 'Devolvido'),
+    ]
 
     titulo = models.CharField(max_length=45)
+    slug = models.SlugField(max_length=60, unique=True, blank=True)
     descricao = models.CharField(max_length=200)
     status = models.CharField(max_length=45, choices=STATUS_CHOICES)
     local = models.CharField(max_length=45)
     data = models.DateField()
     imagem = models.ImageField(upload_to='itens/', blank=True, null=True)
     criado_em = models.DateTimeField(auto_now_add=True)
-    atualizado_em = models.DateTimeField(auto_now_add=True)
+    atualizado_em = models.DateTimeField(auto_now=True)
     usuario = models.ForeignKey(User, on_delete=models.CASCADE, related_name='itens')
-    categoria = models.ForeignKey(Categoria, on_delete=models.SET_NULL, null=True)
+    categoria = models.ForeignKey('Categoria', on_delete=models.SET_NULL, null=True)
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            base_slug = slugify(self.titulo)
+            slug = base_slug
+            contador = 1
+
+            while Item.objects.filter(slug=slug).exists():
+                slug = f"{base_slug}-{contador}"
+                contador += 1
+
+            self.slug = slug
+
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.titulo
-
-class Registro(models.Model):
-    item = models.ForeignKey(Item, on_delete=models.CASCADE)
-    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
-    dat_retirada = models.DateField()
-
-    def __str__(self):
-        return f"{self.usuario.username} retirou {self.item.titulo}"
-    
+        
 class Chat(models.Model):
     STATUS_CHOICES = [
         ('ativo', 'Ativo'),

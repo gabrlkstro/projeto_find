@@ -104,8 +104,11 @@
                                 class="form-control border-info-subtle"
                                 placeholder="00000-000"
                                 maxlength="9"
+                                value="{{ user.profile.cep|default:'' }}"
                                 style="border-radius: 12px;"
-                            >
+                            >  
+
+
                         </div>
 
                         <div class="col-md-5 mb-3">
@@ -163,3 +166,35 @@
         </div>
     </div>
 </div>
+
+<script>
+document.getElementById('cep').addEventListener('blur', function () {
+    let cep = this.value.replace(/\D/g, '');
+
+    if (cep.length !== 8) {
+        return;
+    }
+
+    fetch(`https://viacep.com.br/ws/${cep}/json/`)
+        .then(response => response.json())
+        .then(data => {
+            if (!data.erro) {
+                document.getElementById('cidade').value = data.localidade;
+                document.getElementById('estado').value = data.uf;
+            }
+        })
+        .catch(() => {
+            console.log('Erro ao buscar CEP');
+        });
+});
+
+document.getElementById('cep').addEventListener('input', function () {
+    let value = this.value.replace(/\D/g, '');
+    if (value.length > 5) {
+        this.value = value.slice(0,5) + '-' + value.slice(5,8);
+    } else {
+        this.value = value;
+    }
+});
+</script>
+

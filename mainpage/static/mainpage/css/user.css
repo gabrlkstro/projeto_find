@@ -2,7 +2,7 @@
 .user-card {
     background-color: rgba(171, 232, 255, 0.45);
     border-radius: 18px;
-    overflow: visible;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -17,14 +17,14 @@
     border-radius: 50%;
     margin-bottom: 20px;
     border: 2px solid transparent;
-    background-image: 
+    background-image:
         linear-gradient(white, white),
         linear-gradient(90deg, #000102, #0385b4);
     background-origin: border-box;
     background-clip: content-box, border-box;
 }
 
-.user-card .avatar img {
+.user-card .profile-pic {
     width: 100%;
     height: 100%;
     border-radius: 50%;
@@ -38,8 +38,8 @@
     right: 6px;
     background: #01627a;
     color: white;
-    width: 22px;
-    height: 22px;
+    width: 24px;
+    height: 24px;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -49,12 +49,11 @@
 }
 
 .upload-badge:hover {
-    transform: scale(1.1);
+    transform: scale(1.08);
     background: #032e38;
 }
 
 .user-card .btn {
-    margin-top: 25px;
     border-radius: 30px;
     background: linear-gradient(90deg, #002a35, #01627ad3);
     border: none;
@@ -73,47 +72,102 @@
 .items-card .card-header {
     background: #004254;
     color: #fff;
-    padding: 24px 40px;
+    padding: 18px 26px;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
 }
 
 .items-card .card-body {
-    padding: 30px;
+    padding: 22px;
 }
 
 .btn-sm {
-    padding: 6px 20px;
+    padding: 6px 16px;
     background-color: #ffffff;
     color: black;
     font-size: 0.85rem;
 }
 
+/* ===== ITEM LISTA (CORRIGIDO) ===== */
+.item-lista-horizontal {
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 14px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+/* Colunas internas */
+.item-col-img {
+    flex: 0 0 auto;
+}
+
+.item-col-info {
+    flex: 1 1 auto;
+    min-width: 0; /* evita quebrar o layout do text-truncate */
+}
+
+.item-col-actions {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+}
+
+/* Foto */
 .item-img-container {
-    width: 80px;         /* Largura fixa */
-    height: 80px;        /* Altura fixa (Quadrada) */
-    min-width:80px;     /* Garante que não amasse no mobile */
-    overflow: hidden;    /* Corta o que sobrar da imagem */
+    width: 78px;
+    height: 78px;
+    min-width: 78px;
+    overflow: hidden;
     border-radius: 10px;
-    background: #f0f0f0; /* Fundo cinza caso não tenha foto */
+    background: #f0f0f0;
 }
 
 .item-img-container img {
     width: 100%;
     height: 100%;
-    object-fit: cover;   /* ESSENCIAL: Corta a foto para caber sem esticar */
+    object-fit: cover;
     display: block;
 }
 
-/* ================= STATUS HORIZONTAL ================= */
+/* Botão ver item */
+.btn-ver-lista {
+    background-color: #002a35;
+    color: white;
+    border-radius: 50px;
+    font-size: 0.70rem;
+    font-weight: 800;
+    padding: 8px 18px;
+    border: none;
+    text-transform: uppercase;
+    text-decoration: none;
+}
+
+.btn-ver-lista:hover {
+    background-color: #004d61;
+    color: #fff;
+}
+
+/* Linha de ações (editar, excluir, status) */
+.item-actions-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* STATUS HORIZONTAL */
 .status-badge-horizontal {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 28px;
-    height: 28px;
-    border-radius: 8px;
+    width: 30px;
+    height: 30px;
+    border-radius: 10px;
     color: white;
-    font-size: 0.9rem;
-    margin-right: 8px;
+    font-size: 0.95rem;
     flex-shrink: 0;
 }
 
@@ -125,23 +179,7 @@
     background-color: #28c76f;
 }
 
-/* ================= BOTÃO VER ITEM (LISTA) ================= */
-.btn-ver-lista {
-    background-color: #002a35;
-    color: white;
-    border-radius: 50px;
-    font-size: 0.7rem;
-    font-weight: 800;
-    padding: 8px 18px;
-    border: none;
-    text-transform: uppercase;
-}
-
-.btn-ver-lista:hover {
-    background-color: #004d61;
-}
-
-/* ================= BOTÃO VER TODOS ================= */
+/* BOTÃO VER TODOS */
 .btn-ver-todos-custom {
     background-color: transparent;
     color: #004254;
@@ -161,31 +199,54 @@
     box-shadow: 0 5px 15px rgba(0, 66, 84, 0.3);
 }
 
-/* ================= ESTATÍSTICAS ================= */
+/* ================= ESTATÍSTICAS (CORRIGIDO) ================= */
 .stats-card {
     background-color: rgba(171, 232, 255, 0.45);
     border-radius: 18px;
+    margin-top: 0; /* quem controla é o row mt-4 do HTML */
 }
 
-.stat-box {
-    border: 2px solid #004d61;
-    border-radius: 15px;
-    padding: 20px 10px;
+/* Cada box */
+.stat-card {
+    border: 1px solid #032e38;
+    border-radius: 18px;
+    padding: 14px 10px;
+    background: rgba(255, 255, 255, 0.35);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 70px;
 }
 
-.stat-box h3,
-.stat-box small {
-    color: #004d61;
-    font-weight: 600;
+.stat-card small {
+    font-size: 0.70rem;
+    letter-spacing: 0.6px;
+    font-weight: 700;
+    color: #003a49;
 }
 
 /* ================= RESPONSIVO ================= */
 @media (max-width: 768px) {
     .items-card .card-header {
-        padding: 18px 20px;
+        padding: 16px 16px;
+    }
+
+    .items-card .card-body {
+        padding: 16px;
     }
 
     .item-lista-horizontal {
-        padding: 10px;
+        padding: 12px;
+        gap: 12px;
+    }
+
+    .item-img-container {
+        width: 70px;
+        height: 70px;
+        min-width: 70px;
+    }
+
+    .item-col-actions {
+        gap: 8px;
     }
 }

@@ -1,3 +1,8 @@
+
+<form id="deleteForm{{ item.id }}" method="post" action="{% url 'item_delete' item.id %}" class="d-none">
+  {% csrf_token %}
+</form>
+
 <div class="modal fade" id="modalDelete{{ item.id }}" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content border-0 shadow-lg" style="border-radius: 20px; overflow: hidden;">
@@ -6,40 +11,34 @@
       <div class="modal-header border-0 p-4"
            style="background: linear-gradient(135deg, #8b1e1e 0%, #c0392b 100%);">
         <h5 class="modal-title fw-bold text-white">Excluir Item</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+
+
+        <button type="button" class="btn-close btn-close-white"
+                data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
 
       <div class="modal-body p-4 text-center" style="background: #f8fdff;">
-        <p class="fw-semibold mb-2">
-          Tem certeza que deseja excluir o item:
-        </p>
-        <p class="text-danger fw-bold">
-          {{ item.titulo }}
-        </p>
-        <small class="text-muted">
-          Essa ação não poderá ser desfeita.
-        </small>
+        <p class="fw-semibold mb-2">Tem certeza que deseja excluir o item:</p>
+        <p class="text-danger fw-bold mb-1">{{ item.titulo }}</p>
+        <small class="text-muted">Essa ação não poderá ser desfeita.</small>
       </div>
 
       <div class="modal-footer border-0 p-4 pt-0 justify-content-center"
            style="background: #f8fdff;">
 
-        <button type="button"
-                class="btn btn-light px-4 fw-semibold"
-                data-bs-dismiss="modal"
-                style="border-radius: 15px;">
+
+        <button type="button" class="btn btn-light px-4 fw-semibold"
+                data-bs-dismiss="modal" style="border-radius: 15px;">
           Cancelar
         </button>
 
-        <form method="post" action="{% url 'deletar_item' item.id %}">
-          {% csrf_token %}
-          <button type="submit"
-                  class="btn text-white px-4 fw-bold shadow"
-                  style="background: linear-gradient(to right, #8b1e1e, #c0392b);
-                         border-radius: 15px; border: none;">
-            Excluir
-          </button>
-        </form>
+        <button type="submit"
+                form="deleteForm{{ item.id }}"
+                class="btn text-white px-4 fw-bold shadow"
+                style="background: linear-gradient(to right, #8b1e1e, #c0392b);
+                       border-radius: 15px; border: none;">
+          Excluir
+        </button>
 
       </div>
 

@@ -7,85 +7,229 @@
 <link rel="stylesheet" href="{% static 'mainpage/css/menu.css' %}">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css">
 
-<!-- HEADER -->
-<header class="header-main text-center py-5">
+<!-- HERO (SÓ ATÉ O BOTÃO) -->
+<section class="hero-main py-5">
 
-    <!-- TÍTULO -->
-    <div class="container-fluid title-gradient">
-        <h1 class="fw-bold">Perdeu algo importante?</h1>
-        <p class="lead">
-            O FIND conecta pessoas que perderam itens <br>
-            com aquelas que os encontraram.
-        </p>
-    </div>
+  <!-- TÍTULO -->
+  <div class="container-fluid title-gradient text-center">
+    <h1 class="fw-bold">Perdeu algo importante?</h1>
+    <p class="lead">
+      O FIND conecta pessoas que perderam itens <br>
+      com aquelas que os encontraram.
+    </p>
+  </div>
 
-    <!-- BARRA DE BUSCA -->
-    <div class="d-flex justify-content-center mt-4">
-        <div class="input-group search-bar">
-            <span class="input-group-text">
-                <i class="bi bi-search"></i>
-            </span>
-            <input type="text" class="form-control" placeholder="Buscar itens" aria-label="Buscar itens">
+  <!-- BUSCA (FUNCIONA VIA GET) -->
+  <div class="d-flex justify-content-center mt-4">
+    <form method="GET" class="input-group search-bar">
+      <span class="input-group-text">
+        <i class="bi bi-search"></i>
+      </span>
+
+      <input
+        type="text"
+        class="form-control"
+        name="q"
+        value="{{ q|default:'' }}"
+        placeholder="Buscar itens (nome, descrição, local...)"
+      >
+
+      <!-- mantém filtros atuais ao buscar -->
+      <input type="hidden" name="status" value="{{ status|default:'todos' }}">
+      <input type="hidden" name="categoria" value="{{ categoria|default:'todas' }}">
+    </form>
+  </div>
+
+  <!-- CARDS DE STATUS -->
+  <div class="container text-center mt-5">
+    <div class="row row-cols-1 row-cols-md-4 g-4 justify-content-center">
+
+      <div class="col">
+        <div class="card status-card">
+          <i class="bi bi-box-seam icon-total"></i>
+          <h3>{{ total_itens }}</h3>
+          <p>TOTAL DE ITENS</p>
         </div>
-    </div>
+      </div>
 
-    <!-- CARDS -->
-    <div class="container text-center mt-5">
-        <div class="row row-cols-1 row-cols-md-4 g-4 justify-content-center">
-
-            <!-- TOTAL DE ITENS -->
-            <div class="col">
-                <div class="card h-100 shadow-sm border-0 py-4">
-                    <div class="card-body">
-                        <i class="bi bi-box-seam icon-total"></i>
-                        <h3 class="mt-3">{{ total_itens }}</h3>
-                        <p class="text-muted mb-0">TOTAL DE ITENS</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ITENS PERDIDOS -->
-            <div class="col">
-                <div class="card h-100 shadow-sm border-0 py-4">
-                    <div class="card-body">
-                        <i class="bi bi-exclamation-triangle icon-perdidos"></i>
-                        <h3 class="mt-3">{{ perdidos }}</h3>
-                        <p class="text-muted mb-0">ITENS PERDIDOS</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ITENS ENCONTRADOS -->
-            <div class="col">
-                <div class="card h-100 shadow-sm border-0 py-4">
-                    <div class="card-body">
-                        <i class="bi bi-check-circle icon-encontrados"></i>
-                        <h3 class="mt-3">{{ encontrados }}</h3>
-                        <p class="text-muted mb-0">ITENS ENCONTRADOS</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- CORRESPONDÊNCIAS -->
-            <div class="col">
-                <div class="card h-100 shadow-sm border-0 py-4">
-                    <div class="card-body">
-                        <i class="fa-solid fa-handshake icon-corresp"></i>
-                        <h3 class="mt-3">{{ correspondencias }}</h3>
-                        <p class="text-muted mb-0">CORRESPONDÊNCIAS</p>
-                    </div>
-                </div>
-            </div>
+      <div class="col">
+        <div class="card status-card">
+          <i class="bi bi-exclamation-triangle icon-perdidos"></i>
+          <h3>{{ perdidos }}</h3>
+          <p>ITENS PERDIDOS</p>
         </div>
+      </div>
+
+      <div class="col">
+        <div class="card status-card">
+          <i class="bi bi-check-circle icon-encontrados"></i>
+          <h3>{{ encontrados }}</h3>
+          <p>ITENS ENCONTRADOS</p>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="card status-card">
+          <i class="bi bi-people-fill icon-corresp"></i>
+          <h3>{{ correspondencias }}</h3>
+          <p>CORRESPONDÊNCIAS</p>
+        </div>
+      </div>
+
     </div>
+  </div>
 
-    <!-- BOTÃO CADASTRAR ITEM -->
-    <button type="button" class="btn btn-primary mt-3 mx-auto d-block fw-bold" data-bs-toggle="modal" data-bs-target="#modalNovoItem">
-        <i class="fa-solid fa-plus me-2"></i> CADASTRAR ITEM
-    </button>
+  <!-- BOTÃO -->
+  <button class="btn btn-primary btn-cadastrar-item"
+          data-bs-toggle="modal"
+          data-bs-target="#modalNovoItem">
+    <i class="bi bi-plus-lg me-2"></i> CADASTRAR ITEM
+  </button>
 
+</section>
 
+<!-- SEÇÃO DE FILTROS (APARECE QUANDO DESCE) -->
+<section class="filters-section">
+  <div class="container">
 
-</header>
+    <form method="GET" class="filters-box">
+      <div class="row g-3 align-items-end">
+
+        <!-- BUSCAR NOME -->
+        <div class="col-12 col-md-4">
+          <label class="filters-label">BUSCAR</label>
+          <input
+            type="text"
+            class="form-control filters-input"
+            name="q"
+            value="{{ q|default:'' }}"
+            placeholder="Nome"
+          >
+        </div>
+
+        <!-- STATUS -->
+        <div class="col-12 col-md-3">
+          <label class="filters-label">STATUS</label>
+          <select name="status" class="form-select filters-input">
+            <option value="todos" {% if status == 'todos' %}selected{% endif %}>Todos</option>
+            <option value="perdido" {% if status == 'perdido' %}selected{% endif %}>Perdidos</option>
+            <option value="achado" {% if status == 'achado' %}selected{% endif %}>Encontrados</option>
+          </select>
+        </div>
+
+        <!-- CATEGORIA -->
+        <div class="col-12 col-md-3">
+          <label class="filters-label">CATEGORIA</label>
+          <select name="categoria" class="form-select filters-input">
+            <option value="todas" {% if categoria == 'todas' %}selected{% endif %}>Todas</option>
+            {% for cat in categorias %}
+              <option value="{{ cat.id }}" {% if categoria == cat.id|stringformat:"s" %}selected{% endif %}>
+                {{ cat.nome }}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <!-- BOTÃO -->
+        <div class="col-12 col-md-2 d-grid">
+          <button type="submit" class="btn btn-filtrar">
+            FILTRAR
+          </button>
+        </div>
+
+      </div>
+    </form>
+
+  </div>
+</section>
+
+<!-- LISTA / GRID DOS ITENS -->
+<section class="items-section">
+  <div class="container mt-4">
+    <div class="row g-4 justify-content-center">
+
+      {% if itens %}
+        {% for item in itens %}
+          <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+            <div class="menu-item-card">
+
+              <!-- IMAGEM -->
+              <div class="menu-item-img">
+                {% if item.imagem %}
+                  <img src="{{ item.imagem.url }}" alt="{{ item.titulo }}">
+                {% else %}
+                  <img src="{% static 'mainpage/img/item-default.png' %}" alt="Imagem padrão">
+                {% endif %}
+              </div>
+
+              <!-- CONTEÚDO -->
+              <div class="menu-item-body">
+                <h6 class="menu-item-title">{{ item.titulo }}</h6>
+
+                <p class="menu-item-desc">
+                  {{ item.descricao|truncatechars:85 }}
+                </p>
+
+                <!-- LINHAS IGUAL AO PRINT -->
+                <div class="menu-item-meta">
+
+                  <!-- Linha 1: Categoria (esq) / Local (dir) -->
+                  <div class="menu-item-meta-line">
+                    <span class="meta-left">
+                      <i class="bi bi-tag"></i>
+                      {{ item.categoria.nome|default:"Sem categoria" }}
+                    </span>
+
+                    <span class="meta-right">
+                      <i class="bi bi-geo-alt"></i>
+                      {{ item.local|default:"---" }}
+                    </span>
+                  </div>
+
+                  <!-- Linha 2: Data (esq) / Hora (dir) -->
+                  <div class="menu-item-meta-line">
+                    <span class="meta-left">
+                      <i class="bi bi-calendar3"></i>
+                      {{ item.criado_em|date:"d/m/Y" }}
+                    </span>
+
+                    <span class="meta-right">
+                      <i class="bi bi-clock"></i>
+                      {{ item.criado_em|time:"H:i" }}
+                    </span>
+                  </div>
+
+                </div>
+
+                <!-- AÇÕES -->
+                <div class="menu-item-actions">
+                  <a href="{% url 'item_detail' item.slug %}" class="btn-ver-item">
+                    VER ITEM
+                  </a>
+
+                  {% if item.status == "achado" %}
+                    <span class="status-square status-green" title="Achado">
+                      <i class="bi bi-check-lg"></i>
+                    </span>
+                  {% else %}
+                    <span class="status-square status-red" title="Perdido">
+                      <i class="bi bi-exclamation-lg"></i>
+                    </span>
+                  {% endif %}
+                </div>
+
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      {% else %}
+        <div class="col-12">
+          <p class="text-center text-muted mt-4">Nenhum item encontrado com esses filtros.</p>
+        </div>
+      {% endif %}
+
+    </div>
+  </div>
+</section>
 
 {% endblock %}

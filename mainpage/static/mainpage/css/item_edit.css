@@ -1,0 +1,262 @@
+/* ===========================
+   ITEM EDIT - FIND (PADRÃO)
+   arquivo: static/mainpage/css/item_edit.css
+=========================== */
+
+/* BASE */
+:root{
+  --bg: rgba(171, 232, 255, 0.45);
+  --card: rgba(171, 232, 255, 0.55);
+  --border: rgba(0, 42, 53, 0.45);
+  --border-strong: rgba(3, 133, 180, 0.55);
+  --ink: #002a35;
+  --ink-soft: rgba(0, 42, 53, 0.75);
+  --white: #ffffff;
+  --muted: rgba(0, 0, 0, 0.45);
+
+  --grad: linear-gradient(90deg, #002a35, #01627ad3);
+  --grad-2: linear-gradient(135deg, #004254, #00bcd4cc);
+
+  --shadow: 0 10px 25px rgba(0,0,0,.10);
+  --shadow-soft: 0 6px 16px rgba(0,0,0,.08);
+
+  --r-sm: 12px;
+  --r-md: 16px;
+  --r-lg: 20px;
+
+  --focus: 0 0 0 .25rem rgba(3, 133, 180, .25);
+}
+
+/* CONTAINER */
+.container{
+  max-width: 1050px;
+}
+
+/* CARD PRINCIPAL */
+.edit-card{
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  display: flex;
+  min-height: 520px;
+}
+
+/* COLUNA DA IMAGEM */
+.item-img-col{
+  width: 340px;
+  min-width: 340px;
+  background: linear-gradient(180deg, rgba(0,66,84,.25), rgba(0,171,214,.12));
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 28px 18px;
+  position: relative;
+}
+
+/* FOTO PREVIEW */
+.item-img-preview{
+  width: 165px;
+  height: 165px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #f3fbff;
+  border: 3px solid rgba(3, 133, 180, .65);
+  box-shadow: var(--shadow-soft);
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+
+.item-img-preview:hover{
+  transform: scale(1.04);
+  box-shadow: 0 14px 30px rgba(0,0,0,.14);
+}
+
+/* BADGE CÂMERA */
+.upload-badge-item{
+  position: absolute;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  right: calc(50% - 82px); /* gruda perto da borda da foto */
+  bottom: calc(50% - 82px);
+  background: var(--grad);
+  border: 1px solid rgba(255,255,255,.35);
+  color: #fff;
+  cursor: pointer;
+  transition: transform .2s ease, filter .2s ease;
+}
+
+.upload-badge-item i{
+  font-size: 18px;
+  line-height: 1;
+}
+
+.upload-badge-item:hover{
+  transform: scale(1.08);
+  filter: brightness(1.05);
+}
+
+/* COLUNA DO FORM */
+.form-col{
+  flex: 1;
+  padding: 30px 28px 26px;
+  background: rgba(255,255,255,.25);
+}
+
+/* TÍTULO */
+.form-col h4{
+  margin: 0 0 18px;
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: .2px;
+  text-align: center;
+}
+
+/* LABEL */
+.form-col label{
+  display: block;
+  margin: 14px 0 6px;
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--ink);
+}
+
+/* INPUT / SELECT / TEXTAREA */
+.form-col input,
+.form-col select,
+.form-col textarea{
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid rgba(3, 133, 180, .35);
+  background: rgba(255,255,255,.55);
+  color: var(--ink);
+  padding: 11px 12px;
+  font-size: 14px;
+  outline: none;
+  transition: box-shadow .2s ease, border-color .2s ease, background .2s ease;
+}
+
+.form-col textarea{
+  resize: none;
+  min-height: 92px;
+}
+
+.form-col input::placeholder,
+.form-col textarea::placeholder{
+  color: rgba(0,0,0,.35);
+  font-weight: 600;
+}
+
+.form-col input:focus,
+.form-col select:focus,
+.form-col textarea:focus{
+  border-color: rgba(3, 133, 180, .75);
+  box-shadow: var(--focus);
+  background: rgba(255,255,255,.72);
+}
+
+/* ARRUMA SELECT (setinha) */
+.form-col select{
+  appearance: none;
+  background-image:
+    linear-gradient(45deg, transparent 50%, rgba(0,42,53,.65) 50%),
+    linear-gradient(135deg, rgba(0,42,53,.65) 50%, transparent 50%),
+    linear-gradient(to right, transparent, transparent);
+  background-position:
+    calc(100% - 18px) calc(50% - 2px),
+    calc(100% - 12px) calc(50% - 2px),
+    0 0;
+  background-size:
+    6px 6px,
+    6px 6px,
+    100% 100%;
+  background-repeat: no-repeat;
+}
+
+/* GRID DO STATUS/LOCAL */
+.form-col .row.g-3{
+  margin-top: 6px;
+}
+
+/* BOTÕES */
+.form-col .d-flex.justify-content-between{
+  gap: 12px;
+  margin-top: 22px;
+}
+
+.form-col .btn{
+  border-radius: 999px !important;
+  padding: 11px 18px !important;
+  font-weight: 800;
+  letter-spacing: .2px;
+  border: none;
+  transition: transform .15s ease, box-shadow .2s ease, filter .2s ease;
+}
+
+/* SALVAR */
+.form-col .btn-primary{
+  background: var(--grad) !important;
+  color: #fff !important;
+  box-shadow: 0 10px 20px rgba(0,0,0,.12);
+}
+
+.form-col .btn-primary:hover{
+  transform: translateY(-1px);
+  filter: brightness(1.03);
+}
+
+/* CANCELAR */
+.form-col .btn-secondary{
+  background: rgba(255,255,255,.55) !important;
+  color: var(--ink) !important;
+  border: 1px solid rgba(0,42,53,.25) !important;
+}
+
+.form-col .btn-secondary:hover{
+  transform: translateY(-1px);
+  background: rgba(255,255,255,.72) !important;
+}
+
+/* RESPONSIVO */
+@media (max-width: 992px){
+  .edit-card{
+    flex-direction: column;
+    min-height: unset;
+  }
+
+  .item-img-col{
+    width: 100%;
+    min-width: 100%;
+    border-right: 0;
+    border-bottom: 1px solid var(--border);
+    padding: 26px 18px 34px;
+  }
+
+  .upload-badge-item{
+    right: 50%;
+    transform: translateX(82px);
+    bottom: 26px;
+  }
+
+  .upload-badge-item:hover{
+    transform: translateX(82px) scale(1.08);
+  }
+}
+
+@media (max-width: 576px){
+  .form-col{
+    padding: 22px 16px 18px;
+  }
+
+  .form-col .btn{
+    width: 49%;
+    padding: 10px 14px !important;
+    font-size: 13px;
+  }
+}

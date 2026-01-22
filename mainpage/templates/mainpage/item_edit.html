@@ -1,112 +1,109 @@
+{% extends 'base.html' %}
 {% load static %}
-<div class="modal fade" id="modalEdit{{ item.id }}" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-lg">
-    <div class="modal-content border-0 shadow-lg" style="border-radius: 20px; overflow: hidden;">
 
-      <!-- HEADER -->
-      <div class="modal-header border-0 p-4"
-           style="background: linear-gradient(135deg, #0d4e5d 0%, #1a7a8c 100%);">
-        <h5 class="modal-title fw-bold text-white">Editar Item</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-      </div>
+{% block content %}
+<link rel="stylesheet" href="{% static 'mainpage/css/item_edit.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css">
 
-      <form method="post" action="{% url 'editar_item' item.id %}" enctype="multipart/form-data">
+<div class="container mt-5">
+  <div class="edit-card">
+
+    <!-- COLUNA IMAGEM -->
+    <div class="item-img-col">
+
+      {% if item.imagem %}
+        <img src="{{ item.imagem.url }}" alt="Imagem do item" class="item-img-preview">
+      {% else %}
+        <img src="{% static 'mainpage/img/item-default.png' %}" alt="Imagem padrão" class="item-img-preview">
+      {% endif %}
+
+      <!-- Form só para trocar imagem (auto submit) -->
+      <form method="post" enctype="multipart/form-data" action="?next={{ next|default:''|urlencode }}" id="form-img">
+        {% csrf_token %}
+        <label for="imagem" class="upload-badge-item shadow" title="Alterar foto">
+          <i class="bi bi-camera-fill"></i>
+        </label>
+        <input type="file" name="imagem" id="imagem" hidden onchange="document.getElementById('form-img').submit()">
+      </form>
+
+    </div>
+
+    <!-- COLUNA FORM -->
+    <div class="form-col">
+      <h4>Editar Item</h4>
+
+      <form method="post" enctype="multipart/form-data" action="?next={{ next|default:''|urlencode }}">
         {% csrf_token %}
 
-        <div class="modal-body p-4" style="background: #f8fdff;">
+        <!-- TÍTULO -->
+        <label>Título</label>
+        <input
+          type="text"
+          name="titulo"
+          value="{{ item.titulo|default_if_none:'' }}"
+          required
+          placeholder="Ex: Carteira preta"
+        >
 
-          <div class="row g-3">
+        <!-- CATEGORIA -->
+        <label>Categoria</label>
+        <select name="categoria" required>
+          {% for cat in categorias %}
+            <option value="{{ cat.id }}" {% if item.categoria_id == cat.id %}selected{% endif %}>
+              {{ cat.nome }}
+            </option>
+          {% endfor %}
+        </select>
 
-            <div class="col-md-6">
-              <label class="form-label fw-bold small text-muted text-uppercase">Título</label>
-              <input type="text" name="titulo"
-                     class="form-control border-info-subtle shadow-sm"
-                     value="{{ item.titulo }}"
-                     style="border-radius: 12px;">
-            </div>
+        <!-- DESCRIÇÃO -->
+        <label>Descrição</label>
+        <textarea name="descricao" rows="3" placeholder="Descreva o item...">{{ item.descricao|default_if_none:'' }}</textarea>
 
-            <div class="col-md-6">
-              <label class="form-label fw-bold small text-muted text-uppercase">Categoria</label>
-              <select name="categoria"
-                      class="form-select border-info-subtle shadow-sm"
-                      style="border-radius: 12px;">
-                {% for cat in categorias %}
-                  <option value="{{ cat.id }}"
-                    {% if item.categoria.id == cat.id %}selected{% endif %}>
-                    {{ cat.nome }}
-                  </option>
-                {% endfor %}
-              </select>
-            </div>
-
-            <div class="col-12">
-              <label class="form-label fw-bold small text-muted text-uppercase">Descrição</label>
-              <textarea name="descricao"
-                        class="form-control border-info-subtle shadow-sm"
-                        rows="3"
-                        style="border-radius: 12px;">{{ item.descricao }}</textarea>
-            </div>
-
-            <div class="col-md-6">
-              <label class="form-label fw-bold small text-muted text-uppercase">Status</label>
-              <select name="status"
-                      class="form-select border-info-subtle shadow-sm"
-                      style="border-radius: 12px;">
-                <option value="perdido" {% if item.status == 'perdido' %}selected{% endif %}>
-                  Perdido
-                </option>
-                <option value="achado" {% if item.status == 'achado' %}selected{% endif %}>
-                  Achado
-                </option>
-              </select>
-            </div>
-
-            <div class="col-md-6">
-              <label class="form-label fw-bold small text-muted text-uppercase">Local</label>
-              <input type="text" name="local"
-                     class="form-control border-info-subtle shadow-sm"
-                     value="{{ item.local }}"
-                     style="border-radius: 12px;">
-            </div>
-
-            <div class="col-md-6">
-              <label class="form-label fw-bold small text-muted text-uppercase">Data</label>
-              <input type="date" name="data"
-                     class="form-control border-info-subtle shadow-sm"
-                     value="{{ item.data|date:'Y-m-d' }}"
-                     style="border-radius: 12px;">
-            </div>
-
-            <div class="col-md-6">
-              <label class="form-label fw-bold small text-muted text-uppercase">Imagem</label>
-              <input type="file" name="imagem"
-                     class="form-control border-info-subtle shadow-sm"
-                     style="border-radius: 12px;">
-            </div>
-
+        <!-- STATUS / LOCAL -->
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label>Status</label>
+            <select name="status" required>
+              <option value="perdido" {% if item.status == 'perdido' %}selected{% endif %}>Perdido</option>
+              <option value="achado" {% if item.status == 'achado' %}selected{% endif %}>Achado</option>
+            </select>
           </div>
 
+          <div class="col-md-6">
+            <label>Local</label>
+            <input
+              type="text"
+              name="local"
+              value="{{ item.local|default_if_none:'' }}"
+              required
+              placeholder="Ex: IFRN / Centro / Rua..."
+            >
+          </div>
         </div>
 
-        <!-- FOOTER -->
-        <div class="modal-footer border-0 p-4 pt-0" style="background: #f8fdff;">
-          <button type="button"
-                  class="btn btn-light px-4 fw-semibold"
-                  data-bs-dismiss="modal"
-                  style="border-radius: 15px;">
-            Cancelar
-          </button>
+        <!-- DATA -->
+        <label>Data</label>
+        <input
+          type="date"
+          name="data"
+          value="{{ item.data|date:'Y-m-d' }}"
+        >
 
-          <button type="submit"
-                  class="btn text-white px-4 fw-bold shadow"
-                  style="background: linear-gradient(to right, #0d4e5d, #1a7a8c);
-                         border-radius: 15px; border: none;">
+        <!-- BOTOES -->
+        <div class="d-flex justify-content-between">
+          <a href="{% if next %}{{ next }}{% else %}{% url 'menu' %}{% endif %}" class="btn btn-secondary">
+            Cancelar
+          </a>
+
+          <button type="submit" class="btn btn-primary">
             Salvar Alterações
           </button>
         </div>
 
       </form>
-
     </div>
+
   </div>
 </div>
+
+{% endblock %}
