@@ -1,0 +1,59 @@
+/* Container do card */
+.card {
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+/* Imagem do item */
+.item-img-preview {
+    max-width: 100%;
+    max-height: 250px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+/* Botão de alterar foto */
+.btn-outline-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.3rem;
+    font-weight: 500;
+}
+
+/* Labels do formulário */
+.form-label {
+    font-size: 0.95rem;
+}
+
+/* Inputs e selects arredondados */
+.form-control,
+.form-select {
+    border-radius: 8px;
+}
+
+/* Botões principais */
+.btn-primary {
+    background: linear-gradient(135deg, #0d4e5d, #1a7a8c);
+    border: none;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #0b3f49, #176573);
+}
+
+/* Responsividade */
+@media (max-width: 767px) {
+    .row.g-0 {
+        flex-direction: column;
+    }
+
+    .col-md-4,
+    .col-md-8 {
+        max-width: 100%;
+    }
+
+    .item-img-preview {
+        max-height: 200px;
+    }
+}

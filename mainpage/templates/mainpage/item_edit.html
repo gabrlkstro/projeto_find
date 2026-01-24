@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'mainpage/css/item_edit.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css">
+
+<div class="container mt-5">
+  <div class="edit-card">
+
+    <!-- COLUNA IMAGEM -->
+    <div class="item-img-col">
+
+      {% if item.imagem %}
+        <img src="{{ item.imagem.url }}" alt="Imagem do item" class="item-img-preview">
+      {% else %}
+        <img src="{% static 'mainpage/img/item-default.png' %}" alt="Imagem padrão" class="item-img-preview">
+      {% endif %}
+
+      <!-- Form só para trocar imagem (auto submit) -->
+      <form method="post" enctype="multipart/form-data" action="?next={{ next|default:''|urlencode }}" id="form-img">
+        {% csrf_token %}
+        <label for="imagem" class="upload-badge-item shadow" title="Alterar foto">
+          <i class="bi bi-camera-fill"></i>
+        </label>
+        <input type="file" name="imagem" id="imagem" hidden onchange="document.getElementById('form-img').submit()">
+      </form>
+
+    </div>
+
+    <!-- COLUNA FORM -->
+    <div class="form-col">
+      <h4>Editar Item</h4>
+
+      <form method="post" enctype="multipart/form-data" action="?next={{ next|default:''|urlencode }}">
+        {% csrf_token %}
+
+        <!-- TÍTULO -->
+        <label>Título</label>
+        <input
+          type="text"
+          name="titulo"
+          value="{{ item.titulo|default_if_none:'' }}"
+          required
+          placeholder="Ex: Carteira preta"
+        >
+
+        <!-- CATEGORIA -->
+        <label>Categoria</label>
+        <select name="categoria" required>
+          {% for cat in categorias %}
+            <option value="{{ cat.id }}" {% if item.categoria_id == cat.id %}selected{% endif %}>
+              {{ cat.nome }}
+            </option>
+          {% endfor %}
+        </select>
+
+        <!-- DESCRIÇÃO -->
+        <label>Descrição</label>
+        <textarea name="descricao" rows="3" placeholder="Descreva o item...">{{ item.descricao|default_if_none:'' }}</textarea>
+
+        <!-- STATUS / LOCAL -->
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label>Status</label>
+            <select name="status" required>
+              <option value="perdido" {% if item.status == 'perdido' %}selected{% endif %}>Perdido</option>
+              <option value="achado" {% if item.status == 'achado' %}selected{% endif %}>Achado</option>
+            </select>
+          </div>
+
+          <div class="col-md-6">
+            <label>Local</label>
+            <input
+              type="text"
+              name="local"
+              value="{{ item.local|default_if_none:'' }}"
+              required
+              placeholder="Ex: IFRN / Centro / Rua..."
+            >
+          </div>
+        </div>
+
+        <!-- DATA -->
+        <label>Data</label>
+        <input
+          type="date"
+          name="data"
+          value="{{ item.data|date:'Y-m-d' }}"
+        >
+
+        <!-- BOTOES -->
+        <div class="d-flex justify-content-between">
+          <a href="{% if next %}{{ next }}{% else %}{% url 'menu' %}{% endif %}" class="btn btn-secondary">
+            Cancelar
+          </a>
+
+          <button type="submit" class="btn btn-primary">
+            Salvar Alterações
+          </button>
+        </div>
+
+      </form>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}

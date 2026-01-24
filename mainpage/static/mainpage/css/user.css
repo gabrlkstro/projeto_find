@@ -1,0 +1,252 @@
+/* ================= CARD USUÁRIO ================= */
+.user-card {
+    background-color: rgba(171, 232, 255, 0.45);
+    border-radius: 18px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px 20px;
+    text-align: center;
+}
+
+.user-card .avatar {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    margin-bottom: 20px;
+    border: 2px solid transparent;
+    background-image:
+        linear-gradient(white, white),
+        linear-gradient(90deg, #000102, #0385b4);
+    background-origin: border-box;
+    background-clip: content-box, border-box;
+}
+
+.user-card .profile-pic {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* Badge câmera */
+.upload-badge {
+    position: absolute;
+    bottom: 6px;
+    right: 6px;
+    background: #01627a;
+    color: white;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.upload-badge:hover {
+    transform: scale(1.08);
+    background: #032e38;
+}
+
+.user-card .btn {
+    border-radius: 30px;
+    background: linear-gradient(90deg, #002a35, #01627ad3);
+    border: none;
+}
+
+.user-card .btn:hover {
+    background: linear-gradient(90deg, #001f24, #01404ad3);
+}
+
+/* ================= MEUS ITENS ================= */
+.items-card {
+    background-color: rgba(171, 232, 255, 0.45);
+    border-radius: 12px;
+}
+
+.items-card .card-header {
+    background: #004254;
+    color: #fff;
+    padding: 18px 26px;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+}
+
+.items-card .card-body {
+    padding: 22px;
+}
+
+.btn-sm {
+    padding: 6px 16px;
+    background-color: #ffffff;
+    color: black;
+    font-size: 0.85rem;
+}
+
+/* ===== ITEM LISTA (CORRIGIDO) ===== */
+.item-lista-horizontal {
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 14px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+/* Colunas internas */
+.item-col-img {
+    flex: 0 0 auto;
+}
+
+.item-col-info {
+    flex: 1 1 auto;
+    min-width: 0; /* evita quebrar o layout do text-truncate */
+}
+
+.item-col-actions {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+}
+
+/* Foto */
+.item-img-container {
+    width: 78px;
+    height: 78px;
+    min-width: 78px;
+    overflow: hidden;
+    border-radius: 10px;
+    background: #f0f0f0;
+}
+
+.item-img-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* Botão ver item */
+.btn-ver-lista {
+    background-color: #002a35;
+    color: white;
+    border-radius: 50px;
+    font-size: 0.70rem;
+    font-weight: 800;
+    padding: 8px 18px;
+    border: none;
+    text-transform: uppercase;
+    text-decoration: none;
+}
+
+.btn-ver-lista:hover {
+    background-color: #004d61;
+    color: #fff;
+}
+
+/* Linha de ações (editar, excluir, status) */
+.item-actions-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* STATUS HORIZONTAL */
+.status-badge-horizontal {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 10px;
+    color: white;
+    font-size: 0.95rem;
+    flex-shrink: 0;
+}
+
+.status-badge-horizontal.status-perdido {
+    background-color: #ff4d4d;
+}
+
+.status-badge-horizontal.status-achado {
+    background-color: #28c76f;
+}
+
+/* BOTÃO VER TODOS */
+.btn-ver-todos-custom {
+    background-color: transparent;
+    color: #004254;
+    border: 2px solid #004254;
+    border-radius: 50px;
+    padding: 10px 25px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.btn-ver-todos-custom:hover {
+    background-color: #004254;
+    color: #ffffff;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 66, 84, 0.3);
+}
+
+/* ================= ESTATÍSTICAS (CORRIGIDO) ================= */
+.stats-card {
+    background-color: rgba(171, 232, 255, 0.45);
+    border-radius: 18px;
+    margin-top: 0; /* quem controla é o row mt-4 do HTML */
+}
+
+/* Cada box */
+.stat-card {
+    border: 1px solid #032e38;
+    border-radius: 18px;
+    padding: 14px 10px;
+    background: rgba(255, 255, 255, 0.35);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 70px;
+}
+
+.stat-card small {
+    font-size: 0.70rem;
+    letter-spacing: 0.6px;
+    font-weight: 700;
+    color: #003a49;
+}
+
+/* ================= RESPONSIVO ================= */
+@media (max-width: 768px) {
+    .items-card .card-header {
+        padding: 16px 16px;
+    }
+
+    .items-card .card-body {
+        padding: 16px;
+    }
+
+    .item-lista-horizontal {
+        padding: 12px;
+        gap: 12px;
+    }
+
+    .item-img-container {
+        width: 70px;
+        height: 70px;
+        min-width: 70px;
+    }
+
+    .item-col-actions {
+        gap: 8px;
+    }
+}

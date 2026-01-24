@@ -1,16 +1,49 @@
-{% extends 'base.html' %}
 {% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Find - Pagina inicial</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
 
-{% block title %}Início{% endblock %}
+    <link rel="stylesheet" href="{% static 'mainpage/css/index.css' %}">
+    <link rel="icon" type="image/png" href="{% static 'mainpage/img/find.png' %}">
+</head>
 
-{% block content %}
-<h2>LOGO</h2>
-<p>SE você perdeu algo acaba de ENCONTRAR a plataforma certa!</p>
-<p>
-    <a href="{% url 'register' %}">CADASTRE-SE</a>
-</p>
-<p>
-    Já tem uma conta?
-    <a href="{% url 'login' %}">Entrar</a>
-</p>
-{% endblock %}
+<body>
+
+<div class="container hero-container text-center py-5">
+
+    <!-- LOGO -->
+    <div class="mb-4 logo animate delay-1">
+        <img src="{% static 'mainpage/img/logo-find.png' %}" alt="Logo Find">
+    </div>
+
+    <!-- TEXTO PRINCIPAL -->
+    <div class="mb-4 animate delay-2">
+        <h1 class="fw-bold text-title">
+            Se você <span class="title-color">PERDEU</span> algo acaba de <br>
+            <span class="title-color">ENCONTRAR</span> a plataforma certa!
+        </h1>
+    </div>
+
+    <!-- BOTÃO -->
+    <div class="mb-1 animate delay-3">
+        <a href="{% url 'register' %}" class="btn-primary">
+            CADASTRE-SE
+        </a>
+    </div>
+
+    <!-- LOGIN -->
+    <div class="text2 animate delay-4">
+        <h5>
+            Já tem uma conta?
+            <a href="{% url 'login' %}" class="fw-bold">Entrar</a>
+        </h5>
+    </div>
+
+</div>
+
+</body>
+</html>

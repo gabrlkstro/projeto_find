@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Meus Chats - FIND{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'mainpage/css/chats.css' %}">
+
+<div class="container-fluid py-4 chats-wrap px-1">
+
+  <!-- TÍTULO -->
+  <div class="mb-2">
+    <h4 class="mb-1 chats-title">Meus Chats</h4>
+    <small class="text-muted chats-subtitle">
+      Chats iniciados a partir de itens
+    </small>
+  </div>
+
+  <!-- LISTA DE CHATS -->
+  <div class="list-group shadow-sm chats-list">
+
+    {% for chat in chats %}
+      <a href="{% url 'chat_detail' chat.id %}"
+         class="list-group-item list-group-item-action d-flex justify-content-between align-items-center chat-row">
+
+        <div>
+          <div class="chat-item-title">
+            {{ chat.item.titulo }}
+          </div>
+
+          <div class="chat-meta">
+            {% if request.user.id == chat.dono_item_id %}
+              Interessado: {{ chat.criado_por.username }}
+            {% else %}
+              Dono do item: {{ chat.dono_item.username }}
+            {% endif %}
+            • {{ chat.atualizado_em|date:"d/m/Y H:i" }}
+          </div>
+        </div>
+
+        <span class="badge chat-badge {% if chat.status == 'ativo' %}bg-success{% else %}bg-secondary{% endif %}">
+          {{ chat.get_status_display }}
+        </span>
+
+      </a>
+    {% empty %}
+      <div class="list-group-item text-center text-muted chats-empty">
+        Você ainda não tem chats.<br>
+        Abra um item e clique em <b>“Falar com o Usuário”</b>.
+      </div>
+    {% endfor %}
+
+  </div>
+
+</div>
+{% endblock %}

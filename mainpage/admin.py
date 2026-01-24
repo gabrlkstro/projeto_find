@@ -1,3 +1,14 @@
 from django.contrib import admin
+from .models import (
+    Profile,
+    Categoria,
+    Item,
+    Chat,
+    Mensagem
+)
 
-# Register your models here.
+admin.site.register(Profile)
+admin.site.register(Categoria)
+admin.site.register(Item)
+admin.site.register(Chat)
+admin.site.register(Mensagem)

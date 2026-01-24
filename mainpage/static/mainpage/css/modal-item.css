@@ -1,0 +1,91 @@
+/* ===== MODAL BASE ===== */
+#modalNovoItem .modal-content {
+    border-radius: 10px; /* Mais quadrado conforme a foto 2 */
+    background-color: #b4ebff;
+    border: 1px solid #333;
+    padding: 20px;
+}
+
+/* ===== HEADER ===== */
+#modalNovoItem .modal-header {
+    position: relative;
+    border: none;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 0;
+}
+#modalNovoItem .btn-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+}
+#modalNovoItem .modal-header img {
+    height: 50px;
+    margin-bottom: 10px;
+}
+
+#modalNovoItem .modal-title {
+    color: #000;
+    font-weight: 500;
+    font-size: 1.4rem;
+    border-top: 2px solid #003845; /* Linha em cima do título igual à foto */
+    padding-top: 10px;
+    width: 60%;
+    text-align: center;
+}
+
+/* ===== LABELS (CAIXA ALTA) ===== */
+#modalNovoItem .form-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase; /* TRANSFORMA EM MAIÚSCULO */
+    color: #333;
+    margin-bottom: 4px;
+}
+
+/* ===== INPUTS ===== */
+#modalNovoItem .form-control,
+#modalNovoItem .form-select {
+    background: #a8a8a8b1; /* Cinza da segunda imagem */
+    border: none;
+    border-radius: 2px; /* Quase nada de arredondamento */
+    height: 40px;
+}
+
+#modalNovoItem textarea.form-control {
+    height: 120px;
+}
+
+/* ===== BOTÕES (ESTILO RETANGULAR) ===== */
+#modalNovoItem .modal-footer {
+    border: none;
+    padding-top: 20px;
+}
+
+/* Botão Salvar (Azul Escuro) */
+#modalNovoItem .btn-salvar {
+    background: linear-gradient(to right, #002d38, #005a70);
+    color: white;
+    border-radius: 12px;
+    padding: 10px 0;
+    width: 45%;
+    font-weight: bold;
+    border: none;
+}
+
+/* Botão Cancelar (Branco com borda) */
+#modalNovoItem .btn-cancelar {
+    background: white;
+    color: #003845;
+    border: 2px solid #003845;
+    border-radius: 12px;
+    padding: 10px 0;
+    width: 45%;
+    font-weight: bold;
+}
+
+/* Efeito de sublinhado nos textos dos botões */
+#modalNovoItem .btn-salvar u, 
+#modalNovoItem .btn-cancelar u {
+    text-decoration-thickness: 2px;
+}

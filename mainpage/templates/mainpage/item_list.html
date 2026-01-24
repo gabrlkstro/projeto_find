@@ -1,0 +1,467 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ page_title|default:"Todos os Itens" }} - FIND{% endblock %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'mainpage/css/menu.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css">
+
+<section class="hero-main py-5">
+
+  <div class="container-fluid title-gradient text-center">
+    <h1 class="fw-bold">{{ page_title|default:"Todos os Itens" }}</h1>
+    <p class="lead">
+      {% if page_title == "Itens Perdidos" %}
+        Itens que precisam ser encontrados
+      {% elif page_title == "Itens Encontrados" %}
+        Itens que foram encontrados
+      {% else %}
+        Encontre itens perdidos ou cadastre itens encontrados
+      {% endif %}
+    </p>
+  </div>
+
+  <div class="d-flex justify-content-center mt-4">
+    <form method="GET" class="input-group search-bar">
+      <span class="input-group-text">
+        <i class="bi bi-search"></i>
+      </span>
+
+      <input
+        type="text"
+        class="form-control"
+        name="q"
+        value="{{ q|default:'' }}"
+        placeholder="Buscar itens (nome, descrição, local...)"
+      >
+
+      <input type="hidden" name="status" value="{{ status|default:'todos' }}">
+      <input type="hidden" name="categoria" value="{{ categoria|default:'todas' }}">
+    </form>
+  </div>
+
+  <div class="d-flex justify-content-center mt-3">
+    <form method="GET" class="filters-box" style="width: 70%; max-width: 900px;">
+      <div class="row g-3 align-items-end">
+
+        <div class="col-12 col-md-4">
+          <label class="filters-label">BUSCAR</label>
+          <input
+            type="text"
+            class="form-control filters-input"
+            name="q"
+            value="{{ q|default:'' }}"
+            placeholder="Nome"
+          >
+        </div>
+
+        {% if page_title != "Itens Perdidos" and page_title != "Itens Encontrados" %}
+        <div class="col-12 col-md-3">
+          <label class="filters-label">STATUS</label>
+          <select name="status" class="form-select filters-input">
+            <option value="todos" {% if status == 'todos' %}selected{% endif %}>Todos</option>
+            <option value="perdido" {% if status == 'perdido' %}selected{% endif %}>Perdidos</option>
+            <option value="achado" {% if status == 'achado' %}selected{% endif %}>Encontrados</option>
+          </select>
+        </div>
+        {% endif %}
+
+        <div class="col-12 col-md-3">
+          <label class="filters-label">CATEGORIA</label>
+          <select name="categoria" class="form-select filters-input">
+            <option value="todas" {% if categoria == 'todas' %}selected{% endif %}>Todas</option>
+            {% for cat in categorias %}
+              <option value="{{ cat.id }}" {% if categoria == cat.id|stringformat:"s" %}selected{% endif %}>
+                {{ cat.nome }}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="col-12 col-md-2 d-grid">
+          <button type="submit" class="btn btn-filtrar">
+            FILTRAR
+          </button>
+        </div>
+
+      </div>
+    </form>
+  </div>
+
+</section>
+
+{% if page_title == "Itens Perdidos" or page_title == "Itens Encontrados" %}
+<section class="items-section">
+  <div class="container mt-4">
+    <h2 class="text-center mb-4" style="font-weight: 700; color: #333;">
+      {% if page_title == "Itens Perdidos" %}
+        Itens Perdidos
+      {% elif page_title == "Itens Encontrados" %}
+        Itens Encontrados
+      {% endif %}
+    </h2>
+    <div class="row g-4 justify-content-start">
+
+      {% if itens %}
+        {% for item in itens %}
+          <div class="col-12 col-sm-6 col-md-4 col-xl-3">
+            <div class="menu-item-card">
+
+              <div class="menu-item-img">
+                {% if item.imagem %}
+                  <img src="{{ item.imagem.url }}" alt="{{ item.titulo }}">
+                {% else %}
+                  <img src="{% static 'mainpage/img/item-default.png' %}" alt="Imagem padrão">
+                {% endif %}
+              </div>
+
+              <div class="menu-item-body">
+                <h6 class="menu-item-title">{{ item.titulo }}</h6>
+
+                <p class="menu-item-desc">
+                  {{ item.descricao|truncatechars:85 }}
+                </p>
+
+                <div class="menu-item-meta">
+
+                  <div class="menu-item-meta-line">
+                    <span class="meta-left">
+                      <i class="bi bi-tag"></i>
+                      {{ item.categoria.nome|default:"Sem categoria" }}
+                    </span>
+
+                    <span class="meta-right">
+                      <i class="bi bi-geo-alt"></i>
+                      {{ item.local|default:"---" }}
+                    </span>
+                  </div>
+
+                  <div class="menu-item-meta-line">
+                    <span class="meta-left">
+                      <i class="bi bi-calendar3"></i>
+                      {{ item.criado_em|date:"d/m/Y" }}
+                    </span>
+
+                    <span class="meta-right">
+                      <i class="bi bi-clock"></i>
+                      {{ item.criado_em|time:"H:i" }}
+                    </span>
+                  </div>
+
+                </div>
+
+                <div class="menu-item-actions">
+                  <a href="{% url 'item_detail' item.slug %}" class="btn-ver-item">
+                    VER ITEM
+                  </a>
+
+                  {% if item.status == "achado" %}
+                    <span class="status-square status-green" title="Achado">
+                      <i class="bi bi-check-circle-fill"></i>
+                    </span>
+                  {% else %}
+                    <span class="status-square status-red" title="Perdido">
+                      <i class="bi bi-exclamation-triangle-fill"></i>
+                    </span>
+                  {% endif %}
+                </div>
+
+                {% if user == item.usuario %}
+                <div class="menu-item-actions mt-2" style="gap: 8px;">
+                  <a href="{% url 'item_edit' item.id %}?next={{ request.path }}" class="btn btn-sm btn-primary" style="flex: 1;">
+                    <i class="bi bi-pencil-fill"></i> Editar
+                  </a>
+
+                  <button type="button" class="btn btn-sm btn-danger" style="flex: 1;" data-bs-toggle="modal" data-bs-target="#modalDelete{{ item.id }}">
+                    <i class="bi bi-trash-fill"></i> Excluir
+                  </button>
+                </div>
+                {% endif %}
+
+              </div>
+            </div>
+          </div>
+
+          {% if user == item.usuario %}
+            {% include 'mainpage/item_delete.html' %}
+          {% endif %}
+
+        {% endfor %}
+      {% else %}
+        <div class="col-12">
+          <p class="text-center text-muted mt-4">Nenhum item encontrado com esses filtros.</p>
+        </div>
+      {% endif %}
+
+    </div>
+
+    {% if has_more %}
+    <div class="text-center mt-4">
+      <a href="?q={{ q|default:'' }}&status={{ status|default:'todos' }}&categoria={{ categoria|default:'todas' }}&page={{ next_page }}" class="btn btn-primary" style="background: #002a35; border: none; border-radius: 8px; padding: 10px 30px; font-weight: 700;">
+        CARREGAR MAIS
+      </a>
+    </div>
+    {% endif %}
+
+  </div>
+</section>
+{% endif %}
+
+{% if not page_title or page_title == "Todos os Itens" %}
+<section class="items-section">
+  <div class="container mt-4">
+    <h2 class="text-center mb-4" style="font-weight: 700; color: #333;">Todos os Itens</h2>
+    <div class="row g-4 justify-content-start">
+
+      {% if itens %}
+        {% for item in itens %}
+          <div class="col-12 col-sm-6 col-md-4 col-xl-3">
+            <div class="menu-item-card">
+
+              <div class="menu-item-img">
+                {% if item.imagem %}
+                  <img src="{{ item.imagem.url }}" alt="{{ item.titulo }}">
+                {% else %}
+                  <img src="{% static 'mainpage/img/item-default.png' %}" alt="Imagem padrão">
+                {% endif %}
+              </div>
+
+              <div class="menu-item-body">
+                <h6 class="menu-item-title">{{ item.titulo }}</h6>
+
+                <p class="menu-item-desc">
+                  {{ item.descricao|truncatechars:85 }}
+                </p>
+
+                <div class="menu-item-meta">
+
+                  <div class="menu-item-meta-line">
+                    <span class="meta-left">
+                      <i class="bi bi-tag"></i>
+                      {{ item.categoria.nome|default:"Sem categoria" }}
+                    </span>
+
+                    <span class="meta-right">
+                      <i class="bi bi-geo-alt"></i>
+                      {{ item.local|default:"---" }}
+                    </span>
+                  </div>
+
+                  <div class="menu-item-meta-line">
+                    <span class="meta-left">
+                      <i class="bi bi-calendar3"></i>
+                      {{ item.criado_em|date:"d/m/Y" }}
+                    </span>
+
+                    <span class="meta-right">
+                      <i class="bi bi-clock"></i>
+                      {{ item.criado_em|time:"H:i" }}
+                    </span>
+                  </div>
+
+                </div>
+
+                <div class="menu-item-actions">
+                  <a href="{% url 'item_detail' item.slug %}" class="btn-ver-item">
+                    VER ITEM
+                  </a>
+
+                  {% if item.status == "achado" %}
+                    <span class="status-square status-green" title="Achado">
+                      <i class="bi bi-check-circle-fill"></i>
+                    </span>
+                  {% else %}
+                    <span class="status-square status-red" title="Perdido">
+                      <i class="bi bi-exclamation-triangle-fill"></i>
+                    </span>
+                  {% endif %}
+                </div>
+
+                {% if user == item.usuario %}
+                <div class="menu-item-actions mt-2" style="gap: 8px;">
+                  <a href="{% url 'item_edit' item.id %}?next={{ request.path }}" class="btn btn-sm btn-primary" style="flex: 1;">
+                    <i class="bi bi-pencil-fill"></i> Editar
+                  </a>
+
+                  <button type="button" class="btn btn-sm btn-danger" style="flex: 1;" data-bs-toggle="modal" data-bs-target="#modalDelete{{ item.id }}">
+                    <i class="bi bi-trash-fill"></i> Excluir
+                  </button>
+                </div>
+                {% endif %}
+
+              </div>
+            </div>
+          </div>
+
+          {% if user == item.usuario %}
+            {% include 'mainpage/item_delete.html' %}
+          {% endif %}
+
+        {% endfor %}
+      {% else %}
+        <div class="col-12">
+          <p class="text-center text-muted mt-4">Nenhum item encontrado com esses filtros.</p>
+        </div>
+      {% endif %}
+
+    </div>
+
+    {% if has_more %}
+    <div class="text-center mt-4">
+      <a href="?q={{ q|default:'' }}&status={{ status|default:'todos' }}&categoria={{ categoria|default:'todas' }}&page={{ next_page }}" class="btn btn-primary" style="background: #002a35; border: none; border-radius: 8px; padding: 10px 30px; font-weight: 700;">
+        CARREGAR MAIS
+      </a>
+    </div>
+    {% endif %}
+
+  </div>
+</section>
+{% endif %}
+
+<section class="hero-main py-5">
+  <div class="container text-center mt-4">
+    <div class="row row-cols-1 row-cols-md-4 g-4 justify-content-center">
+
+      <div class="col">
+        <div class="card status-card">
+          <i class="bi bi-box-seam icon-total"></i>
+          <h3>{{ total_itens }}</h3>
+          <p>TOTAL DE ITENS</p>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="card status-card">
+          <i class="bi bi-exclamation-triangle icon-perdidos"></i>
+          <h3>{{ perdidos }}</h3>
+          <p>ITENS PERDIDOS</p>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="card status-card">
+          <i class="bi bi-check-circle icon-encontrados"></i>
+          <h3>{{ encontrados }}</h3>
+          <p>ITENS ENCONTRADOS</p>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="card status-card">
+          <i class="bi bi-people-fill icon-corresp"></i>
+          <h3>{{ correspondencias|default:0 }}</h3>
+          <p>CORRESPONDÊNCIAS</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <button class="btn btn-primary btn-cadastrar-item"
+          data-bs-toggle="modal"
+          data-bs-target="#modalNovoItem">
+    <i class="bi bi-plus-lg me-2"></i> CADASTRAR ITEM
+  </button>
+
+</section>
+
+{% if page_title == "Itens Perdidos" or page_title == "Itens Encontrados" %}
+<section class="items-section">
+  <div class="container mt-5">
+    <h2 class="text-center mb-4" style="font-weight: 700; color: #333;">Itens Recentes</h2>
+    <div class="row g-4 justify-content-start">
+
+      {% if itens_recentes %}
+        {% for item in itens_recentes %}
+          <div class="col-12 col-sm-6 col-md-4 col-xl-3">
+            <div class="menu-item-card">
+
+              <div class="menu-item-img">
+                {% if item.imagem %}
+                  <img src="{{ item.imagem.url }}" alt="{{ item.titulo %}">
+                {% else %}
+                  <img src="{% static 'mainpage/img/item-default.png' %}" alt="Imagem padrão">
+                {% endif %}
+              </div>
+
+              <div class="menu-item-body">
+                <h6 class="menu-item-title">{{ item.titulo }}</h6>
+
+                <p class="menu-item-desc">
+                  {{ item.descricao|truncatechars:85 }}
+                </p>
+
+                <div class="menu-item-meta">
+
+                  <div class="menu-item-meta-line">
+                    <span class="meta-left">
+                      <i class="bi bi-tag"></i>
+                      {{ item.categoria.nome|default:"Sem categoria" }}
+                    </span>
+
+                    <span class="meta-right">
+                      <i class="bi bi-geo-alt"></i>
+                      {{ item.local|default:"---" }}
+                    </span>
+                  </div>
+
+                  <div class="menu-item-meta-line">
+                    <span class="meta-left">
+                      <i class="bi bi-calendar3"></i>
+                      {{ item.criado_em|date:"d/m/Y" }}
+                    </span>
+
+                    <span class="meta-right">
+                      <i class="bi bi-clock"></i>
+                      {{ item.criado_em|time:"H:i" }}
+                    </span>
+                  </div>
+
+                </div>
+
+                <div class="menu-item-actions">
+                  <a href="{% url 'item_detail' item.slug %}" class="btn-ver-item">
+                    VER ITEM
+                  </a>
+
+                  {% if item.status == "achado" %}
+                    <span class="status-square status-green" title="Achado">
+                      <i class="bi bi-check-circle-fill"></i>
+                    </span>
+                  {% else %}
+                    <span class="status-square status-red" title="Perdido">
+                      <i class="bi bi-exclamation-triangle-fill"></i>
+                    </span>
+                  {% endif %}
+                </div>
+
+                {% if user == item.usuario %}
+                <div class="menu-item-actions mt-2" style="gap: 8px;">
+                  <a href="{% url 'item_edit' item.id %}?next={{ request.path }}" class="btn btn-sm btn-primary" style="flex: 1;">
+                    <i class="bi bi-pencil-fill"></i> Editar
+                  </a>
+
+                  <button type="button" class="btn btn-sm btn-danger" style="flex: 1;" data-bs-toggle="modal" data-bs-target="#modalDelete{{ item.id }}">
+                    <i class="bi bi-trash-fill"></i> Excluir
+                  </button>
+                </div>
+                {% endif %}
+
+              </div>
+            </div>
+          </div>
+
+          {% if user == item.usuario %}
+            {% include 'mainpage/item_delete.html' %}
+          {% endif %}
+
+        {% endfor %}
+      {% endif %}
+
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{% endblock %}

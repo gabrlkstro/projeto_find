@@ -1,0 +1,176 @@
+/* ================= RESET BÁSICO ================= */
+* { box-sizing: border-box; }
+
+/* ================= BODY / FUNDO ================= */
+body {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5feff 50%, #e4f7ff 100%);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* ================= BLURS DECORATIVOS ================= */
+body::before,
+body::after{
+  content:"";
+  position: fixed;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: 0.1;
+  pointer-events: none;
+  z-index: -1;
+}
+body::before { background:#00d5ff; top:-140px; left:-140px; }
+body::after  { background:#90dbf4; bottom:-140px; right:-140px; }
+
+/* ================= NAVBAR ================= */
+.navbar{
+  background-color: #7adafd !important;
+  min-height: 90px;
+  padding: 0 22px;
+  box-shadow: 0 4px 12px rgba(0,0,0,.08);
+}
+
+.navbar-brand img{
+  height: 55px;
+}
+
+/* Botão do bootstrap (mobile) ficar visível no fundo azul */
+.navbar-toggler{
+  border: 0 !important;
+  box-shadow: none !important;
+}
+.navbar-toggler-icon{
+  filter: brightness(0) invert(1); /* deixa o "hamburger" branco */
+}
+
+/* Área do collapse (bootstrap) */
+.navbar-collapse{
+  /* garante que no desktop fica alinhado à direita */
+  justify-content: flex-end;
+}
+
+/* Container dos links */
+.nav-links{
+  display: flex;
+  align-items: center;
+  gap: 58px;          /* ✅ espaçamento mais equilibrado */
+  padding: 10px 0;
+}
+
+/* Link padrão da navbar */
+.nav-links .icon{
+  position: relative;             /* ✅ underline do ::after funciona */
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+
+  font-weight: 700;
+  text-decoration: none;
+
+  background: linear-gradient(90deg, #000102, #0385b4);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  padding: 8px 6px;         
+  border-radius: 10px;
+  transition: transform .2s ease, opacity .2s ease;
+}
+
+/* hover */
+.nav-links .icon:hover{
+  transform: translateY(-2px);
+  opacity: 1;
+}
+
+/* underline animado */
+.nav-links .icon::after{
+  content:"";
+  position:absolute;
+  left: 6px;
+  right: 6px;
+  bottom: 2px;
+
+  height: 0px;
+  width: 0%;
+  background: transparent;
+  transition: width .25s ease;
+}
+.nav-links .icon:hover::after{
+  width: 0%;
+}
+
+/* Avatar */
+.user-icon{
+  width: 52px;
+  height: 52px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid transparent;
+
+  background-image: linear-gradient(white, white),
+                    linear-gradient(90deg, #000102, #0385b4);
+  background-origin: border-box;
+  background-clip: content-box, border-box;
+
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+.user-icon:hover{
+  transform: scale(1.06);
+  box-shadow: 0 6px 16px rgba(0,0,0,.15);
+}
+
+
+.navbar a{
+  text-decoration: none;
+}
+
+/* ================= MAIN ================= */
+main{
+  min-height: calc(100vh - 180px);
+  padding: 40px 20px;
+}
+
+/* ================= FOOTER ================= */
+footer{
+  background: #7adafd;
+  text-align: center;
+  padding: 20px 10px;
+  font-weight: 700;
+  color: #000;
+  box-shadow: 0 -4px 10px rgba(0,0,0,.05);
+}
+
+/* ================= MODAL Z-INDEX ================= */
+.modal { position: fixed !important; z-index: 9999 !important; }
+.modal-backdrop { z-index: 9998 !important; }
+
+/* ================= RESPONSIVO ================= */
+@media (max-width: 992px){
+  /* quando abre o collapse, coloca os links em coluna */
+  .nav-links{
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .navbar{
+    min-height: auto;
+    padding: 12px 16px;
+  }
+
+  .user-icon{
+    width: 48px;
+    height: 48px;
+  }
+}
+
+@media (max-width: 768px){
+  main{ padding: 25px 15px; }
+}
