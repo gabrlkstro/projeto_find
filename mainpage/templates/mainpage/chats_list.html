@@ -5,6 +5,7 @@
 
 {% block content %}
 <link rel="stylesheet" href="{% static 'mainpage/css/chats.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css">
 
 <div class="container chats-wrap py-4">
 
@@ -24,7 +25,7 @@
         <div class="me-3 w-100">
           <div class="d-flex align-items-center justify-content-between gap-3">
             <div class="chat-item-title text-truncate">
-              {{ chat.item.titulo }}
+              {% if chat.item %}{{ chat.item.titulo }}{% else %}Item removido{% endif %}
             </div>
 
             <span class="badge chat-badge {% if chat.status == 'ativo' %}bg-success{% else %}bg-secondary{% endif %}">

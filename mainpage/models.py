@@ -67,7 +67,14 @@ class Chat(models.Model):
         ('fechado', 'Fechado'),
     ]
 
-    item = models.ForeignKey(Item, on_delete=models.CASCADE, related_name='chats')
+    item = models.ForeignKey(
+        Item,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='chats'
+    )
+
     criado_por = models.ForeignKey(User, on_delete=models.CASCADE, related_name='chats_criados')
     dono_item = models.ForeignKey(User, on_delete=models.CASCADE, related_name='chats_como_dono')
 
@@ -75,14 +82,10 @@ class Chat(models.Model):
     atualizado_em = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='ativo')
 
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(fields=['item', 'criado_por', 'dono_item'], name='unique_chat_por_item_e_usuarios')
-        ]
-
     def __str__(self):
-        return f"Chat #{self.id} - {self.item.titulo}"
-
+        if self.item:
+            return f"Chat #{self.id} - {self.item.titulo}"
+        return f"Chat #{self.id} - Item removido"
 
 class Mensagem(models.Model):
     TIPO_CHOICES = [

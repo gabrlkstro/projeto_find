@@ -1,29 +1,108 @@
+/* ================= CONTAINER ================= */
 .chats-wrap {
   max-width: 1100px;
 }
 
+/* ================= TITULO ================= */
 .chats-title {
+  color: #002a35;
   font-weight: 800;
 }
 
-.chats-list .chat-row {
-  padding: 16px 18px;
+.chats-subtitle {
+  color: #003a49;
+  opacity: 0.85;
+}
+
+/* ================= LISTA / CARD ================= */
+.chats-list {
+  border-radius: 18px;
+  overflow: hidden;
+  background-color: rgba(171, 232, 255, 0.45);
   border: none;
-  border-bottom: 1px solid rgba(0,0,0,0.06);
 }
 
+/* Linha (sobrescreve o Bootstrap list-group-item) */
+.chat-row.list-group-item {
+  border: none !important;
+  border-bottom: 1px solid rgba(0, 66, 84, 0.16) !important;
+  padding: 14px 16px;
+  background: rgba(255, 255, 255, 0.75);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+.chat-row.list-group-item:last-child {
+  border-bottom: none !important;
+}
+
+/* Hover */
+.chat-row.list-group-item:hover {
+  background: rgba(255, 255, 255, 0.92);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 18px rgba(0, 66, 84, 0.10);
+}
+
+/* Titulo do item */
 .chat-item-title {
-  font-weight: 800;
-  font-size: 1.05rem;
-  max-width: 75%;
+  color: #002a35;
+  font-weight: 900;
+  font-size: 0.98rem;
+  max-width: 85%;
 }
 
+/* Meta */
 .chat-meta {
-  font-size: .9rem;
+  font-size: 0.82rem;
+  color: rgba(0, 42, 53, 0.75);
 }
 
+/* Badge (mantém padrão do site, mesmo usando bg-success/bg-secondary) */
 .chat-badge {
-  font-weight: 800;
-  padding: 8px 10px;
-  border-radius: 999px;
+  font-size: 0.70rem;
+  font-weight: 900;
+  padding: 6px 10px;
+  border-radius: 50px;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+
+/* Deixa o success/secondary mais "soft" no seu padrão */
+.chat-badge.bg-success {
+  background-color: rgba(40, 199, 111, 0.16) !important;
+  color: #128a45 !important;
+  border: 1px solid rgba(40, 199, 111, 0.35);
+}
+
+.chat-badge.bg-secondary {
+  background-color: rgba(108, 117, 125, 0.14) !important;
+  color: #4a4f55 !important;
+  border: 1px solid rgba(108, 117, 125, 0.35);
+}
+
+/* Ícone seta */
+.chat-row .bi-chevron-right {
+  color: #01627a !important;
+  font-size: 1.15rem;
+}
+
+/* Estado vazio */
+.chats-empty.list-group-item {
+  background: rgba(255, 255, 255, 0.65) !important;
+  border: none !important;
+  border-radius: 18px;
+}
+
+/* ================= RESPONSIVO ================= */
+@media (max-width: 768px) {
+  .chat-row.list-group-item {
+    padding: 12px 12px;
+  }
+
+  .chat-item-title {
+    max-width: 75%;
+  }
+
+  .chat-row .bi-chevron-right {
+    font-size: 1.05rem;
+  }
 }

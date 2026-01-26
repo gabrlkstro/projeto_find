@@ -1,106 +1,173 @@
-/* ===== CARD GERAL ===== */
-.card {
-    background: #d9f4ff;
-    border-radius: 14px;
-    border: 1px solid #002a35;
+/* ===== CARD PRINCIPAL ===== */
+.item-detail-card {
+  background: #dff5ff;
+  border-radius: 16px;
+  border: 1px solid rgba(0,0,0,0.08);
 }
 
 /* ===== IMAGEM ===== */
-.item-image {
-    border-radius: 10px;
+.item-image-wrapper img {
+  width: 100%;
+  height: 340px;
+  object-fit: cover;
+  border-radius: 12px;
 }
 
-.item-image img {
-    width: 100%;
-    height: 360px;
-    object-fit: cover;
-    border-radius: 8px;
+/* ===== STATUS (BADGE DISCRETO) ===== */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  align-self: flex-start;
+  font-size: 0.7rem;
+  font-weight: 900;
+  padding: 4px 12px;
+  border-radius: 999px;
+  color: #fff;
+  line-height: 1;
+  margin-bottom: 8px;
+  width: fit-content;
 }
 
-/* ===== BADGE ===== */
-.badge {
-    font-size: 0.7rem;
-    padding: 6px 10px;
-    border-radius: 6px;
-}
+.status-badge.achado { background-color: #28c76f; }
+.status-badge.perdido { background-color: #ff4d4d; }
+.status-badge.devolvido { background-color: #6c757d; }
 
 /* ===== TEXTO ===== */
-.text-gradient {
-    background: linear-gradient(90deg, #002a35, #00abd6d3);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    font-weight: 700;
+.item-title {
+  font-weight: 900;
+  letter-spacing: -0.2px;
+  color: #002a35;
 }
 
-.item-card p {
-    font-size: 0.9rem;
-    color: #333;
-    margin-top: 10px;
+.item-description {
+  font-size: 0.95rem;
+  font-weight: 500;
+  line-height: 1.55;
+  color: #333;
+  margin-top: 6px;
 }
 
-/* ===== INFO GRID ===== */
-.info-item {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    font-size: 0.85rem;
+/* ===== INFO GRID (Ícone + label em cima + valor embaixo) ===== */
+.item-info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+  margin-top: 10px;
 }
 
-.info-item i {
-    font-size: 1.1rem;
-    color: #0b3c49;
-    margin-right: 6px;
+.info-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
 }
 
-.info-item .label {
-    display: flex;
-    align-items: center;
-    font-size: 0.75rem;
-    color: #6c757d;
-    font-weight: 600;
+.info-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 12px;
+  background: rgba(1, 98, 122, 0.10);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+}
+
+.info-icon i {
+  font-size: 1.05rem;
+  color: #01627a;
+}
+
+.info-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+  min-width: 0;
+}
+
+.info-label {
+  font-size: 0.70rem;
+  font-weight: 900;
+  letter-spacing: 0.35px;
+  text-transform: uppercase;
+  color: rgba(0, 42, 53, 0.55);
+  margin-bottom: 3px;
+}
+
+.info-value {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #001f24;
+  word-break: break-word;
 }
 
 /* ===== CONTATO ===== */
-.contact-card {
-    background: #d9f4ff;
+.contact-detail-card {
+  background: #dff5ff;
+  border-radius: 16px;
+  border: 1px solid rgba(0,0,0,0.08);
 }
 
-.contact-card h1 {
-    font-size: 1.1rem;
-    font-weight: 800;
-    text-align: center;
-    margin-bottom: 20px;
+.contact-title {
+  text-align: center;
+  font-weight: 900;
+  font-size: 0.85rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  color: #002a35;
 }
 
-.contact-card p {
-    font-size: 0.95rem;
-    color: #333;
-    display: flex;
-    align-items: center;
-    margin-bottom: 12px;
+.contact-line {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.90rem;
+  font-weight: 600;
+  margin-bottom: 14px;
+  color: #001f24;
 }
 
-/* ===== BOTÃO ===== */
-.contact-card .btn {
-    background: linear-gradient(90deg, #002a35, #01627ad3);
-    color: white;
-    border-radius: 30px;
-    padding: 10px 28px;
-    font-weight: 600;
-    border: none;
+.contact-line i {
+  color: #01627a;
+  font-size: 1.1rem;
 }
 
-.contact-card .btn:hover {
-    background: #002a35;
+/* ===== BOTÃO CHAT (AZUL FORTE + PRETO) ===== */
+.btn-chat {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  background: linear-gradient(135deg, #001f2a, #007ea7);
+  color: #ffffff;
+  border-radius: 30px;
+  padding: 11px 18px;
+  font-weight: 900;
+  font-size: 0.85rem;
+  text-align: center;
+  border: none;
+  letter-spacing: 0.35px;
+  text-transform: uppercase;
+  box-shadow: 0 6px 16px rgba(0, 126, 167, 0.35);
+  transition: all 0.25s ease;
+  text-decoration: none;
+}
+
+.btn-chat:hover {
+  background: linear-gradient(135deg, #000f15, #006080);
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(0, 96, 128, 0.45);
 }
 
 /* ===== RESPONSIVO ===== */
 @media (max-width: 768px) {
-    .item-image img {
-        height: 260px;
-    }
+  .item-image-wrapper img {
+    height: 260px;
+  }
 
-    .contact-card {
-        margin-top: 20px;
-    }
+  .item-info-grid {
+    grid-template-columns: 1fr;
+  }
 }

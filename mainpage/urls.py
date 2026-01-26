@@ -55,11 +55,15 @@ urlpatterns = [
     path('item/<slug:slug>/', views.item_detail, name='item_detail'),
     path('item/editar/<int:id>/', views.edit_item, name='item_edit'),
     path('item/deletar/<int:id>/', views.delete_item, name='item_delete'),
+    path("meus-itens/", views.my_itens, name="my_itens"),
+
 
     # CHAT
     path('chats/', views.chats_list, name='chats_list'),
     path('chats/iniciar/<int:item_id>/', views.chat_start, name='chat_start'),
     path('chats/<int:chat_id>/', views.chat_detail, name='chat_detail'),
+    path('chats/<int:chat_id>/mensagens/', views.chat_messages, name='chat_messages'),
     path('chats/<int:chat_id>/enviar/', views.chat_send_message, name='chat_send_message'),
     path('chats/<int:chat_id>/fechar/', views.chat_close, name='chat_close'),
+
 ]

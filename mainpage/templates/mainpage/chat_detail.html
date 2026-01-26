@@ -1,58 +1,154 @@
 {% extends "base.html" %}
-
-{% block title %}Meus Chats - FIND{% endblock %}
-
+{% load static %}
 {% block content %}
-<div class="container py-4">
 
-  <div class="d-flex justify-content-between align-items-center mb-3">
-    <div>
-      <h4 class="mb-0">Meus chats</h4>
-      <small class="text-muted">Conversas dos itens</small>
+<link rel="stylesheet" href="{% static 'mainpage/css/chat_detail.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css">
+
+<div class="container py-4 chat-shell">
+
+  <div class="card chat-card">
+    <!-- HEADER -->
+    <div class="chat-header d-flex align-items-center justify-content-between gap-3">
+      <div class="d-flex align-items-center gap-3">
+        <div class="rounded-circle d-flex align-items-center justify-content-center"
+             style="width:44px;height:44px;background:rgba(13,110,253,.12);">
+          <i class="bi bi-chat-dots"></i>
+        </div>
+
+        <div>
+          <p class="chat-title">
+            {% if chat.item %}{{ chat.item.titulo }}{% else %}Item removido{% endif %}
+          </p>
+          <div class="chat-sub text-muted">
+            {% if request.user.id == chat.dono_item_id %}
+              Interessado: <b>{{ chat.criado_por.username }}</b>
+            {% else %}
+              Dono: <b>{{ chat.dono_item.username }}</b>
+            {% endif %}
+            <span class="mx-2">•</span>
+            <span>Status: <b id="statusText">{{ chat.get_status_display }}</b></span>
+          </div>
+        </div>
+      </div>
+
+      <a href="{% url 'chats_list' %}" class="btn btn-sm btn-outline-secondary">
+        <i class="bi bi-arrow-left"></i> Voltar
+      </a>
+    </div>
+
+    <!-- BODY -->
+    <div class="card-body chat-body" id="messagesBox">
+      <div id="messages"></div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="chat-footer">
+      <form id="msgForm">
+        {% csrf_token %}
+        <div class="d-flex gap-2">
+          <input class="form-control chat-input" name="conteudo" id="conteudo"
+                 placeholder="Digite sua mensagem..." autocomplete="off" />
+          <button class="btn btn-primary send-btn" type="submit">
+            <i class="bi bi-send"></i> Enviar
+          </button>
+        </div>
+        <small class="text-danger d-none" id="err"></small>
+        <div class="typing-hint text-muted">
+          Dica: use mensagens curtas e objetivas 🙂
+        </div>
+      </form>
     </div>
   </div>
-
-  <div class="card shadow-sm">
-    <div class="card-body">
-
-      {% if chats %}
-        <div class="list-group">
-
-          {% for c in chats %}
-            <a href="{% url 'chat_detail' c.id %}" class="list-group-item list-group-item-action">
-              <div class="d-flex justify-content-between align-items-start">
-                <div>
-                  <div class="fw-bold">
-                    {{ c.item.titulo }}
-                    <span class="badge text-bg-{% if c.status == 'ativo' %}success{% else %}secondary{% endif %} ms-2">
-                      {{ c.get_status_display }}
-                    </span>
-                  </div>
-
-                  <div class="text-muted small mt-1">
-                    {% if request.user.id == c.dono_item_id %}
-                      Interessado: {{ c.criado_por.username }}
-                    {% else %}
-                      Dono: {{ c.dono_item.username }}
-                    {% endif %}
-                    • Atualizado em {{ c.atualizado_em|date:"d/m/Y H:i" }}
-                  </div>
-                </div>
-
-                <i class="bi bi-chevron-right"></i>
-              </div>
-            </a>
-          {% endfor %}
-
-        </div>
-      {% else %}
-        <div class="text-muted">
-          Você ainda não tem chats. Abra um item e clique em <b>“Falar com o dono”</b>.
-        </div>
-      {% endif %}
-
-    </div>
-  </div>
-
 </div>
+
+<script>
+  const urlList = "{% url 'chat_messages' chat.id %}";
+  const urlSend = "{% url 'chat_send_message' chat.id %}";
+  const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+  const messagesEl = document.getElementById("messages");
+  const box = document.getElementById("messagesBox");
+  const err = document.getElementById("err");
+  const statusText = document.getElementById("statusText");
+
+  function showError(msg){
+    err.textContent = msg;
+    err.classList.remove("d-none");
+    setTimeout(()=>err.classList.add("d-none"), 2500);
+  }
+
+  function escapeHtml(text){
+    const div = document.createElement("div");
+    div.innerText = text;
+    return div.innerHTML;
+  }
+
+  function isNearBottom(){
+    return (box.scrollHeight - box.scrollTop - box.clientHeight) < 140;
+  }
+
+  function renderMessages(mensagens){
+    const shouldStick = isNearBottom();
+    messagesEl.innerHTML = "";
+
+    for (const m of mensagens){
+      const wrap = document.createElement("div");
+      wrap.className = "msg " + (m.is_me ? "me" : "other");
+
+      wrap.innerHTML = `
+        <div class="bubble">
+          <div class="meta">
+            <span class="name">${m.is_me ? "Você" : escapeHtml(m.remetente)}</span>
+            <span class="time">${escapeHtml(m.data_envio)}</span>
+          </div>
+          <div class="text">${escapeHtml(m.conteudo)}</div>
+        </div>
+      `;
+      messagesEl.appendChild(wrap);
+    }
+
+    if (shouldStick) box.scrollTop = box.scrollHeight;
+  }
+
+  async function loadMessages(){
+    const r = await fetch(urlList);
+    const data = await r.json();
+    if(!r.ok){ showError(data.error || "Erro ao carregar"); return; }
+
+    // se você retornar status no JSON, dá pra refletir aqui:
+    if (data.status) statusText.textContent = data.status === "ativo" ? "Ativo" : "Fechado";
+
+    renderMessages(data.mensagens || []);
+  }
+
+  document.getElementById("msgForm").addEventListener("submit", async (e)=>{
+    e.preventDefault();
+    const input = document.getElementById("conteudo");
+    const conteudo = input.value.trim();
+    if(!conteudo) return;
+
+    const body = new URLSearchParams();
+    body.append("conteudo", conteudo);
+
+    const r = await fetch(urlSend, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "X-CSRFToken": csrfToken
+      },
+      body: body.toString()
+    });
+
+    const data = await r.json();
+    if(!r.ok){ showError(data.error || "Erro ao enviar"); return; }
+
+    input.value = "";
+    await loadMessages();
+  });
+
+  // Start
+  loadMessages();
+  setInterval(loadMessages, 2000);
+</script>
 {% endblock %}

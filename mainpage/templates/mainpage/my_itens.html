@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Todos os itens - FIND{% endblock %}
+{% block title %}Meus itens - FIND{% endblock %}
 
 {% block content %}
 <link rel="stylesheet" href="{% static 'mainpage/css/user.css' %}">
@@ -13,7 +13,7 @@
     <!-- TOPO -->
     <div class="item-list-header d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
         <div>
-            <h3 class="fw-bold mb-1">{{ page_title|default:"Todos os itens" }}</h3>
+            <h3 class="fw-bold mb-1">Meus itens</h3>
             <p class="text-muted mb-0">
                 {% if itens %}
                     Mostrando {{ itens|length }} item(ns)
@@ -24,6 +24,15 @@
         </div>
 
         <div class="d-flex gap-2">
+            <button
+                class="btn btn-primary rounded-pill"
+                data-bs-toggle="modal"
+                data-bs-target="#modalNovoItem"
+                type="button"
+            >
+                <i class="bi bi-plus-lg me-2"></i> Novo item
+            </button>
+
             <button class="btn-voltar-custom" onclick="history.back()">
                 ← Voltar
             </button>
@@ -97,21 +106,38 @@
                             </small>
                         </div>
 
-                        <!-- AÇÕES (SÓ VER ITEM) -->
+                        <!-- AÇÕES (MEUS ITENS TEM EDITAR/EXCLUIR) -->
                         <div class="item-col-actions">
                             <a href="{% url 'item_detail' item.slug %}" class="btn-ver-lista">
                                 VER ITEM
                             </a>
 
-                            {% if item.status == 'perdido' %}
-                                <span class="status-badge-horizontal status-perdido" title="Perdido">
-                                    <i class="bi bi-exclamation-triangle-fill"></i>
-                                </span>
-                            {% else %}
-                                <span class="status-badge-horizontal status-achado" title="Achado">
-                                    <i class="bi bi-check-circle-fill"></i>
-                                </span>
-                            {% endif %}
+                            <div class="item-actions-row">
+                                <a href="{% url 'item_edit' item.id %}"
+                                   class="btn btn-sm btn-outline-primary rounded-pill"
+                                   title="Editar">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+
+                                <button
+                                    class="btn btn-sm btn-outline-danger rounded-pill"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#modalDeletarItem{{ item.id }}"
+                                    type="button"
+                                    title="Excluir">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+
+                                {% if item.status == 'perdido' %}
+                                    <span class="status-badge-horizontal status-perdido" title="Perdido">
+                                        <i class="bi bi-exclamation-triangle-fill"></i>
+                                    </span>
+                                {% else %}
+                                    <span class="status-badge-horizontal status-achado" title="Achado">
+                                        <i class="bi bi-check-circle-fill"></i>
+                                    </span>
+                                {% endif %}
+                            </div>
                         </div>
 
                     </div>
@@ -120,11 +146,37 @@
             </div>
         {% else %}
             <div class="item-empty text-center">
-                Nenhum item encontrado.
+                Nenhum item cadastrado.
             </div>
         {% endif %}
 
     </div>
 </div>
+
+<!-- MODAIS DE EXCLUSÃO -->
+{% for item in itens %}
+<div class="modal fade" id="modalDeletarItem{{ item.id }}" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg" style="border-radius:20px; overflow:hidden;">
+            <form method="POST" action="{% url 'item_delete' item.id %}">
+                {% csrf_token %}
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title">Excluir Item</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body text-center">
+                    Tem certeza que deseja excluir <strong>{{ item.titulo }}</strong>?
+                </div>
+
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-danger">Excluir</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endfor %}
 
 {% endblock %}
