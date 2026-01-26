@@ -1,97 +1,29 @@
-/* =========================
-   CHATS LIST - FIND STYLE
-   ========================= */
-
-   .chats-wrap {
-    max-width: 980px;
+.chats-wrap {
+  max-width: 1100px;
 }
-  
-  /* Cabeçalho */
-  .chats-title {
-    font-weight: 800;
-    letter-spacing: .2px;
-    background: linear-gradient(90deg, #000102, #0385b4);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-  
-  .chats-subtitle {
-    font-weight: 600;
-    opacity: .7;
-  }
-  
-  /* Card container (list-group wrapper) */
-  .chats-list {
-    border-radius: 18px;
-    overflow: hidden;
-    background: rgba(255, 255, 255, 0.75);
-    border: 1px solid rgba(0, 0, 0, 0.06);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
-  }
-  
-  /* Each row */
-  .chat-row {
-    border: 0 !important;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.06) !important;
-    background: transparent !important;
-    padding: 18px 18px;
-    transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
-  }
-  
-  .chat-row:last-child {
-    border-bottom: 0 !important;
-  }
-  
-  /* Hover */
-  .chat-row:hover {
-    background: rgba(122, 218, 253, 0.10) !important;
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
-  }
-  
-  /* Texto */
-  .chat-item-title {
-    font-weight: 800;
-    margin-bottom: 4px;
-    color: #0b2230;
-  }
-  
-  .chat-meta {
-    font-size: 0.88rem;
-    font-weight: 600;
-    color: rgba(0, 0, 0, 0.55);
-  }
-  
-  /* Badge */
-  .chat-badge {
-    font-weight: 800;
-    padding: 8px 12px;
-    border-radius: 999px;
-    border: 1px solid rgba(0, 0, 0, 0.06);
-  }
-  
-  /* “Sem chats” */
-  .chats-empty {
-    padding: 26px 18px;
-    background: rgba(255, 255, 255, 0.65);
-  }
-  
-  /* Responsivo */
-  @media (max-width: 768px) {
-    .chat-row {
-      padding: 16px 14px;
-    }
-  
-    .chat-item-title {
-      font-size: 1rem;
-    }
-  
-    .chat-meta {
-      font-size: 0.82rem;
-    }
-  
-    .chat-badge {
-      padding: 7px 10px;
-    }
-  }
-  
+
+.chats-title {
+  font-weight: 800;
+}
+
+.chats-list .chat-row {
+  padding: 16px 18px;
+  border: none;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+}
+
+.chat-item-title {
+  font-weight: 800;
+  font-size: 1.05rem;
+  max-width: 75%;
+}
+
+.chat-meta {
+  font-size: .9rem;
+}
+
+.chat-badge {
+  font-weight: 800;
+  padding: 8px 10px;
+  border-radius: 999px;
+}

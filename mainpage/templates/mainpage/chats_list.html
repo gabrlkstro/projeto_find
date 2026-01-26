@@ -6,51 +6,53 @@
 {% block content %}
 <link rel="stylesheet" href="{% static 'mainpage/css/chats.css' %}">
 
-<div class="container-fluid py-4 chats-wrap px-1">
+<div class="container chats-wrap py-4">
 
-  <!-- TÍTULO -->
-  <div class="mb-2">
-    <h4 class="mb-1 chats-title">Meus Chats</h4>
-    <small class="text-muted chats-subtitle">
-      Chats iniciados a partir de itens
-    </small>
+  <div class="d-flex align-items-end justify-content-between flex-wrap gap-2 mb-3">
+    <div>
+      <h4 class="mb-1 chats-title">Meus Chats</h4>
+      <small class="text-muted chats-subtitle">Conversas iniciadas a partir de itens</small>
+    </div>
   </div>
 
-  <!-- LISTA DE CHATS -->
   <div class="list-group shadow-sm chats-list">
 
     {% for chat in chats %}
       <a href="{% url 'chat_detail' chat.id %}"
          class="list-group-item list-group-item-action d-flex justify-content-between align-items-center chat-row">
 
-        <div>
-          <div class="chat-item-title">
-            {{ chat.item.titulo }}
+        <div class="me-3 w-100">
+          <div class="d-flex align-items-center justify-content-between gap-3">
+            <div class="chat-item-title text-truncate">
+              {{ chat.item.titulo }}
+            </div>
+
+            <span class="badge chat-badge {% if chat.status == 'ativo' %}bg-success{% else %}bg-secondary{% endif %}">
+              {{ chat.get_status_display }}
+            </span>
           </div>
 
-          <div class="chat-meta">
+          <div class="chat-meta mt-1">
             {% if request.user.id == chat.dono_item_id %}
-              Interessado: {{ chat.criado_por.username }}
+              <span class="text-muted">Interessado:</span> <b>{{ chat.criado_por.username }}</b>
             {% else %}
-              Dono do item: {{ chat.dono_item.username }}
+              <span class="text-muted">Dono:</span> <b>{{ chat.dono_item.username }}</b>
             {% endif %}
-            • {{ chat.atualizado_em|date:"d/m/Y H:i" }}
+            <span class="mx-1">•</span>
+            <span class="text-muted">{{ chat.atualizado_em|date:"d/m/Y H:i" }}</span>
           </div>
         </div>
 
-        <span class="badge chat-badge {% if chat.status == 'ativo' %}bg-success{% else %}bg-secondary{% endif %}">
-          {{ chat.get_status_display }}
-        </span>
-
+        <i class="bi bi-chevron-right text-muted"></i>
       </a>
+
     {% empty %}
-      <div class="list-group-item text-center text-muted chats-empty">
+      <div class="list-group-item text-center text-muted py-5 chats-empty">
         Você ainda não tem chats.<br>
-        Abra um item e clique em <b>“Falar com o Usuário”</b>.
+        Abra um item e clique em <b>“Iniciar conversa”</b>.
       </div>
     {% endfor %}
 
   </div>
-
 </div>
 {% endblock %}

@@ -1,0 +1,107 @@
+/* ================= CONTAINER GERAL ================= */
+.item-list-container {
+    background-color: rgba(171, 232, 255, 0.45);
+    border-radius: 18px;
+    padding: 26px;
+}
+
+/* ================= TOPO ================= */
+.item-list-header h3 {
+    color: #002a35;
+}
+
+.item-list-header p {
+    font-size: 0.9rem;
+}
+
+/* ================= CARD FILTRO ================= */
+.item-filter-card {
+    background: rgba(255, 255, 255, 0.55);
+    border-radius: 18px;
+}
+
+.item-filter-card .form-control,
+.item-filter-card .form-select {
+    border-radius: 30px;
+    border: 1px solid #004254;
+}
+
+.item-filter-card .btn {
+    border-radius: 30px;
+    background: linear-gradient(90deg, #002a35, #01627ad3);
+    border: none;
+    color: #fff;
+}
+
+.item-filter-card .btn:hover {
+    background: linear-gradient(90deg, #001f24, #01404ad3);
+}
+
+/* ================= LISTA DE ITENS ================= */
+.item-list-wrapper {
+    background-color: rgba(171, 232, 255, 0.45);
+    border-radius: 18px;
+    padding: 22px;
+}
+
+/* reaproveita o mesmo card horizontal */
+.item-lista-horizontal {
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 14px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+/* ================= BOTÃO VOLTAR ================= */
+.btn-voltar-custom {
+    border-radius: 50px;
+    border: 2px solid #004254;
+    color: #004254;
+    background: transparent;
+    font-weight: 700;
+    padding: 8px 20px;
+    transition: all 0.3s ease;
+}
+
+.btn-voltar-custom:hover {
+    background-color: #004254;
+    color: #ffffff;
+    transform: translateY(-2px);
+}
+
+/* ================= PAGINAÇÃO ================= */
+.pagination .page-link {
+    color: #004254;
+    border-radius: 12px;
+    border: 1px solid #004254;
+}
+
+.pagination .page-link:hover {
+    background-color: #004254;
+    color: #ffffff;
+}
+
+.pagination .page-item.disabled .page-link {
+    color: #999;
+    border-color: #ccc;
+}
+
+/* ================= EMPTY STATE ================= */
+.item-empty {
+    padding: 40px 0;
+    color: #003a49;
+    font-style: italic;
+}
+
+/* ================= RESPONSIVO ================= */
+@media (max-width: 768px) {
+    .item-list-container {
+        padding: 18px;
+    }
+
+    .item-list-wrapper {
+        padding: 16px;
+    }
+}

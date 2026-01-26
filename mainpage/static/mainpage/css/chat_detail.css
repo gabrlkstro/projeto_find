@@ -1,0 +1,63 @@
+.chat-detail-wrap {
+  max-width: 1100px;
+}
+
+.chat-card {
+  border: none;
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+.chat-messages {
+  height: 62vh;
+  overflow-y: auto;
+  background: rgba(255,255,255,0.7);
+}
+
+.msg-row {
+  display: flex;
+  margin-bottom: 10px;
+}
+
+.msg-row.me {
+  justify-content: flex-end;
+}
+
+.msg-row.other {
+  justify-content: flex-start;
+}
+
+.msg-bubble {
+  max-width: 75%;
+  padding: 10px 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(0,0,0,0.08);
+  background: #fff;
+}
+
+.msg-row.me .msg-bubble {
+  background: rgba(0, 213, 255, 0.08);
+}
+
+.msg-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 4px;
+  font-size: .8rem;
+  color: rgba(0,0,0,0.55);
+}
+
+.msg-user {
+  font-weight: 700;
+}
+
+.msg-text {
+  font-size: .95rem;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.chat-footer textarea {
+  resize: none;
+}

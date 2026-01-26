@@ -1,117 +1,162 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block title %}{{ item.titulo }} - FIND{% endblock %}
+
 {% block content %}
 <link rel="stylesheet" href="{% static 'mainpage/css/item_detail.css' %}">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css">
 
 <div class="container mt-5 mb-5">
-    <div class="row g-4">
+  <div class="row g-4">
 
-        <!-- CARD ITEM -->
-        <div class="col-lg-8">
-            <div class="card item-card shadow-sm">
+    <!-- CARD ITEM -->
+    <div class="col-lg-8">
+      <div class="card item-card shadow-sm">
 
-                <!-- IMAGEM -->
-                <div class="item-image p-3">
-                    {% if item.imagem %}
-                        <img src="{{ item.imagem.url }}" alt="{{ item.titulo }}">
-                    {% else %}
-                        <img src="{% static 'mainpage/img/item-default.png' %}" alt="Item padrão">
-                    {% endif %}
-                </div>
-
-                <!-- CONTEÚDO -->
-                <div class="p-4">
-
-                    {% if item.status == 'perdido' %}
-                        <span class="badge bg-danger mb-2">Item perdido</span>
-                    {% else %}
-                        <span class="badge bg-success mb-2">Item encontrado</span>
-                    {% endif %}
-
-                    <h4 class="text-gradient">{{ item.titulo }}</h4>
-
-                    <p>{{ item.descricao }}</p>
-
-                    <!-- INFO GRID -->
-                    <div class="row mt-4 g-3">
-
-                        <div class="col-md-6 info-item">
-                            <span class="label">
-                                <i class="bi bi-tags-fill"></i> Categoria
-                            </span>
-                            <strong>{{ item.categoria.nome }}</strong>
-                        </div>
-
-                        <div class="col-md-6 info-item">
-                            <span class="label">
-                                <i class="bi bi-geo-alt-fill"></i> Local
-                            </span>
-                            <strong>{{ item.local }}</strong>
-                        </div>
-
-                        <div class="col-md-6 info-item">
-                            <span class="label">
-                                <i class="bi bi-calendar-event-fill"></i> Encontrado
-                            </span>
-                            <strong>{{ item.data|date:"d/m/Y" }}</strong>
-                        </div>
-
-                        <div class="col-md-6 info-item">
-                            <span class="label">
-                                <i class="bi bi-clock-fill"></i> Hora da publicação
-                            </span>
-                            <strong>{{ item.criado_em|time:"H:i" }}</strong>
-                        </div>
-
-                    </div>
-
-                </div>
-            </div>
+        <!-- IMAGEM -->
+        <div class="item-image p-3">
+          {% if item.imagem %}
+            <img src="{{ item.imagem.url }}" alt="{{ item.titulo }}">
+          {% else %}
+            <img src="{% static 'mainpage/img/item-default.png' %}" alt="Item padrão">
+          {% endif %}
         </div>
 
-        <!-- CARD CONTATO -->
-        <div class="col-lg-4">
-            <div class="card contact-card shadow-sm p-4">
+        <!-- CONTEÚDO -->
+        <div class="p-4">
 
-                <h1>CONTATO</h1>
+          {% if item.status == 'perdido' %}
+            <span class="badge bg-danger mb-2">Item perdido</span>
+          {% elif item.status == 'achado' %}
+            <span class="badge bg-success mb-2">Item encontrado</span>
+          {% else %}
+            <span class="badge bg-secondary mb-2">{{ item.get_status_display }}</span>
+          {% endif %}
 
-                <p>
-                    <i class="bi bi-envelope-fill me-2"></i>
-                    {{ item.usuario.email }}
-                </p>
+          <h4 class="text-gradient mb-2">{{ item.titulo }}</h4>
 
-                <p>
-                    <i class="bi bi-person-fill me-2"></i>
-                    {{ item.usuario.get_full_name|default:item.usuario.username }}
-                </p>
+          {% if item.descricao %}
+            <p class="mb-0">{{ item.descricao }}</p>
+          {% else %}
+            <p class="text-muted mb-0">Sem descrição.</p>
+          {% endif %}
 
-                <p>
-                    <i class="bi bi-telephone-fill me-2"></i>
-                    {{ item.usuario.profile.telefone|default:"Não informado" }}
-                </p>
+          <!-- INFO GRID -->
+          <div class="row mt-4 g-3">
 
-                <div class="text-center mt-4">
-                    {% if user.is_authenticated and user.id != item.usuario_id %}
-                        <a href="{% url 'chat_start' item.id %}" class="btn">
-                            <i class="bi bi-chat-dots-fill me-2"></i> Iniciar conversa
-                        </a>
-                    {% elif not user.is_authenticated %}
-                        <a href="{% url 'login' %}" class="btn">
-                            <i class="bi bi-box-arrow-in-right me-2"></i> Entrar para conversar
-                        </a>
-                    {% else %}
-                        <button class="btn" disabled>
-                            <i class="bi bi-chat-dots-fill me-2"></i> Este item é seu
-                        </button>
-                    {% endif %}
-                </div>
-
+            <div class="col-md-6 info-item">
+              <span class="label">
+                <i class="bi bi-tags-fill"></i> Categoria
+              </span>
+              <strong>
+                {% if item.categoria %}
+                  {{ item.categoria.nome }}
+                {% else %}
+                  Sem categoria
+                {% endif %}
+              </strong>
             </div>
-        </div>
 
+            <div class="col-md-6 info-item">
+              <span class="label">
+                <i class="bi bi-geo-alt-fill"></i> Local
+              </span>
+              <strong>{{ item.local|default:"Não informado" }}</strong>
+            </div>
+
+            <div class="col-md-6 info-item">
+              <span class="label">
+                <i class="bi bi-calendar-event-fill"></i> Data
+              </span>
+              <strong>
+                {% if item.data %}
+                  {{ item.data|date:"d/m/Y" }}
+                {% else %}
+                  Não informado
+                {% endif %}
+              </strong>
+            </div>
+
+            <div class="col-md-6 info-item">
+              <span class="label">
+                <i class="bi bi-clock-fill"></i> Publicado
+              </span>
+              <strong>
+                {% if item.criado_em %}
+                  {{ item.criado_em|date:"d/m/Y" }} • {{ item.criado_em|time:"H:i" }}
+                {% else %}
+                  —
+                {% endif %}
+              </strong>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
     </div>
+
+    <!-- CARD CONTATO -->
+    <div class="col-lg-4">
+      <div class="card contact-card shadow-sm p-4">
+
+        <h1>CONTATO</h1>
+
+        <p>
+          <i class="bi bi-envelope-fill me-2"></i>
+          {% if item.usuario and item.usuario.email %}
+            {{ item.usuario.email }}
+          {% else %}
+            Não informado
+          {% endif %}
+        </p>
+
+        <p>
+          <i class="bi bi-person-fill me-2"></i>
+          {% if item.usuario %}
+            {{ item.usuario.get_full_name|default:item.usuario.username }}
+          {% else %}
+            Usuário não encontrado
+          {% endif %}
+        </p>
+
+        <p>
+          <i class="bi bi-telephone-fill me-2"></i>
+          {% if item.usuario %}
+            {# NÃO MUDA O DESIGN, só evita quebrar se profile não existir #}
+            {% if item.usuario.profile and item.usuario.profile.telefone %}
+              {{ item.usuario.profile.telefone }}
+            {% else %}
+              Não informado
+            {% endif %}
+          {% else %}
+            Não informado
+          {% endif %}
+        </p>
+
+        <div class="text-center mt-4">
+          {% if user.is_authenticated %}
+            {% if item.usuario and user.id != item.usuario_id %}
+              <a href="{% url 'chat_start' item.id %}?next={% url 'item_detail' item.slug %}" class="btn">
+                <i class="bi bi-chat-dots-fill me-2"></i> Iniciar conversa
+              </a>
+            {% else %}
+              <button class="btn" disabled>
+                <i class="bi bi-chat-dots-fill me-2"></i> Este item é seu
+              </button>
+            {% endif %}
+          {% else %}
+            <a href="{% url 'login' %}?next={% url 'item_detail' item.slug %}" class="btn">
+              <i class="bi bi-chat-dots-fill me-2"></i> Entrar para conversar
+            </a>
+          {% endif %}
+        </div>
+
+      </div>
+    </div>
+
+  </div>
 </div>
 
 {% endblock %}

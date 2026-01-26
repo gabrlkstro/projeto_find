@@ -3,21 +3,17 @@ from django.contrib.auth import views as auth_views
 from . import views
 
 urlpatterns = [
-
     # HOME / AUTENTICAÇÃO
-
     path('', views.home, name='home'),
     path('login/', views.login_view, name='login'),
     path('logout/', views.logout_view, name='logout'),
     path('register/', views.register_view, name='register'),
 
     # PÁGINAS PRINCIPAIS
-    
     path('menu/', views.menu_view, name='menu'),
     path('tela/', views.screen_user, name='screen_user'),
 
     # RESET DE SENHA
-
     path(
         'redefinir-senha/',
         auth_views.PasswordResetView.as_view(
@@ -43,15 +39,15 @@ urlpatterns = [
         'redefinir-senha/concluido/',
         auth_views.PasswordResetCompleteView.as_view(
             template_name='mainpage/password_reset_complete.html'
-        ), name='password_reset_complete'),
+        ),
+        name='password_reset_complete'
+    ),
 
     # PERFIL
-
     path('upload-photo/', views.upload_photo, name='upload_photo'),
     path('perfil/atualizar/', views.update_profile, name='update_profile'),
-    
-    # ITENS
 
+    # ITENS
     path('perfil/item/novo/', views.register_item, name='register_item'),
     path('itens/', views.list_item, name='item_list'),
     path('itens/perdidos/', views.items_perdidos, name='items_perdidos'),
@@ -61,7 +57,6 @@ urlpatterns = [
     path('item/deletar/<int:id>/', views.delete_item, name='item_delete'),
 
     # CHAT
-    
     path('chats/', views.chats_list, name='chats_list'),
     path('chats/iniciar/<int:item_id>/', views.chat_start, name='chat_start'),
     path('chats/<int:chat_id>/', views.chat_detail, name='chat_detail'),
