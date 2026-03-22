@@ -1,6 +1,6 @@
 /* ===== CARD PRINCIPAL ===== */
 .item-detail-card {
-  background: #dff5ff;
+  background: rgba(171, 232, 255, 0.45);
   border-radius: 16px;
   border: 1px solid rgba(0,0,0,0.08);
 }
@@ -29,10 +29,42 @@
   width: fit-content;
 }
 
-.status-badge.achado { background-color: #28c76f; }
-.status-badge.perdido { background-color: #ff4d4d; }
-.status-badge.devolvido { background-color: #6c757d; }
+/* ===== STATUS BADGE ===== */
+.status-badge{
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: .9rem;
+  margin-top: 8px;
+}
 
+.status-badge i{
+  font-size: 1rem;
+}
+
+/* Perdido */
+.status-badge.status-perdido{
+  background: #fc0000;
+  color: #52040a;
+  border: 1px solid rgba(209,26,42,.18);
+}
+
+/* Achado */
+.status-badge.status-achado{
+  background: #00ffd5;
+  color: #1b7a43;
+  border: 1px solid rgba(29,78,216,.18);
+}
+
+/* Devolvido */
+.status-badge.status-devolvido{
+  background: #00d9ff;
+  color: #026be4 !important;
+  border: 1px solid rgba(27,122,67,.18);
+}
 /* ===== TEXTO ===== */
 .item-title {
   font-weight: 900;
@@ -103,7 +135,7 @@
 
 /* ===== CONTATO ===== */
 .contact-detail-card {
-  background: #dff5ff;
+  background: rgba(171, 232, 255, 0.45);
   border-radius: 16px;
   border: 1px solid rgba(0,0,0,0.08);
 }

@@ -50,7 +50,6 @@ body::after {
     position: relative;
     display: flex;
     justify-content: center;
-    margin-bottom: 30px;
 }
 
 /* Radar */
@@ -72,7 +71,7 @@ body::after {
 
 .logo img {
     position: relative;
-    max-width: 360px;
+    max-width: 560px;
     width: 100%;
     z-index: 1;
 }
@@ -83,14 +82,10 @@ body::after {
     font-weight: 800;
     line-height: 1.35;
     margin-bottom: 25px;
-
-    background: linear-gradient(90deg, #000102, #05739b);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
 }
 
 .title-color {
-    color: #0156b1;
+    color: #07b9ffbe;
     font-weight: 900;
 }
 
@@ -98,16 +93,16 @@ body::after {
 .btn-primary {
     position: relative;
     overflow: hidden;
-
+    top: 30px;
     border: none;
-    padding: 15px 60px;
+    padding: 25px 80px;
     font-size: 1.3rem;
     font-weight: 700;
     border-radius: 50px;
     cursor: pointer;
     color: #fff;
 
-    background: linear-gradient(90deg, #000102, #008abd);
+    background: linear-gradient(90deg, #00b6ee, #012c3b);
     background-size: 200% 100%;
 
     transition: transform 0.25s ease,
@@ -115,43 +110,26 @@ body::after {
                 background-position 0.6s ease;
 }
 
-/* Brilho */
-.btn-primary::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 50%;
-    height: 100%;
-    background: linear-gradient(
-        120deg,
-        transparent,
-        rgba(255, 255, 255, 0.4),
-        transparent
-    );
-    transform: skewX(-25deg);
-    transition: left 0.6s ease;
-}
 
 .btn-primary:hover {
-    transform: scale(1.04);
+    transform: scale(1.01);
     background-position: right;
-    box-shadow: 0 15px 35px rgba(2, 119, 161, 0.473);
+    box-shadow: 0 15px 35px rgba(0, 185, 252, 0.173);
 }
 
 .btn-primary:hover::before {
-    left: 150%;
+    left: 120%;
 }
 
 /* ================= TEXTO LOGIN ================= */
 .text2 {
-    margin-top: 25px;
+    margin-top: 75px;
     font-size: 22px;
     color: #000;
 }
 
 .text2 a {
-    color: #018ab4;
+    color: #00b6ee;
     font-weight: 700;
     text-decoration: none;
 }
@@ -183,33 +161,3 @@ body::after {
         transform: translateY(0);
     }
 }
-
-/* ================= RESPONSIVO ================= */
-@media (max-width: 768px) {
-    .hero-container {
-        padding: 40px 25px;
-    }
-
-    .logo img {
-        max-width: 260px;
-    }
-
-    .logo::before {
-        width: 160px;
-        height: 160px;
-    }
-
-    .text-title {
-        font-size: 30px;
-    }
-
-    .btn-primary {
-        font-size: 1.1rem;
-        padding: 14px 45px;
-    }
-
-    .text2 {
-        font-size: 18px;
-    }
-}
-

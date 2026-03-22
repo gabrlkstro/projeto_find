@@ -48,9 +48,10 @@ body::after {
 .login-card {
     width: 520px;
     height: 600px !important;
-    background: rgba(171, 232, 255, 0.67) !important;
-    border-radius: 20px;
-    backdrop-filter: blur(8px);
+    position: relative;
+    background: rgba(191, 233, 246, 0.7) !important;
+    border-radius: 20px !important;
+    backdrop-filter: blur(8px) !important;
 }
 
 /* ====== LOGO ====== */
@@ -115,65 +116,82 @@ body::after {
     border: none !important;
 }
 
-/* ====== BOTÃO ====== */
 .btn-primary {
     position: relative;
     overflow: hidden;
     border: none !important;
-    height: 45px;
+    height: 50px;
     font-size: 1.1rem;
     border-radius: 50px;
     color: white;
     cursor: pointer;
 
-    /* Gradiente inicial */
-    background: linear-gradient(90deg, #000102, #005C7E) !important;
-    background-size: 200% 100%;
-    transition: background-position 0.6s ease, transform 0.2s ease;
+    /* gradiente fixo */
+    background: linear-gradient(90deg, #21B6FF, #033f52);
+
+    box-shadow: 0 8px 18px rgba(14, 110, 139, 0.25);
+
+    transition: 
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        filter 0.25s ease;
 }
 
-/* Brilho que passa */
+/* brilho passando */
 .btn-primary::before {
     content: "";
     position: absolute;
     top: 0;
-    left: -100%;
-    width: 50%;
+    left: -120%;
+    width: 60%;
     height: 100%;
     background: linear-gradient(
         120deg,
         transparent,
-        rgba(255, 255, 255, 0.35),
+        rgba(255,255,255,0.25),
         transparent
     );
     transform: skewX(-25deg);
-    transition: left 0.6s ease;
+    transition: left 0.8s ease;
 }
 
-/* Hover: gradiente desliza + brilho passa + leve zoom */
+/* hover SEM mudar a cor */
 .btn-primary:hover {
-    background-position: right;
-    transform: scale(1.03);
+    transform: translateY(-2px) scale(1.03);
+    filter: brightness(1.02);
+
+    box-shadow:
+        0 14px 10px rgba(33,182,255,0.25),
+        0 6px 5px rgba(14,110,139,0.18);
 }
 
 .btn-primary:hover::before {
-    left: 150%;
+    left: 160%;
 }
 
+.btn-primary:active {
+    transform: scale(0.98);
+}
 
 /* ====== LINK PEQUENO ====== */
 .small-password {
     width: 100%;
     font-size: 0.85rem;
     color: #023a51;
-    margin-top: -10px;
+    margin-top: -30px;
     margin-left: 30px;
+}
+
+.small-password-register {
+    width: 100%;
+    font-size: 0.85rem;
+    color: #005374;
 }
 
 .small-password-link {
     text-decoration: none;
-    color: #0398c2;
-    font-weight: 600;
+    color: #01c1f1 !important;
+    font-weight: 500 !important;
 }
 
 .small-password-link:hover {
@@ -182,7 +200,7 @@ body::after {
 
 /* ====== HR ====== */
 .hr-custom {
-    height: 5px;
+    height: 3px;
     background-color: #098aec;
     border: none;
     opacity: 1;
@@ -191,13 +209,43 @@ body::after {
     margin: 20px auto;
 }
 
-.alert-danger {
-    background: linear-gradient(90deg, #ff4b4b, #ff1e1e) !important;
-    color: white !important;
-    font-weight: 600;
-    border-radius: 15px !important;
-    box-shadow: 0 0 10px #ff1e1e80;
+/* ALERTA FIXO (não empurra o layout) */
+.alert-danger{
+  position: fixed !important;
+  left: 50% !important;
+  top: 195px !important;
+  transform: translateX(-50%) !important;
+  z-index: 9999 !important;
+
+  background: linear-gradient(90deg, #ff4b4b, #ff1e1e) !important;
+  color: #fff !important;
+  font-weight: 500;
+  border-radius: 15px !important;
+  box-shadow: 0 8px 25px rgba(255,0,0,0.25);
+
+  padding: 10px 18px !important;
+  width: min(520px, calc(100% - 32px)) !important;
+  text-align: center;
+
+  margin: 0 !important; /* <- evita qualquer espaço fantasma */
+  animation: fadeDownFixed 0.35s ease;
 }
-.alert-danger .close {
-    color: white !important;
+
+/* animação sem quebrar translateX */
+@keyframes fadeDownFixed{
+  from { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+/* Remove fundo roxo do autofill (Chrome/Edge) */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+select:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0px 1000px #f8f9fa inset !important; /* mesma cor do input */
+    box-shadow: 0 0 0px 1000px #f8f9fa inset !important;
+    -webkit-text-fill-color: #212529 !important;
+    caret-color: #212529;
+    border-radius: inherit;
 }

@@ -2,6 +2,8 @@ from django.urls import path
 from django.contrib.auth import views as auth_views
 from . import views
 
+
+
 urlpatterns = [
     # HOME / AUTENTICAÇÃO
     path('', views.home, name='home'),
@@ -52,11 +54,14 @@ urlpatterns = [
     path('itens/', views.list_item, name='item_list'),
     path('itens/perdidos/', views.items_perdidos, name='items_perdidos'),
     path('itens/encontrados/', views.items_encontrados, name='items_encontrados'),
+    path('itens/recentes/', views.recent_items, name='itens_recentes'),
     path('item/<slug:slug>/', views.item_detail, name='item_detail'),
     path('item/editar/<int:id>/', views.edit_item, name='item_edit'),
     path('item/deletar/<int:id>/', views.delete_item, name='item_delete'),
     path("meus-itens/", views.my_itens, name="my_itens"),
-
+    path("itens/devolvidos/", views.items_devolvidos, name="items_devolvidos"),
+    path("itens/<int:id>/devolver/", views.marcar_devolvido, name="marcar_devolvido"),
+    path("itens/<int:id>/achado/", views.marcar_achado, name="marcar_achado"),
 
     # CHAT
     path('chats/', views.chats_list, name='chats_list'),

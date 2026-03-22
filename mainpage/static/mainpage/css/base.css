@@ -31,8 +31,8 @@ body::after  { background:#90dbf4; bottom:-140px; right:-140px; }
 
 /* ================= NAVBAR ================= */
 .navbar{
-  background-color: #7adafd !important;
-  min-height: 90px;
+  background-color: #90dbf4 !important;
+  min-height: 100px;
   padding: 0 22px;
   box-shadow: 0 4px 12px rgba(0,0,0,.08);
 }
@@ -60,7 +60,7 @@ body::after  { background:#90dbf4; bottom:-140px; right:-140px; }
 .nav-links{
   display: flex;
   align-items: center;
-  gap: 58px;          /* ✅ espaçamento mais equilibrado */
+  gap: 30px !important;          /* ✅ espaçamento mais equilibrado */
   padding: 10px 0;
 }
 
@@ -139,7 +139,7 @@ main{
 
 /* ================= FOOTER ================= */
 footer{
-  background: #7adafd;
+  background: #90dbf4 !important;
   text-align: center;
   padding: 20px 10px;
   font-weight: 700;
@@ -173,4 +173,44 @@ footer{
 
 @media (max-width: 768px){
   main{ padding: 25px 15px; }
+}
+
+/* ===== NAVBAR MOBILE SEM BRIGAR COM BOOTSTRAP ===== */
+@media (max-width: 991.98px){
+
+  /* dá um espaçamento quando abre */
+  #navbarFind{
+    padding-top: 10px;
+  }
+
+  /* transforma teus links em coluna (padrão mobile) */
+  #navbarFind .nav-links{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch !important;
+    gap: 10px !important;
+    padding: 10px 0;
+  }
+
+  /* cada link vira "linha" clicável */
+  #navbarFind .nav-links .icon{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 12px;
+    border-radius: 12px;
+  }
+
+  /* avatar/perfil centralizado embaixo */
+  #navbarFind .nav-links > a.d-flex{
+    justify-content: center;
+    padding: 10px 0;
+  }
+
+  /* evita estourar tela */
+  #navbarFind .nav-links .icon i{
+    margin-left: 10px;
+  }
 }

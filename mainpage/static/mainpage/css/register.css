@@ -10,10 +10,10 @@ body {
 
 .login-card {
     width: 100%;
-    max-width: 470px; /* Reduzi um pouco para ficar mais elegante */
-    background: rgba(171, 232, 255, 0.67) !important;
-    border-radius: 20px;
-    backdrop-filter: blur(8px);
+    max-width: 500px; /* Reduzi um pouco para ficar mais elegante */
+    background: rgba(191, 233, 246, 0.7) !important;
+    border-radius: 20px !important;
+    backdrop-filter: blur(8px) !important;
     border: none;
 }
 
@@ -84,40 +84,61 @@ body {
     border-bottom: 5px solid rgba(255, 77, 79, 0.9);
 }
 .btn-primary {
-    /* Gradiente um pouco maior para podermos mover ele no hover */
-    background: linear-gradient(90deg, #000102, #005C7E, #000102) !important;
-    background-size: 200% auto !important;
-    
-    border: none !important;
-    outline: none !important;
-    box-shadow: none !important;
-    height: 45px;
-    opacity: 1;
-    cursor: pointer;
-    transition: 0.5s all ease-in-out !important; /* Transição mais suave */
     position: relative;
+    overflow: hidden;
+    border: none !important;
+    height: 50px;
+    font-size: 1.1rem;
+    border-radius: 50px;
+    color: white;
+    cursor: pointer;
+
+    /* gradiente fixo */
+    background: linear-gradient(90deg, #21B6FF, #033f52);
+
+    box-shadow: 0 8px 18px rgba(14, 110, 139, 0.25);
+
+    transition: 
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        filter 0.25s ease;
 }
 
-/* EFEITO AO PASSAR O MOUSE */
+/* brilho passando */
+.btn-primary::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -120%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(
+        120deg,
+        transparent,
+        rgba(255,255,255,0.25),
+        transparent
+    );
+    transform: skewX(-25deg);
+    transition: left 0.8s ease;
+}
+
+/* hover SEM mudar a cor */
 .btn-primary:hover {
-    /* Move o gradiente para o lado, dando efeito de iluminação */
-    background-position: right center !important;
-    transform: translateY(-2px); /* Sobe um pouquinho (estilo moderno) */
-    box-shadow: 0 5px 15px rgba(0, 92, 126, 0.4) !important; /* Brilho azul sutil */
+    transform: translateY(-2px) scale(1.03);
+    filter: brightness(1.02);
+
+    box-shadow:
+        0 14px 10px rgba(33,182,255,0.25),
+        0 6px 5px rgba(14,110,139,0.18);
 }
 
-/* EFEITO AO CLICAR */
+.btn-primary:hover::before {
+    left: 160%;
+}
+
 .btn-primary:active {
-    transform: translateY(0); /* Volta ao normal ao clicar */
-    filter: brightness(1.2); /* Dá um flash de brilho */
+    transform: scale(0.98);
 }
-
-/* Mantém o bloqueio da borda azul */
-.btn-primary:focus {
-    outline: none !important;
-    box-shadow: none !important;
-}
-
 /* Adicione isso para o botão tremer se a idade for inválida (opcional) */
 @keyframes shake {
     0%, 100% { transform: translateX(0); }
@@ -130,4 +151,41 @@ body {
     background: linear-gradient(90deg, #000, #005c7e);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+}
+
+/* ====== HR ====== */
+.hr-custom {
+    height: 3px;
+    background-color: #098aec;
+    border: none;
+    opacity: 1;
+    border-radius: 10px;
+    width: 80%;
+    margin: 20px auto;
+}
+
+.small-password-login {
+    width: 100%;
+    font-size: 0.85rem !important;
+    color: #005374 !important;
+}
+
+.small-password-link {
+    text-decoration: none;
+    color: #01c1f1 !important;
+    font-weight: 500 !important;
+    font-size: 0.80rem;
+}
+
+/* Remove fundo roxo do autofill (Chrome/Edge) */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+select:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0px 1000px #f8f9fa inset !important; /* mesma cor do input */
+    box-shadow: 0 0 0px 1000px #f8f9fa inset !important;
+    -webkit-text-fill-color: #212529 !important;
+    caret-color: #212529;
+    border-radius: inherit;
 }

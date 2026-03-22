@@ -10,6 +10,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils import timezone
 from django.views.decorators.http import require_POST
+from rest_framework import request
 
 from .forms import ProfileupdateForm
 from .models import Categoria, Item, Profile, Chat, Mensagem
@@ -37,7 +38,8 @@ def _apply_item_filters(itens_qs, q="", status="todos", categoria="todas"):
             Q(local__icontains=q)
         )
 
-    if status in ["perdido", "achado"]:
+    # suporta perdido, achado e devolvido
+    if status in ["perdido", "achado", "devolvido"]:
         itens_qs = itens_qs.filter(status=status)
 
     if categoria.isdigit():
@@ -58,7 +60,8 @@ def _system_counts():
     total = Item.objects.count()
     perdidos = Item.objects.filter(status="perdido").count()
     encontrados = Item.objects.filter(status="achado").count()
-    return total, perdidos, encontrados
+    devolvidos = Item.objects.filter(status="devolvido").count()
+    return total, perdidos, encontrados, devolvidos
 
 
 def _usuario_participa(chat, user):
@@ -139,6 +142,10 @@ def register_view(request):
             messages.error(request, "Nome de usuário já existe.")
             return redirect("register")
 
+        if User.objects.filter(email=email).exists():
+            messages.error(request, "Esse e-mail já está em uso.")
+            return redirect("register")
+
         name_parts = full_name.split(" ", 1)
         first_name = name_parts[0] if name_parts else ""
         last_name = name_parts[1] if len(name_parts) > 1 else ""
@@ -151,7 +158,6 @@ def register_view(request):
             last_name=last_name,
         )
 
-        # profile (compatível com signal ou sem signal)
         profile, _ = Profile.objects.get_or_create(user=user)
 
         if dn_value:
@@ -175,23 +181,28 @@ def menu_view(request):
     status = _get_stripped(request, "status", "todos")
     categoria = _get_stripped(request, "categoria", "todas")
 
-    itens = Item.objects.all().order_by("-id")
-    itens = _apply_item_filters(itens, q=q, status=status, categoria=categoria)
+    base_qs = Item.objects.all().order_by("-id")
 
-    total_itens, perdidos, encontrados = _system_counts()
+    # lista principal (com filtros)
+    itens = _apply_item_filters(base_qs, q=q, status=status, categoria=categoria)
+
+    # lista específica para seção devolvidos
+    itens_devolvidos = Item.objects.filter(status="devolvido").order_by("-id")[:10]
+
+    total_itens, perdidos, encontrados, devolvidos = _system_counts()
 
     return render(request, "mainpage/menu.html", {
         "categorias": categorias,
         "itens": itens,
+        "itens_devolvidos": itens_devolvidos,
         "total_itens": total_itens,
         "perdidos": perdidos,
         "encontrados": encontrados,
-        "correspondencias": 0,
+        "devolvidos": devolvidos,
         "q": q,
         "status": status,
         "categoria": categoria,
     })
-
 
 @login_required(login_url="login")
 def screen_user(request):
@@ -206,11 +217,12 @@ def screen_user(request):
         "total": itens.count(),
         "perdidos": itens.filter(status="perdido").count(),
         "encontrados": itens.filter(status="achado").count(),
+        "devolvidos": itens.filter(status="devolvido").count(),
         "categorias": categorias,
     })
 
 
-@login_required
+@login_required(login_url="login")
 def upload_photo(request):
     if request.method == "POST":
         profile, _ = Profile.objects.get_or_create(user=request.user)
@@ -225,7 +237,7 @@ def upload_photo(request):
     return redirect("screen_user")
 
 
-@login_required
+@login_required(login_url="login")
 def update_profile(request):
     if request.method == "POST":
         user = request.user
@@ -354,7 +366,7 @@ def list_item(request):
     per_page = 8
     itens_page, has_more = _paginate_has_more(itens, page=page, per_page=per_page)
 
-    total_itens, perdidos, encontrados = _system_counts()
+    total_itens, perdidos, encontrados, devolvidos = _system_counts()
 
     return render(request, "mainpage/item_list.html", {
         "categorias": categorias,
@@ -362,6 +374,7 @@ def list_item(request):
         "total_itens": total_itens,
         "perdidos": perdidos,
         "encontrados": encontrados,
+        "devolvidos": devolvidos,
         "q": q,
         "status": status,
         "categoria": categoria,
@@ -386,7 +399,7 @@ def my_itens(request):
             Q(local__icontains=q)
         )
 
-    if status in ["perdido", "achado"]:
+    if status in ["perdido", "achado", "devolvido"]:
         itens = itens.filter(status=status)
 
     per_page = 8
@@ -416,7 +429,7 @@ def items_perdidos(request):
     per_page = 8
     itens_page, has_more = _paginate_has_more(itens, page=page, per_page=per_page)
 
-    total_itens, perdidos, encontrados = _system_counts()
+    total_itens, perdidos, encontrados, devolvidos = _system_counts()
 
     return render(request, "mainpage/item_list.html", {
         "categorias": categorias,
@@ -424,6 +437,7 @@ def items_perdidos(request):
         "total_itens": total_itens,
         "perdidos": perdidos,
         "encontrados": encontrados,
+        "devolvidos": devolvidos,
         "q": q,
         "status": "perdido",
         "categoria": categoria,
@@ -447,7 +461,7 @@ def items_encontrados(request):
     per_page = 8
     itens_page, has_more = _paginate_has_more(itens, page=page, per_page=per_page)
 
-    total_itens, perdidos, encontrados = _system_counts()
+    total_itens, perdidos, encontrados, devolvidos = _system_counts()
 
     return render(request, "mainpage/item_list.html", {
         "categorias": categorias,
@@ -455,6 +469,7 @@ def items_encontrados(request):
         "total_itens": total_itens,
         "perdidos": perdidos,
         "encontrados": encontrados,
+        "devolvidos": devolvidos,
         "q": q,
         "status": "achado",
         "categoria": categoria,
@@ -463,6 +478,69 @@ def items_encontrados(request):
         "next_page": page + 1,
     })
 
+
+@login_required(login_url="login")
+def items_devolvidos(request):
+    categorias = Categoria.objects.all()
+
+    q = _get_stripped(request, "q", "")
+    categoria = _get_stripped(request, "categoria", "todas")
+    page = _get_int(request, "page", 1)
+
+    itens = Item.objects.filter(status="devolvido").order_by("-id")
+    itens = _apply_item_filters(itens, q=q, status="devolvido", categoria=categoria)
+
+    per_page = 8
+    itens_page, has_more = _paginate_has_more(itens, page=page, per_page=per_page)
+
+    total_itens, perdidos, encontrados, devolvidos = _system_counts()
+
+    return render(request, "mainpage/item_list.html", {
+        "categorias": categorias,
+        "itens": itens_page,
+        "total_itens": total_itens,
+        "perdidos": perdidos,
+        "encontrados": encontrados,
+        "devolvidos": devolvidos,
+        "q": q,
+        "status": "devolvido",
+        "categoria": categoria,
+        "page_title": "Itens Devolvidos",
+        "has_more": has_more,
+        "next_page": page + 1,
+    })
+
+
+# -----------------------------
+# Ação: marcar item como devolvido
+# -----------------------------
+@login_required(login_url="login")
+@require_POST
+def marcar_devolvido(request, id):
+    next_url = request.POST.get("next") or reverse("view_item", kwargs={"id": id})
+    item = get_object_or_404(Item, id=id, usuario=request.user)
+
+    item.status = "devolvido"
+    item.save(update_fields=["status", "atualizado_em"])
+
+    messages.success(request, "Item marcado como devolvido!")
+    return redirect(next_url)
+
+# -----------------------------
+# Ação: marcar item como achado
+# -----------------------------
+@login_required(login_url="login")
+@require_POST
+def marcar_achado(request, id):
+    # volta pra página atual (item_detail) se vier next
+    next_url = request.POST.get("next") or reverse("view_item", kwargs={"id": id})
+    item = get_object_or_404(Item, id=id, usuario=request.user)
+
+    item.status = "achado"
+    item.save(update_fields=["status", "atualizado_em"])
+
+    messages.success(request, "Item marcado como encontrado!")
+    return redirect(next_url)
 
 # -----------------------------
 # Detalhe do item
@@ -473,6 +551,32 @@ def item_detail(request, slug):
     return render(request, "mainpage/item_detail.html", {
         "item": item,
         "next": next_url,
+    })
+
+
+@login_required(login_url="login")
+def recent_items(request):
+    q = _get_stripped(request, "q", "")
+    page = _get_int(request, "page", 1)
+
+    itens = Item.objects.all().order_by("-id")
+
+    if q:
+        itens = itens.filter(
+            Q(titulo__icontains=q) |
+            Q(descricao__icontains=q) |
+            Q(local__icontains=q)
+        )
+
+    per_page = 8
+    itens_page, has_more = _paginate_has_more(itens, page=page, per_page=per_page)
+
+    return render(request, "mainpage/item_list.html", {
+        "itens": itens_page,
+        "q": q,
+        "page_title": "Itens Recentes",
+        "has_more": has_more,
+        "next_page": page + 1,
     })
 
 
@@ -534,9 +638,8 @@ def chat_detail(request, chat_id):
         messages.error(request, "Você não tem acesso a esse chat.")
         return redirect("chats_list")
 
-    # quem é a outra pessoa no chat?
     other_user = chat.criado_por if request.user.id == chat.dono_item_id else chat.dono_item
-    other_profile = Profile.objects.filter(user=other_user).first()  # pode ser None
+    other_profile = Profile.objects.filter(user=other_user).first()
 
     mensagens = (
         Mensagem.objects
@@ -560,7 +663,6 @@ def chat_messages(request, chat_id):
     if not _usuario_participa(chat, request.user):
         return JsonResponse({"error": "Você não tem acesso a esse chat."}, status=403)
 
-    # marca como lida as mensagens do outro
     Mensagem.objects.filter(chat=chat, lida=False).exclude(remetente=request.user).update(lida=True)
 
     mensagens = (

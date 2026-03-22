@@ -1,27 +1,32 @@
 {% extends 'base.html' %}
 {% load static %}
+
 {% block title %}Início - FIND{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'mainpage/css/menu.css' %}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css">
+
+  <!-- Swiper -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+{% endblock %}
 
 {% block content %}
 
-<link rel="stylesheet" href="{% static 'mainpage/css/menu.css' %}">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css">
-
-<!-- HERO (SÓ ATÉ O BOTÃO) -->
+<!-- HERO -->
 <section class="hero-main py-5">
 
-  <!-- TÍTULO -->
   <div class="container-fluid title-gradient text-center">
-    <h1 class="fw-bold">Perdeu algo importante?</h1>
-    <p class="lead">
+    <h1 class="fw-bold title-gradient">Perdeu algo importante?</h1>
+    <p class="lead title-gradient">
       O FIND conecta pessoas que perderam itens <br>
       com aquelas que os encontraram.
     </p>
   </div>
 
-  <!-- BUSCA (FUNCIONA VIA GET) -->
+  <!-- BUSCA (GET) -->
   <div class="d-flex justify-content-center mt-4">
-    <form method="GET" class="input-group search-bar">
+    <form method="GET" class="input-group search-bar" style="max-width: 820px;">
       <span class="input-group-text">
         <i class="bi bi-search"></i>
       </span>
@@ -34,68 +39,78 @@
         placeholder="Buscar itens (nome, descrição, local...)"
       >
 
-      <!-- mantém filtros atuais ao buscar -->
       <input type="hidden" name="status" value="{{ status|default:'todos' }}">
       <input type="hidden" name="categoria" value="{{ categoria|default:'todas' }}">
     </form>
   </div>
 
-  <!-- CARDS DE STATUS -->
-  <div class="container text-center mt-5">
-    <div class="row row-cols-1 row-cols-md-4 g-4 justify-content-center">
+  <!-- STATUS CARDS -->
+<div class="container text-center mt-5">
+  <div class="row status-row g-3 justify-content-center">
 
-      <div class="col">
+    <div class="col">
+      <a href="{% url 'item_list' %}" class="status-link">
         <div class="card status-card">
           <i class="bi bi-box-seam icon-total"></i>
           <h3>{{ total_itens }}</h3>
-          <p>TOTAL DE ITENS</p>
+          <p>TOTAL</p>
         </div>
-      </div>
+      </a>
+    </div>
 
-      <div class="col">
+    <div class="col">
+      <a href="{% url 'items_perdidos' %}" class="status-link">
         <div class="card status-card">
           <i class="bi bi-exclamation-triangle icon-perdidos"></i>
           <h3>{{ perdidos }}</h3>
-          <p>ITENS PERDIDOS</p>
+          <p>PERDIDOS</p>
         </div>
-      </div>
+      </a>
+    </div>
 
-      <div class="col">
+    <div class="col">
+      <a href="{% url 'items_encontrados' %}" class="status-link">
         <div class="card status-card">
           <i class="bi bi-check-circle icon-encontrados"></i>
           <h3>{{ encontrados }}</h3>
-          <p>ITENS ENCONTRADOS</p>
+          <p>ENCONTRADOS</p>
         </div>
-      </div>
-
-      <div class="col">
-        <div class="card status-card">
-          <i class="bi bi-people-fill icon-corresp"></i>
-          <h3>{{ correspondencias }}</h3>
-          <p>CORRESPONDÊNCIAS</p>
-        </div>
-      </div>
-
+      </a>
     </div>
-  </div>
 
-  <!-- BOTÃO -->
-  <button class="btn btn-primary btn-cadastrar-item"
-          data-bs-toggle="modal"
-          data-bs-target="#modalNovoItem">
+    <div class="col">
+      <a href="{% url 'items_devolvidos' %}" class="status-link">
+        <div class="card status-card">
+          <i class="bi bi-arrow-repeat icon-corresp"></i>
+          <h3>{{ devolvidos }}</h3>
+          <p>DEVOLVIDOS</p>
+        </div>
+      </a>
+    </div>
+
+  </div>
+</div>
+
+  <!-- CTA -->
+<div class="d-flex justify-content-center mt-4">
+  <button
+    type="button"
+    class="btn btn-primary btn-cadastrar-item"
+    data-bs-toggle="modal"
+    data-bs-target="#modalNovoItem"
+  >
     <i class="bi bi-plus-lg me-2"></i> CADASTRAR ITEM
   </button>
+</div>
 
 </section>
 
-<!-- SEÇÃO DE FILTROS (APARECE QUANDO DESCE) -->
+<!-- FILTROS -->
 <section class="filters-section">
   <div class="container">
-
     <form method="GET" class="filters-box">
       <div class="row g-3 align-items-end">
 
-        <!-- BUSCAR NOME -->
         <div class="col-12 col-md-4">
           <label class="filters-label">BUSCAR</label>
           <input
@@ -107,17 +122,16 @@
           >
         </div>
 
-        <!-- STATUS -->
         <div class="col-12 col-md-3">
           <label class="filters-label">STATUS</label>
           <select name="status" class="form-select filters-input">
             <option value="todos" {% if status == 'todos' %}selected{% endif %}>Todos</option>
             <option value="perdido" {% if status == 'perdido' %}selected{% endif %}>Perdidos</option>
             <option value="achado" {% if status == 'achado' %}selected{% endif %}>Encontrados</option>
+            <option value="devolvido" {% if status == 'devolvido' %}selected{% endif %}>Devolvidos</option>
           </select>
         </div>
 
-        <!-- CATEGORIA -->
         <div class="col-12 col-md-3">
           <label class="filters-label">CATEGORIA</label>
           <select name="categoria" class="form-select filters-input">
@@ -130,107 +144,314 @@
           </select>
         </div>
 
-        <!-- BOTÃO -->
         <div class="col-12 col-md-2 d-grid">
-          <button type="submit" class="btn btn-filtrar">
-            FILTRAR
-          </button>
+          <button type="submit" class="btn btn-filtrar">FILTRAR</button>
         </div>
 
       </div>
     </form>
-
   </div>
 </section>
 
-<!-- LISTA / GRID DOS ITENS -->
-<section class="items-section">
-  <div class="container mt-4">
-    <h2 class="text-center mb-4" style="font-weight: 700; color: #333;">Itens Recentes</h2>
-    <div class="row g-4 justify-content-start">
+<!-- ===== ITENS RECENTES (CARROSSEL) ===== -->
+<section class="items-section section-pad">
+  <div class="container mt-2">
+    <div class="d-flex align-items-center justify-content-between mb-2">
+      <h2 class="text-center mb-0 home-section-title title-gradient" style="flex:1;">Itens Recentes</h2>
 
-      {% if itens %}
-        {% for item in itens %}
-          <div class="col-12 col-sm-6 col-md-4 col-xl-3">
-            <div class="menu-item-card">
+      <a class="btn btn-outline-dark btn-sm rounded-pill ms-3" href="{% url 'itens_recentes' %}">
+        Ver todos
+      </a>
+    </div>
 
-              <!-- IMAGEM -->
-              <div class="menu-item-img">
-                {% if item.imagem %}
-                  <img src="{{ item.imagem.url }}" alt="{{ item.titulo }}">
-                {% else %}
-                  <img src="{% static 'mainpage/img/item-default.png' %}" alt="Imagem padrão">
-                {% endif %}
-              </div>
+    <div class="soft-divider"></div>
 
-              <!-- CONTEÚDO -->
-              <div class="menu-item-body">
-                <h6 class="menu-item-title">{{ item.titulo }}</h6>
+    {% if itens %}
+      <div class="swiper mySwiper mt-3">
+        <div class="swiper-wrapper">
 
-                <p class="menu-item-desc">
-                  {{ item.descricao|truncatechars:85 }}
-                </p>
-
-                <!-- LINHAS IGUAL AO PRINT -->
-                <div class="menu-item-meta">
-
-                  <!-- Linha 1: Categoria (esq) / Local (dir) -->
-                  <div class="menu-item-meta-line">
-                    <span class="meta-left">
-                      <i class="bi bi-tag"></i>
-                      {{ item.categoria.nome|default:"Sem categoria" }}
-                    </span>
-
-                    <span class="meta-right">
-                      <i class="bi bi-geo-alt"></i>
-                      {{ item.local|default:"---" }}
-                    </span>
-                  </div>
-
-                  <!-- Linha 2: Data (esq) / Hora (dir) -->
-                  <div class="menu-item-meta-line">
-                    <span class="meta-left">
-                      <i class="bi bi-calendar3"></i>
-                      {{ item.criado_em|date:"d/m/Y" }}
-                    </span>
-
-                    <span class="meta-right">
-                      <i class="bi bi-clock"></i>
-                      {{ item.criado_em|time:"H:i" }}
-                    </span>
-                  </div>
-
-                </div>
-
-                <!-- AÇÕES -->
-                <div class="menu-item-actions">
-                  <a href="{% url 'item_detail' item.slug %}" class="btn-ver-item">
-                    VER ITEM
-                  </a>
-
-                  {% if item.status == "achado" %}
-                    <span class="status-square status-green" title="Achado">
-                      <i class="bi bi-check-circle-fill"></i>
-                    </span>
+          {% for item in itens %}
+            <div class="swiper-slide">
+              <a href="{% url 'item_detail' item.slug %}" class="menu-item-card-link">
+              <div class="menu-item-card">
+                <div class="menu-item-img">
+                  {% if item.imagem %}
+                    <img src="{{ item.imagem.url }}" alt="{{ item.titulo }}">
                   {% else %}
-                    <span class="status-square status-red" title="Perdido">
-                      <i class="bi bi-exclamation-triangle-fill"></i>
-                    </span>
+                    <img src="{% static 'mainpage/img/item-default.png' %}" alt="Imagem padrão">
                   {% endif %}
                 </div>
 
-              </div>
-            </div>
-          </div>
-        {% endfor %}
-      {% else %}
-        <div class="col-12">
-          <p class="text-center text-muted mt-4">Nenhum item encontrado com esses filtros.</p>
-        </div>
-      {% endif %}
+                <div class="menu-item-body">
+                  <h6 class="menu-item-title">{{ item.titulo }}</h6>
 
+                  <p class="menu-item-desc">
+                    {{ item.descricao|truncatechars:85 }}
+                  </p>
+
+                  <div class="menu-item-meta">
+                    <div class="menu-item-meta-line">
+                      <span class="meta-left">
+                        <i class="bi bi-tag"></i>
+                        {{ item.categoria.nome|default:"Sem categoria" }}
+                      </span>
+
+                      <span class="meta-right">
+                        <i class="bi bi-geo-alt"></i>
+                        {{ item.local|default:"---" }}
+                      </span>
+                    </div>
+
+                    <div class="menu-item-meta-line">
+                      <span class="meta-left">
+                        <i class="bi bi-calendar3"></i>
+                        {{ item.criado_em|date:"d/m/Y" }}
+                      </span>
+
+                      <span class="meta-right">
+                        <i class="bi bi-clock"></i>
+                        {{ item.criado_em|time:"H:i" }}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div class="menu-item-actions">
+                    <a href="{% url 'item_detail' item.slug %}" class="btn-ver-item">
+                      VER ITEM
+                    </a>
+
+                    {% if item.status == "achado" %}
+                      <span class="status-square status-green" title="Achado">
+                        <i class="bi bi-check-circle-fill"></i>
+                      </span>
+                    {% elif item.status == "devolvido" %}
+                      <span class="status-square" style="background:#60caff;color: #fff;" title="Devolvido">
+                        <i class="bi bi-arrow-repeat"></i>
+                      </span>
+                    {% else %}
+                      <span class="status-square status-red" title="Perdido">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                      </span>
+                    {% endif %}
+                  </div>
+
+                </div>
+              </div>
+              </a>
+            </div>
+          {% endfor %}
+
+        </div>
+
+        <!-- SETAS PREMIUM -->
+        <button class="swiper-nav swiper-button-prev" type="button" aria-label="Anterior">
+        </button>
+
+        <button class="swiper-nav swiper-button-next" type="button" aria-label="Próximo">
+        </button>
+
+        <div class="swiper-pagination"></div>
+      </div>
+    {% else %}
+      <p class="text-center text-muted mt-4">Nenhum item encontrado com esses filtros.</p>
+    {% endif %}
+  </div>
+</section>
+
+<!-- ===== CATEGORIAS ===== -->
+<section class="section-pad">
+  <div class="container">
+    <div class="position-relative mb-3 text-center">
+      <h3 class="text-center home-section-title mb-0 title-gradient">Explorar por categoria</h3>
+      <span class="text-muted small position-absolute end-0 top-50 translate-middle-y">Clique para filtrar</span>
+    </div>
+
+    <div class="d-flex gap-2 flex-wrap">
+      <a class="cat-chip" href="?q={{ q|default:'' }}&status={{ status|default:'todos' }}&categoria=todas">
+        <i class="bi bi-grid-3x3-gap"></i> Todas
+      </a>
+
+      {% for cat in categorias %}
+        <a class="cat-chip" href="?q={{ q|default:'' }}&status={{ status|default:'todos' }}&categoria={{ cat.id }}">
+          <i class="bi bi-tag"></i> {{ cat.nome }}
+        </a>
+      {% endfor %}
     </div>
   </div>
 </section>
 
+<!-- ===== TODOS OS ITENS ===== -->
+<section class="section-pad">
+  <div class="container">
+    <div class="position-relative mb-3">
+
+  <h3 class="home-section-title text-center mb-0 title-gradient">
+    Todos os itens
+  </h3>
+
+  <a class="btn btn-outline-dark btn-sm rounded-pill position-absolute end-0 top-50 translate-middle-y"
+     href="{% url 'item_list' %}">
+    Ver todos
+  </a>
+
+</div>
+
+    {% if itens %}
+      <!-- Swiper Container -->
+      <div class="swiper todosSwiper mt-3">
+        <div class="swiper-wrapper">
+          {% for item in itens %}
+            <div class="swiper-slide">
+              <div class="menu-item-card">
+                <a href="{% url 'item_detail' item.slug %}" class="menu-item-card-link">
+                <div class="menu-item-img">
+                  {% if item.imagem %}
+                    <img src="{{ item.imagem.url }}" alt="{{ item.titulo }}">
+                  {% else %}
+                    <img src="{% static 'mainpage/img/item-default.png' %}" alt="Imagem padrão">
+                  {% endif %}
+                </div>
+
+                <div class="menu-item-body">
+                  <h6 class="menu-item-title">{{ item.titulo }}</h6>
+                  <p class="menu-item-desc">{{ item.descricao|truncatechars:85 }}</p>
+
+                  <div class="menu-item-actions">
+                    <a href="{% url 'item_detail' item.slug %}" class="btn-ver-item">VER ITEM</a>
+
+                    {% if item.status == "achado" %}
+                      <span class="status-square status-green" title="Achado">
+                        <i class="bi bi-check-circle-fill"></i>
+                      </span>
+                    {% elif item.status == "devolvido" %}
+                      <span class="status-square" style="background:#60caff;color:#fff;" title="Devolvido">
+                        <i class="bi bi-arrow-repeat"></i>
+                      </span>
+                    {% else %}
+                      <span class="status-square status-red" title="Perdido">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                      </span>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+              </a>
+            </div>
+          {% endfor %}
+        </div>
+
+        <!-- Botões de navegação (só 1 vez) -->
+        <button class="swiper-button-prev" type="button"></button>
+        <button class="swiper-button-next" type="button"></button>
+        <!-- Paginação -->
+        <div class="swiper-pagination"></div>
+      </div>
+    {% else %}
+      <p class="text-center text-muted mt-2">Nenhum item encontrado.</p>
+    {% endif %}
+  </div>
+</section>
+
+<!-- Itens devolvidos -->
+
+<section class="section-pad">
+  <div class="container">
+    <div class="d-flex align-items-center justify-content-between mb-2">
+      <h2 class="text-center home-section-title mb-0 title-gradient" style="flex:1;">
+        Itens Devolvidos
+      </h2>
+
+      <a class="btn btn-outline-info btn-sm rounded-pill ms-3" href="{% url 'items_devolvidos' %}">
+        Ver todos
+      </a>
+    </div>
+
+    {% if itens_devolvidos %}
+      <div class="swiper devolvidosSwiper mt-3">
+        <div class="swiper-wrapper">
+
+          {% for item in itens_devolvidos %}
+            <div class="swiper-slide">
+              <div class="menu-item-card">
+                <a href="{% url 'item_detail' item.slug %}" class="menu-item-card-link">
+                <div class="menu-item-img">
+                  {% if item.imagem %}
+                    <img src="{{ item.imagem.url }}" alt="{{ item.titulo }}">
+                  {% else %}
+                    <img src="{% static 'mainpage/img/item-default.png' %}">
+                  {% endif %}
+                </div>
+
+                <div class="menu-item-body">
+                  <h6 class="menu-item-title">{{ item.titulo }}</h6>
+
+                  <div class="menu-item-actions">
+                    <a href="{% url 'item_detail' item.slug %}" class="btn-ver-item">
+                      VER ITEM
+                    </a>
+
+                    <span class="status-square"
+                          style="background:#60caff;color:#fff;">
+                      <i class="bi bi-arrow-repeat"></i>
+                    </span>
+                  </div>
+                </div>
+              </div>
+              </a>
+            </div>
+          {% endfor %}
+
+        </div>
+
+        <button class="swiper-nav swiper-button-prev" type="button" aria-label="Anterior">
+        </button>
+
+        <button class="swiper-nav swiper-button-next" type="button" aria-label="Próximo">
+        </button>
+
+        <div class="swiper-pagination"></div>
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+  <!-- Swiper JS (obrigatório) -->
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+ <script>
+function initSwiper(selector) {
+  const el = document.querySelector(selector);
+  if (!el) return;
+
+  new Swiper(selector, {
+    spaceBetween: 18,
+    loop: false,
+    grabCursor: true,
+    navigation: {
+      nextEl: selector + ' .swiper-button-next',
+      prevEl: selector + ' .swiper-button-prev'
+    },
+    pagination: {
+      el: selector + ' .swiper-pagination',
+      clickable: true
+    },
+    breakpoints: {
+      320:  { slidesPerView: 1.15 },
+      576:  { slidesPerView: 1.6  },
+      768:  { slidesPerView: 2.2  },
+      992:  { slidesPerView: 3.1  },
+      1200: { slidesPerView: 4 }
+    }
+  });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  initSwiper('.mySwiper');          
+  initSwiper('.todosSwiper');       
+  initSwiper('.devolvidosSwiper');  
+});
+</script>
 {% endblock %}

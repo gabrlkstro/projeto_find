@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.urls import path, include
-from django.conf import settings # Importa o arquivo que você mandou
-from django.conf.urls.static import static # Importa a função de arquivos estáticos
+from django.conf import settings 
+from django.conf.urls.static import static 
 
 urlpatterns = [
     path('admin/', admin.site.urls),

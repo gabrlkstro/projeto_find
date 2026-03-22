@@ -95,6 +95,11 @@
     font-style: italic;
 }
 
+.status-devolvido {
+    background-color: #60caff;
+    color: #ffffff;
+}
+
 /* ================= RESPONSIVO ================= */
 @media (max-width: 768px) {
     .item-list-container {
