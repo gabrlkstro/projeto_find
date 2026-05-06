@@ -3,121 +3,462 @@
 <html lang="pt-BR">
 <head>
     <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Find - Cadastro</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>find - cadastro</title>
     <link rel="stylesheet" href="{% static 'mainpage/css/register.css' %}">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded" />
+    <link rel="icon" type="image/png" href="{% static 'mainpage/img/find.png' %}">
 </head>
 <body>
 
-<div class="container d-flex justify-content-center align-items-center vh-100">
-    <div class="card shadow login-card p-4">
+<div class="container d-flex justify-content-center align-items-center min-vh-100 py-4">
+    <div class="card shadow-none login-card" role="main">
 
-        <div class="image-logo text-center">
-            <img src="{% static 'mainpage/img/logo-find.png' %}" alt="logo-find" style="width: 140px; height: 80px;" class="mb-2">
+        <!-- Logo -->
+        <div class="image-logo text-center mb-2">
+            <img src="{% static 'mainpage/img/logo-find.png' %}"
+                 alt="Find – página inicial"
+                 class="mx-auto d-block"
+                 style="width: 140px; height: auto;">
         </div>
-        
-        <hr class="hr-custom mx-auto d-block">
-        <h2 class="text-center fw-bold title-gradient mb-4">Cadastre-se</h2>
 
-        <form method="POST" action="{% url 'register' %}">
+        <hr class="hr-custom" aria-hidden="true">
+
+        <h1 class="text-center title-gradient mb-3">Criar conta</h1>
+
+        <!-- Alerta de erro do Django -->
+        {% if messages %}
+            {% for message in messages %}
+                {% if 'error' in message.tags %}
+                    <div class="alert alert-danger"
+                         role="alert"
+                         aria-live="assertive"
+                         aria-atomic="true"
+                         id="django-error-alert">
+                        <span class="alert-icon" aria-hidden="true">error</span>
+                        <span>{{ message }}</span>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+
+        <form method="POST" action="{% url 'register' %}" id="register-form" novalidate>
             {% csrf_token %}
-            
+
+            <!-- Nome completo -->
             <div class="field-wrapper">
-                <div class="input-group rounded-pill">
-                    <span class="material-symbols-rounded">badge</span>
-                    <input type="text" name="full_name" class="form-control border-0" placeholder="Nome completo" required>
+                <label for="id_full_name" class="field-label">Nome completo</label>
+                <div class="input-group" id="group-full-name">
+                    <span class="input-group-text border-0 bg-transparent" aria-hidden="true">
+                        <span class="material-symbols-rounded">badge</span>
+                    </span>
+                    <input type="text"
+                           id="id_full_name"
+                           name="full_name"
+                           class="form-control"
+                           placeholder="Seu nome completo"
+                           autocomplete="name"
+                           autofocus
+                           required
+                           aria-required="true"
+                           aria-describedby="error-full-name">
                 </div>
+                <span id="error-full-name" class="field-error-msg" style="display:none;" role="alert"></span>
             </div>
 
+            <!-- Nome de usuário -->
             <div class="field-wrapper">
-                <div class="input-group rounded-pill">
-                    <span class="material-symbols-rounded">person</span>
-                    <input type="text" name="username" class="form-control border-0" placeholder="Nome de usuário" required>
+                <label for="id_username" class="field-label">Nome de usuário</label>
+                <div class="input-group" id="group-username">
+                    <span class="input-group-text border-0 bg-transparent" aria-hidden="true">
+                        <span class="material-symbols-rounded">person</span>
+                    </span>
+                    <input type="text"
+                           id="id_username"
+                           name="username"
+                           class="form-control"
+                           placeholder="seunome123"
+                           autocomplete="username"
+                           autocapitalize="none"
+                           spellcheck="false"
+                           required
+                           aria-required="true"
+                           aria-describedby="error-username">
                 </div>
+                <span id="error-username" class="field-error-msg" style="display:none;" role="alert"></span>
             </div>
 
-            <div class="field-wrapper position-relative">
-                <div class="input-group rounded-pill">
-                    <span class="material-symbols-rounded">cake</span>
-                    <input type="date" id="data_nascimento" name="data_nascimento" class="form-control border-0" required>
-                </div>
-                <div id="alert-idade" class="error-msg-absolute d-none">
-                    É necessário ter pelo menos 13 anos.
-                </div>
-            </div>
-
+            <!-- Data de nascimento -->
             <div class="field-wrapper">
-                <div class="input-group rounded-pill">
-                    <span class="material-symbols-rounded">email</span>
-                    <input type="email" name="email" class="form-control border-0" placeholder="Email" required>
+                <label for="id_data_nascimento" class="field-label">Data de nascimento</label>
+                <div class="input-group" id="group-data">
+                    <span class="input-group-text border-0 bg-transparent" aria-hidden="true">
+                        <span class="material-symbols-rounded">cake</span>
+                    </span>
+                    <input type="date"
+                           id="id_data_nascimento"
+                           name="data_nascimento"
+                           class="form-control"
+                           required
+                           aria-required="true"
+                           aria-describedby="error-data">
                 </div>
+                <span id="error-data" class="field-error-msg" style="display:none;" role="alert"></span>
             </div>
 
+            <!-- Email -->
             <div class="field-wrapper">
-                <div class="input-group rounded-pill">
-                    <span class="material-symbols-rounded">lock</span>
-                    <input type="password" name="password" class="form-control border-0" placeholder="Senha" required>
+                <label for="id_email" class="field-label">Email</label>
+                <div class="input-group" id="group-email">
+                    <span class="input-group-text border-0 bg-transparent" aria-hidden="true">
+                        <span class="material-symbols-rounded">email</span>
+                    </span>
+                    <input type="email"
+                           id="id_email"
+                           name="email"
+                           class="form-control"
+                           placeholder="seu@email.com"
+                           autocomplete="email"
+                           spellcheck="false"
+                           required
+                           aria-required="true"
+                           aria-describedby="error-email">
                 </div>
+                <span id="error-email" class="field-error-msg" style="display:none;" role="alert"></span>
             </div>
 
+            <!-- Senha -->
             <div class="field-wrapper">
-                <div class="input-group rounded-pill">
-                    <span class="material-symbols-rounded">lock</span>
-                    <input type="password" name="confirm_password" class="form-control border-0" placeholder="Confirmar senha" required>
+                <label for="id_password" class="field-label">Senha</label>
+                <div class="input-group" id="group-password">
+                    <span class="input-group-text border-0 bg-transparent" aria-hidden="true">
+                        <span class="material-symbols-rounded">lock</span>
+                    </span>
+                    <input type="password"
+                           id="id_password"
+                           name="password"
+                           class="form-control"
+                           placeholder="Mínimo 8 caracteres"
+                           autocomplete="new-password"
+                           required
+                           aria-required="true"
+                           aria-describedby="error-password password-strength-label">
+                    <button type="button"
+                            class="btn-toggle-password"
+                            data-target="id_password"
+                            aria-label="Mostrar senha"
+                            aria-pressed="false">
+                        <span class="material-symbols-rounded" aria-hidden="true">visibility</span>
+                    </button>
                 </div>
+                <!-- Barra de força da senha -->
+                <div class="password-strength" id="password-strength" aria-live="polite">
+                    <div class="strength-bar">
+                        <div class="strength-segment"></div>
+                        <div class="strength-segment"></div>
+                        <div class="strength-segment"></div>
+                        <div class="strength-segment"></div>
+                    </div>
+                    <span class="strength-label" id="password-strength-label"></span>
+                </div>
+                <span id="error-password" class="field-error-msg" style="display:none;" role="alert"></span>
             </div>
 
-            <button id="btn-registrar" class="btn btn-primary w-50 mt-3 mx-auto d-block rounded-pill fw-bold" type="submit">
-                REGISTRAR
+            <!-- Confirmar senha -->
+            <div class="field-wrapper">
+                <label for="id_confirm_password" class="field-label">Confirmar senha</label>
+                <div class="input-group" id="group-confirm">
+                    <span class="input-group-text border-0 bg-transparent" aria-hidden="true">
+                        <span class="material-symbols-rounded">lock</span>
+                    </span>
+                    <input type="password"
+                           id="id_confirm_password"
+                           name="confirm_password"
+                           class="form-control"
+                           placeholder="Repita a senha"
+                           autocomplete="new-password"
+                           required
+                           aria-required="true"
+                           aria-describedby="error-confirm">
+                    <button type="button"
+                            class="btn-toggle-password"
+                            data-target="id_confirm_password"
+                            aria-label="Mostrar confirmação de senha"
+                            aria-pressed="false">
+                        <span class="material-symbols-rounded" aria-hidden="true">visibility</span>
+                    </button>
+                </div>
+                <span id="error-confirm" class="field-error-msg" style="display:none;" role="alert"></span>
+            </div>
+
+            <!-- Botão -->
+            <button class="btn btn-primary w-100 mt-2"
+                    type="submit"
+                    id="btn-registrar"
+                    aria-label="Criar conta">
+                <span class="btn-text">CRIAR CONTA</span>
+                <span class="btn-spinner" aria-hidden="true">
+                    <span class="spinner-dot"></span>
+                    <span class="spinner-dot"></span>
+                    <span class="spinner-dot"></span>
+                </span>
             </button>
         </form>
 
-        <p class="small-password-login text-center mt-3">
-            Já tem conta? <a href="{% url 'login' %}" class="small-password-link">Entre aqui</a>
+        <p class="small-password-login text-center">
+            Já tem uma conta?
+            <a href="{% url 'login' %}" class="small-password-link">Entre aqui</a>
         </p>
+
     </div>
 </div>
 
 <script>
-    const form = document.querySelector('form');
-    const inputData = document.getElementById('data_nascimento');
-    const alerta = document.getElementById('alert-idade');
-    const btn = document.getElementById('btn-registrar');
+(function () {
+    'use strict';
 
-    function calcularIdade(dataValue) {
-        if (!dataValue) return 0;
-        const hoje = new Date();
-        const dataNasc = new Date(dataValue);
-        let idade = hoje.getFullYear() - dataNasc.getFullYear();
-        const m = hoje.getMonth() - dataNasc.getMonth();
-        if (m < 0 || (m === 0 && hoje.getDate() < dataNasc.getDate())) {
-            idade--;
+    /* ── Elementos ── */
+    const form        = document.getElementById('register-form');
+    const btn         = document.getElementById('btn-registrar');
+    const djangoAlert = document.getElementById('django-error-alert');
+
+    const fields = {
+        fullName : { input: document.getElementById('id_full_name'),        group: document.getElementById('group-full-name'), err: document.getElementById('error-full-name') },
+        username : { input: document.getElementById('id_username'),          group: document.getElementById('group-username'),  err: document.getElementById('error-username') },
+        data     : { input: document.getElementById('id_data_nascimento'),   group: document.getElementById('group-data'),      err: document.getElementById('error-data') },
+        email    : { input: document.getElementById('id_email'),             group: document.getElementById('group-email'),     err: document.getElementById('error-email') },
+        password : { input: document.getElementById('id_password'),          group: document.getElementById('group-password'),  err: document.getElementById('error-password') },
+        confirm  : { input: document.getElementById('id_confirm_password'),  group: document.getElementById('group-confirm'),   err: document.getElementById('error-confirm') },
+    };
+
+    const strengthWrap  = document.getElementById('password-strength');
+    const strengthBar   = strengthWrap.querySelector('.strength-bar');
+    const strengthLabel = document.getElementById('password-strength-label');
+
+    /* ── Auto-dismiss alerta Django ── */
+    if (djangoAlert) {
+        setTimeout(() => {
+            djangoAlert.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+            djangoAlert.style.opacity = '0';
+            djangoAlert.style.transform = 'translateX(-50%) translateY(-8px)';
+            setTimeout(() => djangoAlert.remove(), 400);
+        }, 5000);
+    }
+
+    /* ── Helpers: mostrar/limpar erro e sucesso ── */
+    function showError(f, msg) {
+        f.group.classList.add('input-error');
+        f.group.classList.remove('input-success');
+        f.err.textContent = msg;
+        f.err.style.display = 'flex';
+        // Remove sucesso se existir
+        const ok = f.group.parentElement.querySelector('.field-success-msg');
+        if (ok) ok.remove();
+    }
+
+    function clearError(f) {
+        f.group.classList.remove('input-error');
+        f.err.textContent = '';
+        f.err.style.display = 'none';
+    }
+
+    function showSuccess(f, msg) {
+        f.group.classList.add('input-success');
+        f.group.classList.remove('input-error');
+        f.err.style.display = 'none';
+        let ok = f.group.parentElement.querySelector('.field-success-msg');
+        if (!ok) {
+            ok = document.createElement('span');
+            ok.className = 'field-success-msg';
+            ok.setAttribute('role', 'status');
+            f.group.parentElement.appendChild(ok);
         }
+        ok.textContent = msg;
+        ok.style.display = 'flex';
+    }
+
+    function clearSuccess(f) {
+        f.group.classList.remove('input-success');
+        const ok = f.group.parentElement.querySelector('.field-success-msg');
+        if (ok) ok.remove();
+    }
+
+    /* ── Toggle mostrar/ocultar senha ── */
+    document.querySelectorAll('.btn-toggle-password').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const target = document.getElementById(btn.dataset.target);
+            const icon   = btn.querySelector('.material-symbols-rounded');
+            const isHidden = target.type === 'password';
+            target.type = isHidden ? 'text' : 'password';
+            icon.textContent = isHidden ? 'visibility_off' : 'visibility';
+            btn.setAttribute('aria-label',   isHidden ? 'Ocultar senha'  : 'Mostrar senha');
+            btn.setAttribute('aria-pressed',  isHidden ? 'true'           : 'false');
+            target.focus();
+        });
+    });
+
+    /* ── Força da senha ── */
+    const strengthTexts = ['', 'Fraca', 'Razoável', 'Boa', 'Forte'];
+
+    function calcStrength(pw) {
+        let score = 0;
+        if (pw.length >= 8)                      score++;
+        if (/[A-Z]/.test(pw) && /[a-z]/.test(pw)) score++;
+        if (/\d/.test(pw))                        score++;
+        if (/[^A-Za-z0-9]/.test(pw))              score++;
+        return score;
+    }
+
+    fields.password.input.addEventListener('input', () => {
+        const pw = fields.password.input.value;
+        clearError(fields.password);
+
+        if (!pw) {
+            strengthWrap.style.display = 'none';
+            return;
+        }
+
+        strengthWrap.style.display = 'block';
+        const score = calcStrength(pw);
+        strengthBar.className = 'strength-bar strength-' + score;
+        strengthLabel.textContent = strengthTexts[score];
+
+        // Confirma se confirmação já foi preenchida
+        if (fields.confirm.input.value) validateConfirm();
+    });
+
+    /* ── Validações em tempo real ── */
+    function calcularIdade(val) {
+        if (!val) return 0;
+        const hoje  = new Date();
+        const nasc  = new Date(val);
+        let idade   = hoje.getFullYear() - nasc.getFullYear();
+        const m     = hoje.getMonth() - nasc.getMonth();
+        if (m < 0 || (m === 0 && hoje.getDate() < nasc.getDate())) idade--;
         return idade;
     }
 
-    // Apenas mostra o erro visual
-    inputData.addEventListener('change', function() {
-        if (this.value && calcularIdade(this.value) < 13) {
-            alerta.classList.remove('d-none');
-        } else {
-            alerta.classList.add('d-none');
+    fields.data.input.addEventListener('change', () => {
+        clearError(fields.data);
+        const idade = calcularIdade(fields.data.input.value);
+        if (fields.data.input.value && idade < 13) {
+            showError(fields.data, 'Você precisa ter pelo menos 13 anos.');
+        } else if (fields.data.input.value && idade >= 13) {
+            clearError(fields.data);
         }
     });
 
-    // Bloqueia o envio sem mudar o visual do botão
-    form.addEventListener('submit', function(event) {
-        if (calcularIdade(inputData.value) < 13) {
-            event.preventDefault(); // Não deixa cadastrar
-            alerta.classList.remove('d-none');
-            
-            // Efeito de erro no botão (ele treme)
-            btn.style.animation = 'shake 0.4s';
-            setTimeout(() => { btn.style.animation = ''; }, 400);
+    function validateConfirm() {
+        const pw  = fields.password.input.value;
+        const cfm = fields.confirm.input.value;
+        if (!cfm) { clearError(fields.confirm); clearSuccess(fields.confirm); return; }
+        if (pw !== cfm) {
+            showError(fields.confirm, 'As senhas não coincidem.');
+            clearSuccess(fields.confirm);
+        } else {
+            clearError(fields.confirm);
+            showSuccess(fields.confirm, 'Senhas coincidem.');
         }
+    }
+
+    fields.confirm.input.addEventListener('input', validateConfirm);
+
+    /* ── Limpa erros ao digitar (outros campos) ── */
+    [fields.fullName, fields.username, fields.email, fields.password].forEach(f => {
+        f.input.addEventListener('input', () => clearError(f));
     });
+
+    /* ── Validação completa no submit ── */
+    function validateAll() {
+        let valid = true;
+        let firstInvalid = null;
+
+        if (!fields.fullName.input.value.trim()) {
+            showError(fields.fullName, 'Informe seu nome completo.');
+            valid = false;
+            if (!firstInvalid) firstInvalid = fields.fullName.input;
+        }
+
+        if (!fields.username.input.value.trim()) {
+            showError(fields.username, 'Escolha um nome de usuário.');
+            valid = false;
+            if (!firstInvalid) firstInvalid = fields.username.input;
+        } else if (fields.username.input.value.length < 3) {
+            showError(fields.username, 'Mínimo de 3 caracteres.');
+            valid = false;
+            if (!firstInvalid) firstInvalid = fields.username.input;
+        }
+
+        if (!fields.data.input.value) {
+            showError(fields.data, 'Informe sua data de nascimento.');
+            valid = false;
+            if (!firstInvalid) firstInvalid = fields.data.input;
+        } else if (calcularIdade(fields.data.input.value) < 13) {
+            showError(fields.data, 'Você precisa ter pelo menos 13 anos.');
+            valid = false;
+            if (!firstInvalid) firstInvalid = fields.data.input;
+        }
+
+        if (!fields.email.input.value.trim()) {
+            showError(fields.email, 'Informe seu email.');
+            valid = false;
+            if (!firstInvalid) firstInvalid = fields.email.input;
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(fields.email.input.value)) {
+            showError(fields.email, 'Email inválido.');
+            valid = false;
+            if (!firstInvalid) firstInvalid = fields.email.input;
+        }
+
+        if (!fields.password.input.value) {
+            showError(fields.password, 'Crie uma senha.');
+            valid = false;
+            if (!firstInvalid) firstInvalid = fields.password.input;
+        } else if (fields.password.input.value.length < 8) {
+            showError(fields.password, 'A senha deve ter pelo menos 8 caracteres.');
+            valid = false;
+            if (!firstInvalid) firstInvalid = fields.password.input;
+        }
+
+        if (!fields.confirm.input.value) {
+            showError(fields.confirm, 'Confirme sua senha.');
+            valid = false;
+            if (!firstInvalid) firstInvalid = fields.confirm.input;
+        } else if (fields.password.input.value !== fields.confirm.input.value) {
+            showError(fields.confirm, 'As senhas não coincidem.');
+            valid = false;
+            if (!firstInvalid) firstInvalid = fields.confirm.input;
+        }
+
+        if (firstInvalid) firstInvalid.focus();
+        return valid;
+    }
+
+    /* ── Submit ── */
+    form.addEventListener('submit', (e) => {
+        if (!validateAll()) {
+            e.preventDefault();
+            return;
+        }
+
+        btn.classList.add('loading');
+        btn.disabled = true;
+        btn.setAttribute('aria-label', 'Criando conta…');
+
+        // Segurança: remove loading após 10s
+        setTimeout(() => {
+            btn.classList.remove('loading');
+            btn.disabled = false;
+            btn.setAttribute('aria-label', 'Criar conta');
+        }, 10000);
+    });
+
+})();
 </script>
+
 </body>
 </html>

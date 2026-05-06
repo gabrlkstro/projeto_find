@@ -71,8 +71,14 @@ def _usuario_participa(chat, user):
 # Home / Auth
 # -----------------------------
 def home(request):
-    return render(request, "mainpage/index.html")
+    total, perdidos, encontrados, devolvidos = _system_counts()
 
+    return render(request, "mainpage/index.html", {
+        "total_itens": total,
+        "perdidos": perdidos,
+        "encontrados": encontrados,
+        "devolvidos": devolvidos,
+    })
 
 def login_view(request):
     if request.method == "POST":
@@ -541,6 +547,18 @@ def marcar_achado(request, id):
     messages.success(request, "Item marcado como encontrado!")
     return redirect(next_url)
 
+@login_required(login_url="login")
+@require_POST
+def marcar_perdido(request, id):
+    next_url = request.POST.get("next") or reverse("item_detail", kwargs={"id": id})
+    item = get_object_or_404(Item, id=id, usuario=request.user)
+ 
+    item.status = "perdido"
+    item.save(update_fields=["status", "atualizado_em"])
+ 
+    messages.success(request, "Item marcado como perdido!")
+    return redirect(next_url)
+ 
 # -----------------------------
 # Detalhe do item
 # -----------------------------

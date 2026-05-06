@@ -1,49 +1,280 @@
 {% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
 <head>
-    <meta charset='utf-8'>
-    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-    <title>Find - Pagina inicial</title>
-    <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FIND — Plataforma de Achados e Perdidos</title>
 
-    <link rel="stylesheet" href="{% static 'mainpage/css/index.css' %}">
-    <link rel="icon" type="image/png" href="{% static 'mainpage/img/find.png' %}">
+  <!-- Google Fonts: Syne (display) + DM Sans (body) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css">
+
+  <!-- CSS próprio -->
+  <link rel="stylesheet" href="{% static 'mainpage/css/index.css' %}">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="{% static 'mainpage/img/find.png' %}">
+
 </head>
-
 <body>
 
-<div class="container hero-container text-center py-5">
+  <!-- Background decorative layers -->
+  <div class="bg-layer" aria-hidden="true"></div>
+  <div class="dot-grid" aria-hidden="true"></div>
 
-    <!-- LOGO -->
-    <div class="mb-4 logo animate delay-1">
-        <img src="{% static 'mainpage/img/logo-find.png' %}" alt="Logo Find">
+  <!-- ====================================================
+       NAV
+       ==================================================== -->
+  <nav class="nav">
+    <img src="{% static 'mainpage/img/logo-find.png' %}" alt="logo-find" class="logo-find">
+    <div class="nav-links">
+      <a href="#benefits" class="nav-link">Benefícios</a>
+      <a href="#how" class="nav-link">Como funciona</a>
+      <a href="{% url 'login' %}" class="nav-link">Entrar</a>
+      <a href="{% url 'register' %}" class="nav-btn">Criar conta</a>
     </div>
+  </nav>
 
-    <!-- TEXTO PRINCIPAL -->
-    <div class="mb-4 animate delay-2">
-        <h1 class="fw-bold text-title">
-            Se você <span class="title-color">PERDEU</span> algo acaba de <br>
-            <span class="title-color">ENCONTRAR</span> a plataforma certa!
-        </h1>
-    </div>
+  <!-- ====================================================
+       HERO
+       ==================================================== -->
+  <section class="hero">
+    <div class="hero-inner">
 
-    <!-- BOTÃO -->
-    <div class="mb-1 animate delay-3">
+      <div class="hero-badge">
+        <i class="bi bi-stars"></i>
+        Plataforma nº 1 de achados e perdidos
+      </div>
+
+      <h1 class="hero-headline">
+        Perdeu algo?<br>
+        <span class="highlight">Encontre aqui.</span>
+      </h1>
+
+      <p class="hero-sub">
+        Centralize, gerencie e resolva achados e perdidos com eficiência, segurança e total rastreabilidade.
+      </p>
+
+      <div class="hero-cta-group">
         <a href="{% url 'register' %}" class="btn-primary">
-            CADASTRE-SE
+          <i class="bi bi-person-plus-fill"></i>
+          Criar conta grátis
         </a>
-    </div>
+        <a href="{% url 'login' %}" class="btn-ghost">
+          <i class="bi bi-box-arrow-in-right"></i>
+          Já tenho conta
+        </a>
+      </div>
 
-    <!-- LOGIN -->
-    <div class="text2 animate delay-4">
-        <h5>
-            Já tem uma conta?
-            <a href="{% url 'login' %}" class="fw-bold">Entrar</a>
-        </h5>
-    </div>
+      <div class="hero-social-proof">
+        <div class="proof-stat">
+          <strong>{{ total_itens }}</strong>
+          <span>Itens cadastrados</span>
+        </div>
+        <div class="proof-divider"></div>
+        <div class="proof-stat">
+          <strong>{{ devolvidos }}</strong>
+          <span>Itens devolvidos</span>
+        </div>
+        <div class="proof-divider"></div>
+        <div class="proof-stat">
+          <strong>{{ encontrados }}</strong>
+          <span>Itens encontrados</span>
+        </div>
+      </div>
 
-</div>
+    </div>
+  </section>
+
+  <!-- ====================================================
+       BENEFITS
+       ==================================================== -->
+  <section class="section" id="benefits">
+    <div class="section-inner">
+      <div class="section-header text-center">
+        <span class="section-label">Por que escolher</span>
+        <h2 class="section-title">Tudo que você precisa<br>para recuperar o que é seu</h2>
+        <p class="section-sub">Desenvolvemos uma experiência sem atrito para maximizar as chances de você reencontrar o que perdeu.</p>
+      </div>
+
+      <div class="benefits-grid">
+        <div class="benefit-card reveal">
+          <div class="benefit-icon"><i class="bi bi-shield-fill-check"></i></div>
+          <h3 class="benefit-title">100% Seguro</h3>
+          <p class="benefit-desc">Seus dados são protegidos com criptografia de ponta a ponta. Suas informações nunca são compartilhadas sem sua permissão.</p>
+        </div>
+        <div class="benefit-card reveal">
+          <div class="benefit-icon"><i class="bi bi-lightning-charge-fill"></i></div>
+          <h3 class="benefit-title">Resposta Rápida</h3>
+          <p class="benefit-desc">Notificações em tempo real assim que houver uma correspondência com seu item. Não perca a janela de recuperação.</p>
+        </div>
+        <div class="benefit-card reveal">
+          <div class="benefit-icon"><i class="bi bi-geo-alt-fill"></i></div>
+          <h3 class="benefit-title">Localização Inteligente</h3>
+          <p class="benefit-desc">Filtramos os achados por região para aumentar a relevância das correspondências e agilizar a devolução.</p>
+        </div>
+        <div class="benefit-card reveal">
+          <div class="benefit-icon"><i class="bi bi-gift-fill"></i></div>
+          <h3 class="benefit-title">Totalmente Gratuito</h3>
+          <p class="benefit-desc">Sem taxas, sem surpresas. Cadastre quantos itens precisar e use todos os recursos da plataforma sem pagar nada.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================================================
+       HOW IT WORKS
+       ==================================================== -->
+  <section class="section how-section" id="how">
+    <div class="section-inner">
+      <div class="section-header text-center">
+        <span class="section-label">Simples assim</span>
+        <h2 class="section-title">Como funciona?</h2>
+        <p class="section-sub">Três passos para começar. Menos de dois minutos para cadastrar seu item.</p>
+      </div>
+
+      <div class="steps-grid">
+        <div class="step-item reveal">
+          <div class="step-number"><i class="bi bi-person-plus"></i></div>
+          <h3 class="step-title">1. Crie sua conta</h3>
+          <p class="step-desc">Cadastro rápido e gratuito. Apenas nome e e-mail para começar.</p>
+        </div>
+        <div class="step-item reveal">
+          <div class="step-number"><i class="bi bi-pencil-square"></i></div>
+          <h3 class="step-title">2. Cadastre o item</h3>
+          <p class="step-desc">Descreva o objeto perdido ou encontrado com fotos e localização.</p>
+        </div>
+        <div class="step-item reveal">
+          <div class="step-number"><i class="bi bi-bell-fill"></i></div>
+          <h3 class="step-title">3. Receba alertas</h3>
+          <p class="step-desc">Avisamos você imediatamente quando encontrarmos uma correspondência.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================================================
+       TESTIMONIALS
+       ==================================================== -->
+  <section class="section">
+    <div class="section-inner">
+      <div class="section-header text-center">
+        <span class="section-label">Histórias reais</span>
+        <h2 class="section-title">Quem usou, aprovou</h2>
+        <p class="section-sub">Pessoas que recuperaram itens importantes graças à comunidade FIND.</p>
+      </div>
+
+      <div class="testimonials-grid">
+        <div class="testimonial-card reveal">
+          <div class="testimonial-stars">
+            <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+            <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+            <i class="bi bi-star-fill"></i>
+          </div>
+          <p class="testimonial-text">"Perdi minha carteira com todos os documentos. Em menos de 24 horas, alguém a cadastrou no FIND e consegui recuperar tudo. Inacreditável!"</p>
+          <div class="testimonial-author">
+            <div class="author-avatar">MR</div>
+            <div class="author-info">
+              <strong>Mariana R.</strong>
+              <span>São Paulo, SP</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card reveal">
+          <div class="testimonial-stars">
+            <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+            <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+            <i class="bi bi-star-fill"></i>
+          </div>
+          <p class="testimonial-text">"Encontrei um celular na rua e não sabia o que fazer. Cadastrei no FIND e em horas o dono entrou em contato. Fácil demais."</p>
+          <div class="testimonial-author">
+            <div class="author-avatar">CS</div>
+            <div class="author-info">
+              <strong>Carlos S.</strong>
+              <span>Rio de Janeiro, RJ</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card reveal">
+          <div class="testimonial-stars">
+            <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+            <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+            <i class="bi bi-star-half"></i>
+          </div>
+          <p class="testimonial-text">"A plataforma é muito intuitiva. Cadastrei meu notebook perdido e recebi uma notificação no mesmo dia. Recomendo demais!"</p>
+          <div class="testimonial-author">
+            <div class="author-avatar">AL</div>
+            <div class="author-info">
+              <strong>Ana L.</strong>
+              <span>Curitiba, PR</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ====================================================
+       CTA BANNER
+       ==================================================== -->
+  <section class="section" style="padding-top: 0;">
+    <div class="section-inner">
+      <div class="cta-banner reveal">
+        <h2 class="cta-banner-title">Pronto para encontrar<br>o que perdeu?</h2>
+        <p class="cta-banner-sub">Crie sua conta gratuita em menos de um minuto<br>e faça parte da maior rede de achados e perdidos.</p>
+        <div class="cta-banner-actions">
+          <a href="{% url 'register' %}" class="btn-light">
+            <i class="bi bi-person-plus-fill"></i>
+            Criar conta grátis
+          </a>
+          <a href="{% url 'login' %}" class="btn-outline-light">
+            <i class="bi bi-box-arrow-in-right"></i>
+            Já tenho conta
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================================================
+       FOOTER
+       ==================================================== -->
+  <footer>
+    <div class="footer-inner">
+      <img src="{% static 'mainpage/img/logo-find.png' %}" alt="FIND logo" class="logo-find">
+      <div class="footer-links">
+        <a href="#">Sobre</a>
+        <a href="#">Privacidade</a>
+        <a href="#">Termos</a>
+        <a href="#">Contato</a>
+      </div>
+      <span class="footer-copy">© 2025 FIND. Todos os direitos reservados.</span>
+    </div>
+  </footer>
+
+  <!-- ====================================================
+       JS — Scroll reveal
+       ==================================================== -->
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  </script>
 
 </body>
 </html>

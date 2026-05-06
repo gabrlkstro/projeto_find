@@ -1,33 +1,43 @@
-/* ================= RESET BÁSICO ================= */
-* {
+/* ================= RESET ================= */
+*, *::before, *::after {
     box-sizing: border-box;
-}
-
-/* ================= BODY / FUNDO ================= */
-body {
-    min-height: 100vh;
-    background: linear-gradient(135deg, #f5feff 50%, #e4f7ff 100%);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: #333;
     margin: 0;
     padding: 0;
-    overflow-x: hidden;
-    position: relative;
 }
 
+/* ================= FONTS ================= */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600&display=swap');
+
+/* ================= BODY ================= */
+body {
+    min-height: 100vh;
+    font-family: 'Plus Jakarta Sans', 'Segoe UI', sans-serif;
+    color: #1a2e38;
+    overflow-x: hidden;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background-color: #e8f6fb;
+    background-image:
+        radial-gradient(ellipse 80% 60% at 10% 5%, rgba(0, 185, 230, 0.18) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 50% at 90% 95%, rgba(3, 133, 180, 0.14) 0%, transparent 55%),
+        url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%230095c8' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
 
 /* ================= BLURS DECORATIVOS ================= */
 body::before,
 body::after {
     content: "";
-    position: fixed; /* 🔥 não quebra layout */
+    position: fixed;
     width: 500px;
     height: 500px;
     border-radius: 50%;
     filter: blur(100px);
     opacity: 0.1;
-    pointer-events: none; /* 🔥 não bloqueia clique */
-    z-index: -1;
+    pointer-events: none;
+    z-index: 0;
 }
 
 body::before {
@@ -42,210 +52,439 @@ body::after {
     right: -140px;
 }
 
-
-
-/* ====== CARD ====== */
+/* ================= CARD ================= */
 .login-card {
-    width: 520px;
-    height: 600px !important;
+    width: 480px;
     position: relative;
-    background: rgba(191, 233, 246, 0.7) !important;
-    border-radius: 20px !important;
-    backdrop-filter: blur(8px) !important;
+    z-index: 1;
+    background:  rgba(173, 233, 255, 0.65) !important;
+    border-radius: 24px !important;
+    border: 1px solid rgba(255, 255, 255, 0.9) !important;
+    backdrop-filter: blur(20px) saturate(1.4) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(1.4) !important;
+    box-shadow:
+        0 2px 0 rgba(255, 255, 255, 0.8) inset,
+        0 20px 60px rgba(0, 120, 170, 0.12),
+        0 4px 16px rgba(0, 90, 140, 0.07) !important;
+    padding: 2.5rem 2.75rem !important;
+    overflow: visible !important;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
 }
 
-/* ====== LOGO ====== */
+.login-card:hover {
+    box-shadow:
+        0 2px 0 rgba(255, 255, 255, 0.8) inset,
+        0 28px 70px rgba(0, 120, 170, 0.16),
+        0 6px 20px rgba(0, 90, 140, 0.09) !important;
+}
+
+/* linha de luz no topo do card */
+.login-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 10%;
+    width: 80%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.95), transparent);
+    border-radius: 50%;
+}
+
+/* ================= LOGO ================= */
 .image-logo {
-    margin-bottom: -20px;
+    margin-bottom: 0;
 }
 
-/* ====== login ====== */
+.image-logo img {
+    filter: drop-shadow(0 2px 8px rgba(0, 140, 200, 0.2));
+    transition: filter 0.3s ease;
+}
+
+/* ================= HR ================= */
+.hr-custom {
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #0ab4e8, #0385b4, transparent);
+    border: none;
+    opacity: 1;
+    border-radius: 10px;
+    width: 70%;
+    margin: 1rem auto 1.25rem;
+}
+
+/* ================= TÍTULO ================= */
 .title-gradient {
-    background: linear-gradient(90deg, #000102, #0385b4fa);
+    font-size: 1.6rem;
+    letter-spacing: 0.04em;
+    font-weight: 600;
+    background: linear-gradient(100deg, #012e40 20%, #0385b4);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-}
-/* ====== INPUT GROUP ====== */
-.input-group {
-    width: 420px !important;
-    margin: 46px auto;
-    display: flex;
-    align-items: center;
-    border-radius: 50px;
-    overflow: hidden;
-    background: rgba(255, 255, 255, 0.61);
+    background-clip: text;
+    margin-bottom: 0.25rem;
 }
 
-/* ====== ÍCONE (BOLINHA) ====== */
+/* ================= LABEL (acessibilidade) ================= */
+.field-label {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: #3a6a82;
+    margin-bottom: 0.35rem;
+    letter-spacing: 0.03em;
+    transition: color 0.2s;
+}
+
+.field-wrapper:focus-within .field-label {
+    color: #0385b4;
+}
+
+/* ================= INPUT GROUP ================= */
+.input-group {
+    width: 100% !important;
+    margin: 0 !important;
+    display: flex;
+    align-items: center;
+    border-radius: 14px !important;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.65);
+    border: 1.5px solid rgba(3, 133, 180, 0.15) !important;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.input-group:focus-within {
+    border-color: rgba(3, 133, 180, 0.55) !important;
+    box-shadow: 0 0 0 3.5px rgba(0, 185, 230, 0.12), 0 2px 10px rgba(3, 133, 180, 0.08);
+    background: rgba(255, 255, 255, 0.88);
+}
+
+.input-group:hover:not(:focus-within) {
+    border-color: rgba(3, 133, 180, 0.3) !important;
+    background: rgba(255, 255, 255, 0.75);
+}
+
+/* estado de erro no input */
+.input-group.input-error {
+    border-color: rgba(220, 53, 69, 0.5) !important;
+    background: rgba(255, 245, 245, 0.8);
+}
+
+.input-group.input-error:focus-within {
+    box-shadow: 0 0 0 3.5px rgba(220, 53, 69, 0.1) !important;
+    border-color: rgba(220, 53, 69, 0.6) !important;
+}
+
+/* ================= ÍCONE ================= */
 .input-group-text {
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.4) !important;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px !important;
+    background: transparent !important;
+    border: none !important;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-left: 5px;
-    border: 1px solid rgba(255,255,255,0.2);
-    backdrop-filter: blur(6px);
+    margin: 4px 0 4px 6px;
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
 }
 
-/* ====== ÍCONE ESTILO GOOGLE ====== */
+.input-group:focus-within .input-group-text {
+    transform: scale(1.1);
+}
+
 .material-symbols-rounded {
-  font-variation-settings:
-    'FILL' 0,
-    'wght' 200,
-    'GRAD' 0,
-    'opsz' 48;
-  font-size: 22px;
-  color: #0b8ad0;
-  margin: 10px 15px;
+    font-variation-settings: 'FILL' 0, 'wght' 250, 'GRAD' 0, 'opsz' 24;
+    font-size: 20px;
+    color: #0b8ad0;
+    margin: 0;
+    display: block;
+    transition: color 0.2s ease;
 }
 
-/* ====== INPUT ====== */
+.input-group:focus-within .material-symbols-rounded {
+    color: #0385b4;
+    font-variation-settings: 'FILL' 1, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+}
+
+/* ================= TOGGLE SENHA ================= */
+.btn-toggle-password {
+    background: none;
+    border: none;
+    padding: 0 12px 0 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    color: #7bafc4;
+    transition: color 0.2s ease;
+    flex-shrink: 0;
+}
+
+.btn-toggle-password:hover {
+    color: #0385b4;
+}
+
+.btn-toggle-password .material-symbols-rounded {
+    font-size: 18px;
+    color: inherit;
+}
+
+/* ================= INPUT ================= */
 .form-control {
-    height: 48px;
+    height: 52px;
     font-size: 0.9rem;
+    font-family: inherit;
+    color: #1a2e38;
     background: transparent !important;
     border: none !important;
-    border-radius: 0;
+    border-radius: 0 !important;
+    padding-left: 6px;
+    letter-spacing: 0.01em;
+}
+
+.form-control::placeholder {
+    color: #8baec0;
+    font-weight: 400;
 }
 
 .form-control:focus {
     box-shadow: none !important;
     border: none !important;
+    background: transparent !important;
+    color: #1a2e38;
 }
 
-.btn-primary {
-    position: relative;
-    overflow: hidden;
-    border: none !important;
-    height: 50px;
-    font-size: 1.1rem;
-    border-radius: 50px;
-    color: white;
-    cursor: pointer;
-
-    /* gradiente fixo */
-    background: linear-gradient(90deg, #21B6FF, #033f52);
-
-    box-shadow: 0 8px 18px rgba(14, 110, 139, 0.25);
-
-    transition: 
-        transform 0.25s ease,
-        box-shadow 0.25s ease,
-        filter 0.25s ease;
+/* ================= CAMPO WRAPPER ================= */
+.field-wrapper {
+    margin-bottom: 1rem;
 }
 
-/* brilho passando */
-.btn-primary::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: -120%;
-    width: 60%;
-    height: 100%;
-    background: linear-gradient(
-        120deg,
-        transparent,
-        rgba(255,255,255,0.25),
-        transparent
-    );
-    transform: skewX(-25deg);
-    transition: left 0.8s ease;
-}
-
-/* hover SEM mudar a cor */
-.btn-primary:hover {
-    transform: translateY(-2px) scale(1.03);
-    filter: brightness(1.02);
-
-    box-shadow:
-        0 14px 10px rgba(33,182,255,0.25),
-        0 6px 5px rgba(14,110,139,0.18);
-}
-
-.btn-primary:hover::before {
-    left: 160%;
-}
-
-.btn-primary:active {
-    transform: scale(0.98);
-}
-
-/* ====== LINK PEQUENO ====== */
+/* ================= LINK ESQUECI SENHA ================= */
 .small-password {
+    font-size: 0.82rem;
+    color: #4a7a94;
+    margin: 0.4rem 0 1.4rem 2px;
     width: 100%;
-    font-size: 0.85rem;
-    color: #023a51;
-    margin-top: -30px;
-    margin-left: 30px;
 }
 
 .small-password-register {
-    width: 100%;
-    font-size: 0.85rem;
-    color: #005374;
+    font-size: 0.84rem;
+    color: #4a7a94;
+    margin-top: 1.25rem;
+    margin-bottom: 0;
 }
 
 .small-password-link {
     text-decoration: none;
-    color: #01c1f1 !important;
-    font-weight: 500 !important;
+    color: #0385b4 !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.01em;
+    transition: color 0.15s ease;
+    position: relative;
+}
+
+.small-password-link::after {
+    content: "";
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: #0ab4e8;
+    transition: width 0.2s ease;
 }
 
 .small-password-link:hover {
+    color: #0ab4e8 !important;
     text-decoration: none;
 }
 
-/* ====== HR ====== */
-.hr-custom {
-    height: 3px;
-    background-color: #098aec;
-    border: none;
-    opacity: 1;
-    border-radius: 10px;
-    width: 80%;
-    margin: 20px auto;
+.small-password-link:hover::after {
+    width: 100%;
 }
 
-/* ALERTA FIXO (não empurra o layout) */
-.alert-danger{
-  position: fixed !important;
-  left: 50% !important;
-  top: 195px !important;
-  transform: translateX(-50%) !important;
-  z-index: 9999 !important;
-
-  background: linear-gradient(90deg, #ff4b4b, #ff1e1e) !important;
-  color: #fff !important;
-  font-weight: 500;
-  border-radius: 15px !important;
-  box-shadow: 0 8px 25px rgba(255,0,0,0.25);
-
-  padding: 10px 18px !important;
-  width: min(520px, calc(100% - 32px)) !important;
-  text-align: center;
-
-  margin: 0 !important; /* <- evita qualquer espaço fantasma */
-  animation: fadeDownFixed 0.35s ease;
+/* ================= BOTÃO ================= */
+.btn-primary {
+    position: relative;
+    overflow: hidden;
+    border: none !important;
+    height: 52px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    border-radius: 14px !important;
+    color: white;
+    cursor: pointer;
+    background: linear-gradient(135deg, #18b8ef 0%, #0385b4 55%, #024f6d 100%);
+    box-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.2) inset,
+        0 8px 24px rgba(3, 133, 180, 0.3),
+        0 2px 8px rgba(0, 90, 140, 0.2);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-/* animação sem quebrar translateX */
-@keyframes fadeDownFixed{
-  from { opacity: 0; transform: translateX(-50%) translateY(-10px); }
-  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+/* brilho em hover */
+.btn-primary::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -80%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.22), transparent);
+    transform: skewX(-20deg);
+    transition: left 0.6s ease;
 }
 
-/* Remove fundo roxo do autofill (Chrome/Edge) */
+.btn-primary:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.2) inset,
+        0 14px 32px rgba(3, 133, 180, 0.35),
+        0 4px 12px rgba(0, 90, 140, 0.2);
+}
+
+.btn-primary:hover:not(:disabled)::before {
+    left: 140%;
+}
+
+.btn-primary:active:not(:disabled) {
+    transform: scale(0.98) translateY(0);
+    box-shadow: 0 4px 12px rgba(3, 133, 180, 0.25);
+}
+
+/* ---- ESTADO LOADING ---- */
+.btn-primary:disabled {
+    cursor: not-allowed;
+    opacity: 0.85;
+    transform: none;
+}
+
+.btn-primary .btn-text { transition: opacity 0.2s; }
+.btn-primary .btn-spinner { display: none; }
+
+.btn-primary.loading .btn-text { opacity: 0; }
+.btn-primary.loading .btn-spinner {
+    display: flex;
+    position: absolute;
+    inset: 0;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.spinner-dot {
+    width: 7px;
+    height: 7px;
+    background: white;
+    border-radius: 50%;
+    animation: dotPulse 1.2s ease-in-out infinite;
+}
+
+.spinner-dot:nth-child(2) { animation-delay: 0.2s; }
+.spinner-dot:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes dotPulse {
+    0%, 80%, 100% { transform: scale(0.7); opacity: 0.5; }
+    40%           { transform: scale(1);   opacity: 1; }
+}
+
+/* ================= ALERTA ERRO ================= */
+.alert-danger {
+    position: fixed !important;
+    left: 50% !important;
+    top: 1.5rem !important;
+    transform: translateX(-50%) !important;
+    z-index: 9999 !important;
+
+    background: linear-gradient(135deg, #ff5b5b, #e82020) !important;
+    color: #fff !important;
+    font-weight: 500;
+    font-size: 0.88rem;
+    border-radius: 14px !important;
+    border: none !important;
+    box-shadow: 0 8px 28px rgba(220, 30, 30, 0.25), 0 2px 8px rgba(0, 0, 0, 0.1);
+
+    padding: 12px 20px !important;
+    width: min(460px, calc(100% - 2rem)) !important;
+    text-align: center;
+    margin: 0 !important;
+    animation: alertIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.alert-icon {
+    font-family: 'Material Symbols Rounded';
+    font-variation-settings: 'FILL' 1, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+    font-size: 18px;
+    flex-shrink: 0;
+}
+
+@keyframes alertIn {
+    from { opacity: 0; transform: translateX(-50%) translateY(-14px) scale(0.96); }
+    to   { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
+}
+
+/* ================= CAMPO COM ERRO (inline) ================= */
+.field-error-msg {
+    font-size: 0.76rem;
+    color: #c0392b;
+    margin: 0.3rem 0 0 4px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    animation: fadeIn 0.2s ease;
+}
+
+.field-error-msg::before {
+    content: "error";
+    font-family: 'Material Symbols Rounded';
+    font-variation-settings: 'FILL' 1, 'wght' 300, 'GRAD' 0, 'opsz' 20;
+    font-size: 14px;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-4px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ================= AUTOFILL ================= */
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
-input:-webkit-autofill:focus,
-textarea:-webkit-autofill,
-select:-webkit-autofill {
-    -webkit-box-shadow: 0 0 0px 1000px #f8f9fa inset !important; /* mesma cor do input */
-    box-shadow: 0 0 0px 1000px #f8f9fa inset !important;
-    -webkit-text-fill-color: #212529 !important;
-    caret-color: #212529;
-    border-radius: inherit;
+input:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0px 1000px rgba(232, 246, 251, 0.95) inset !important;
+    box-shadow: 0 0 0px 1000px rgba(232, 246, 251, 0.95) inset !important;
+    -webkit-text-fill-color: #1a2e38 !important;
+    caret-color: #0385b4;
+}
+
+/* ================= RESPONSIVO ================= */
+@media (max-width: 540px) {
+    body { padding: 1rem; align-items: flex-start; padding-top: 2rem; }
+
+    .login-card {
+        width: 100% !important;
+        padding: 2rem 1.5rem !important;
+        border-radius: 20px !important;
+    }
+
+    .title-gradient { font-size: 1.35rem; }
+
+    .btn-primary { height: 50px; font-size: 0.9rem; }
+}
+
+/* ================= FOCUS OUTLINE ACESSIBILIDADE ================= */
+a:focus-visible,
+button:focus-visible {
+    outline: 2.5px solid #0ab4e8;
+    outline-offset: 3px;
+    border-radius: 6px;
+}
+
+.input-group:focus-within {
+    outline: none;
 }

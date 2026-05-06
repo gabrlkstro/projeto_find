@@ -1,205 +1,578 @@
-/* ===== CARD PRINCIPAL ===== */
-.item-detail-card {
-  background: rgba(171, 232, 255, 0.45);
-  border-radius: 16px;
-  border: 1px solid rgba(0,0,0,0.08);
+/* ============================================================
+   ITEM DETAIL — Premium UI
+   Paleta original preservada · Apenas refinamento visual
+   ============================================================ */
+
+/* ── Tokens de design ─────────────────────────────────────── */
+:root {
+  --brand-dark:    #002a35;
+  --brand-mid:     #01627a;
+  --brand-light:   #00b4d8;
+  --brand-glass:   rgba(171, 232, 255, 0.45);
+  --brand-glass-border: rgba(0, 180, 216, 0.18);
+  --surface:       rgba(255, 255, 255, 0.55);
+  --shadow-soft:   0 4px 24px rgba(0, 42, 53, 0.08);
+  --shadow-card:   0 8px 40px rgba(0, 42, 53, 0.10), 0 1px 3px rgba(0,0,0,0.06);
+  --radius-card:   20px;
+  --radius-inner:  14px;
+  --radius-icon:   12px;
+  --transition:    all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* ===== IMAGEM ===== */
+/* ══════════════════════════════════════════════════════════
+   1. CARD PRINCIPAL
+   ══════════════════════════════════════════════════════════ */
+.item-detail-card {
+  background: var(--brand-glass);
+  backdrop-filter: blur(16px) saturate(1.4);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  border-radius: var(--radius-card);
+  border: 1px solid var(--brand-glass-border);
+  box-shadow: var(--shadow-card);
+  transition: var(--transition);
+  overflow: hidden; /* garante que a imagem respeite o radius */
+}
+
+/* ══════════════════════════════════════════════════════════
+   2. IMAGEM — efeito hero
+   ══════════════════════════════════════════════════════════ */
+.item-image-wrapper {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-inner);
+  box-shadow: var(--shadow-soft);
+}
+
 .item-image-wrapper img {
   width: 100%;
   height: 340px;
   object-fit: cover;
-  border-radius: 12px;
+  border-radius: var(--radius-inner);
+  display: block;
+  transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1),
+              filter 0.55s ease;
+  filter: brightness(0.97) saturate(1.05);
 }
 
-/* ===== STATUS (BADGE DISCRETO) ===== */
+/* Overlay sutil na imagem */
+.item-image-wrapper::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-inner);
+  background: linear-gradient(
+    to bottom,
+    transparent 55%,
+    rgba(0, 42, 53, 0.22) 100%
+  );
+  pointer-events: none;
+}
+
+/* Hover: zoom suave */
+.item-image-wrapper:hover img {
+  transform: scale(1.03);
+  filter: brightness(1) saturate(1.1);
+}
+
+/* ══════════════════════════════════════════════════════════
+   3. STATUS BADGE — pill premium
+   ══════════════════════════════════════════════════════════ */
 .status-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 2;
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  align-self: flex-start;
-  font-size: 0.7rem;
-  font-weight: 900;
-  padding: 4px 12px;
-  border-radius: 999px;
-  color: #fff;
-  line-height: 1;
-  margin-bottom: 8px;
-  width: fit-content;
-}
-
-/* ===== STATUS BADGE ===== */
-.status-badge{
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 12px;
+  gap: 5px;
+  padding: 4px 10px;
   border-radius: 999px;
   font-weight: 700;
-  font-size: .9rem;
-  margin-top: 8px;
+  font-size: 0.68rem;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.18);
+  transition: var(--transition);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
 }
 
-.status-badge i{
-  font-size: 1rem;
+.status-badge i {
+  font-size: 0.7rem;
 }
 
 /* Perdido */
-.status-badge.status-perdido{
+.status-badge.status-perdido {
   background: #fc0000;
   color: #52040a;
-  border: 1px solid rgba(209,26,42,.18);
+  border: 1px solid rgba(209, 26, 42, 0.25);
+  box-shadow: 0 2px 10px rgba(252, 0, 0, 0.22);
 }
 
 /* Achado */
-.status-badge.status-achado{
+.status-badge.status-achado {
   background: #00ffd5;
   color: #1b7a43;
-  border: 1px solid rgba(29,78,216,.18);
+  border: 1px solid rgba(0, 255, 213, 0.30);
+  box-shadow: 0 2px 10px rgba(0, 255, 213, 0.22);
 }
 
 /* Devolvido */
-.status-badge.status-devolvido{
+.status-badge.status-devolvido {
   background: #00d9ff;
-  color: #026be4 !important;
-  border: 1px solid rgba(27,122,67,.18);
+  color: #026be4;
+  border: 1px solid rgba(0, 217, 255, 0.30);
+  box-shadow: 0 2px 10px rgba(0, 217, 255, 0.22);
 }
-/* ===== TEXTO ===== */
+
+/* ══════════════════════════════════════════════════════════
+   4. TIPOGRAFIA
+   ══════════════════════════════════════════════════════════ */
 .item-title {
+  font-size: 1.55rem;
   font-weight: 900;
-  letter-spacing: -0.2px;
-  color: #002a35;
+  letter-spacing: -0.5px;
+  line-height: 1.2;
+  color: var(--brand-dark);
+  margin-top: 10px;
+  margin-bottom: 0;
 }
 
 .item-description {
   font-size: 0.95rem;
   font-weight: 500;
-  line-height: 1.55;
-  color: #333;
-  margin-top: 6px;
+  line-height: 1.65;
+  color: rgba(0, 42, 53, 0.72);
+  margin-top: 10px;
 }
 
-/* ===== INFO GRID (Ícone + label em cima + valor embaixo) ===== */
+/* ══════════════════════════════════════════════════════════
+   5. INFO GRID — estilo dashboard elegante
+   ══════════════════════════════════════════════════════════ */
 .item-info-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 18px;
-  margin-top: 10px;
+  gap: 14px;
+  margin-top: 24px;
 }
 
 .info-box {
   display: flex;
   align-items: flex-start;
-  gap: 12px;
+  gap: 13px;
+  background: rgba(255, 255, 255, 0.50);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(0, 180, 216, 0.14);
+  border-radius: var(--radius-inner);
+  padding: 14px 15px;
+  box-shadow: 0 2px 10px rgba(0, 42, 53, 0.05);
+  transition: var(--transition);
+}
+
+.info-box:hover {
+  background: rgba(255, 255, 255, 0.68);
+  box-shadow: 0 4px 18px rgba(0, 42, 53, 0.09);
+  transform: translateY(-1px);
 }
 
 .info-icon {
-  width: 34px;
-  height: 34px;
-  border-radius: 12px;
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-icon);
   background: rgba(1, 98, 122, 0.10);
   display: flex;
   align-items: center;
   justify-content: center;
   flex: 0 0 auto;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.5);
 }
 
 .info-icon i {
-  font-size: 1.05rem;
-  color: #01627a;
+  font-size: 1rem;
+  color: var(--brand-mid);
 }
 
 .info-text {
   display: flex;
   flex-direction: column;
-  line-height: 1.15;
+  justify-content: center;
+  line-height: 1.2;
   min-width: 0;
 }
 
 .info-label {
-  font-size: 0.70rem;
+  font-size: 0.65rem;
   font-weight: 900;
-  letter-spacing: 0.35px;
+  letter-spacing: 0.6px;
   text-transform: uppercase;
-  color: rgba(0, 42, 53, 0.55);
-  margin-bottom: 3px;
+  color: rgba(0, 42, 53, 0.48);
+  margin-bottom: 4px;
 }
 
 .info-value {
-  font-size: 0.95rem;
+  font-size: 0.92rem;
   font-weight: 800;
-  color: #001f24;
+  color: var(--brand-dark);
   word-break: break-word;
 }
 
-/* ===== CONTATO ===== */
+/* ══════════════════════════════════════════════════════════
+   6. CARD DE CONTATO
+   ══════════════════════════════════════════════════════════ */
 .contact-detail-card {
-  background: rgba(171, 232, 255, 0.45);
-  border-radius: 16px;
-  border: 1px solid rgba(0,0,0,0.08);
+  background: var(--brand-glass);
+  backdrop-filter: blur(16px) saturate(1.4);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  border-radius: var(--radius-card);
+  border: 1px solid var(--brand-glass-border);
+  box-shadow: var(--shadow-card);
+  position: sticky;
+  top: 24px; /* cola no topo ao rolar */
 }
 
 .contact-title {
   text-align: center;
   font-weight: 900;
-  font-size: 0.85rem;
-  letter-spacing: 1px;
+  font-size: 0.7rem;
+  letter-spacing: 1.8px;
   text-transform: uppercase;
-  margin-bottom: 20px;
-  color: #002a35;
+  margin-bottom: 22px;
+  color: rgba(0, 42, 53, 0.50);
+  position: relative;
+}
+
+/* Linha decorativa abaixo do título */
+.contact-title::after {
+  content: '';
+  display: block;
+  width: 36px;
+  height: 2px;
+  border-radius: 99px;
+  background: linear-gradient(90deg, var(--brand-mid), var(--brand-light));
+  margin: 8px auto 0;
 }
 
 .contact-line {
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-size: 0.90rem;
+  gap: 12px;
+  font-size: 0.875rem;
   font-weight: 600;
-  margin-bottom: 14px;
-  color: #001f24;
+  margin-bottom: 16px;
+  color: var(--brand-dark);
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.38);
+  border: 1px solid rgba(0, 180, 216, 0.12);
+  transition: var(--transition);
+  word-break: break-all;
+}
+
+.contact-line:hover {
+  background: rgba(255, 255, 255, 0.58);
+  transform: translateX(2px);
 }
 
 .contact-line i {
-  color: #01627a;
-  font-size: 1.1rem;
+  color: var(--brand-mid);
+  font-size: 1rem;
+  flex-shrink: 0;
+  width: 18px;
+  text-align: center;
 }
 
-/* ===== BOTÃO CHAT (AZUL FORTE + PRETO) ===== */
+/* ══════════════════════════════════════════════════════════
+   7. BOTÃO CHAT — premium call-to-action
+   ══════════════════════════════════════════════════════════ */
 .btn-chat {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 100%;
-  background: linear-gradient(135deg, #001f2a, #007ea7);
+  background: linear-gradient(135deg, #001f2a 0%, #007ea7 100%);
   color: #ffffff;
   border-radius: 30px;
-  padding: 11px 18px;
+  padding: 13px 20px;
   font-weight: 900;
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   text-align: center;
   border: none;
-  letter-spacing: 0.35px;
+  letter-spacing: 0.8px;
   text-transform: uppercase;
-  box-shadow: 0 6px 16px rgba(0, 126, 167, 0.35);
-  transition: all 0.25s ease;
+  box-shadow: 0 6px 20px rgba(0, 126, 167, 0.38),
+              inset 0 1px 0 rgba(255,255,255,0.12);
+  transition: var(--transition);
   text-decoration: none;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+/* Brilho interno animado */
+.btn-chat::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    120deg,
+    transparent 30%,
+    rgba(255,255,255,0.12) 50%,
+    transparent 70%
+  );
+  transform: translateX(-100%);
+  transition: transform 0.55s ease;
+}
+
+.btn-chat:hover::before {
+  transform: translateX(100%);
 }
 
 .btn-chat:hover {
-  background: linear-gradient(135deg, #000f15, #006080);
+  background: linear-gradient(135deg, #000f15 0%, #006080 100%);
   color: #fff;
   transform: translateY(-2px);
-  box-shadow: 0 10px 22px rgba(0, 96, 128, 0.45);
+  box-shadow: 0 12px 28px rgba(0, 96, 128, 0.48),
+              inset 0 1px 0 rgba(255,255,255,0.12);
 }
 
-/* ===== RESPONSIVO ===== */
+.btn-chat:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 14px rgba(0, 96, 128, 0.35);
+}
+
+.btn-chat:disabled {
+  opacity: 0.58;
+  cursor: not-allowed;
+}
+
+/* ══════════════════════════════════════════════════════════
+   8. STATUS SWITCHER — segmented control premium
+   ══════════════════════════════════════════════════════════ */
+.status-switcher {
+  margin-top: 22px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(0, 180, 216, 0.14);
+}
+
+.status-switcher-label {
+  font-size: 0.65rem;
+  font-weight: 900;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: rgba(0, 42, 53, 0.45);
+  margin-bottom: 10px;
+  display: block;
+}
+
+/* Trilho do segmented control */
+.status-switcher-track {
+  display: flex;
+  gap: 6px;
+  background: rgba(0, 42, 53, 0.06);
+  border: 1px solid rgba(0, 180, 216, 0.15);
+  border-radius: 14px;
+  padding: 5px;
+}
+
+/* Cada opção de status */
+.status-option {
+  flex: 1;
+  position: relative;
+}
+
+/* Input radio escondido */
+.status-option input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+/* Label clicável */
+.status-option label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 10px 6px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  color: rgba(0, 42, 53, 0.45);
+  transition: var(--transition);
+  user-select: none;
+  line-height: 1;
+}
+
+.status-option label i {
+  font-size: 1.1rem;
+}
+
+.status-option label:hover {
+  background: rgba(255, 255, 255, 0.45);
+  color: rgba(0, 42, 53, 0.75);
+}
+
+/* ── Estado ATIVO por status ────────────────────────────── */
+
+/* Perdido ativo */
+.status-option.opt-perdido input:checked ~ label,
+.status-option.opt-perdido.is-current label {
+  background: #fc0000;
+  color: #52040a;
+  box-shadow: 0 3px 12px rgba(252, 0, 0, 0.30);
+}
+
+/* Achado ativo */
+.status-option.opt-achado input:checked ~ label,
+.status-option.opt-achado.is-current label {
+  background: #00ffd5;
+  color: #1b7a43;
+  box-shadow: 0 3px 12px rgba(0, 255, 213, 0.30);
+}
+
+/* Devolvido ativo */
+.status-option.opt-devolvido input:checked ~ label,
+.status-option.opt-devolvido.is-current label {
+  background: #00d9ff;
+  color: #026be4;
+  box-shadow: 0 3px 12px rgba(0, 217, 255, 0.30);
+}
+
+/* ══════════════════════════════════════════════════════════
+   10. CARD DE STATUS (dono do item)
+   ══════════════════════════════════════════════════════════ */
+.status-card {
+  background: var(--brand-glass);
+  backdrop-filter: blur(16px) saturate(1.4);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  border-radius: var(--radius-card);
+  border: 1px solid var(--brand-glass-border);
+  box-shadow: var(--shadow-card);
+  position: sticky;
+
+}
+
+.status-card-title {
+  text-align: center;
+  font-weight: 900;
+  font-size: 0.7rem;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  color: rgba(0, 42, 53, 0.50);
+  position: relative;
+}
+
+.status-card-title::after {
+  content: '';
+  display: block;
+  width: 36px;
+  height: 2px;
+  border-radius: 99px;
+  background: linear-gradient(90deg, var(--brand-mid), var(--brand-light));
+  margin: 8px auto 0;
+}
+
+/* Indicador do status atual */
+.status-card-current {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  border-radius: var(--radius-inner);
+  margin-bottom: 4px;
+  transition: var(--transition);
+}
+
+.status-cur-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 1.3rem;
+}
+
+.status-cur-text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.status-cur-label {
+  font-size: 0.62rem;
+  font-weight: 900;
+  letter-spacing: 0.7px;
+  text-transform: uppercase;
+  opacity: 0.55;
+}
+
+.status-cur-value {
+  font-size: 1rem;
+  font-weight: 900;
+  letter-spacing: -0.2px;
+}
+
+/* Cores por status atual */
+.status-cur-perdido {
+  background: rgba(252, 0, 0, 0.10);
+  border: 1px solid rgba(252, 0, 0, 0.18);
+}
+.status-cur-perdido .status-cur-icon {
+  background: rgba(252, 0, 0, 0.15);
+  color: #c0000a;
+}
+.status-cur-perdido .status-cur-label,
+.status-cur-perdido .status-cur-value { color: #7a0008; }
+
+.status-cur-achado {
+  background: rgba(0, 255, 213, 0.12);
+  border: 1px solid rgba(0, 255, 213, 0.25);
+}
+.status-cur-achado .status-cur-icon {
+  background: rgba(0, 255, 213, 0.18);
+  color: #1b7a43;
+}
+.status-cur-achado .status-cur-label,
+.status-cur-achado .status-cur-value { color: #1b7a43; }
+
+.status-cur-devolvido {
+  background: rgba(0, 217, 255, 0.12);
+  border: 1px solid rgba(0, 217, 255, 0.25);
+}
+.status-cur-devolvido .status-cur-icon {
+  background: rgba(0, 217, 255, 0.18);
+  color: #026be4;
+}
+.status-cur-devolvido .status-cur-label,
+.status-cur-devolvido .status-cur-value { color: #026be4; }
+
+@media (max-width: 991px) {
+  .contact-detail-card {
+    position: static; /* remove sticky em mobile */
+  }
+}
+
 @media (max-width: 768px) {
   .item-image-wrapper img {
-    height: 260px;
+    height: 240px;
   }
 
   .item-info-grid {
     grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .item-title {
+    font-size: 1.3rem;
   }
 }

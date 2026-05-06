@@ -1,0 +1,52 @@
+.confirm-delete-card {
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.confirm-delete-header {
+  background: linear-gradient(135deg, #8b1e1e 0%, #c0392b 100%);
+  padding: 1.5rem;
+}
+
+.confirm-delete-title {
+  color: white;
+  font-weight: 700;
+}
+
+.confirm-delete-body {
+  background: #f8fdff;
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.confirm-delete-icon {
+  font-size: 3rem;
+}
+
+.confirm-delete-item-name {
+  color: #dc3545;
+  font-weight: 700;
+  font-size: 1.25rem;
+}
+
+.confirm-delete-footer {
+  background: #f8fdff;
+  padding: 1.5rem;
+  padding-top: 0;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.confirm-delete-btn-cancel {
+  border-radius: 15px;
+}
+
+.confirm-delete-btn-delete {
+  background: linear-gradient(to right, #8b1e1e, #c0392b);
+  border-radius: 15px;
+  border: none;
+  color: white;
+  padding: 0.375rem 1.5rem;
+}
+

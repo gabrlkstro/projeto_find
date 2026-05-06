@@ -25,7 +25,7 @@
           {% if user.is_authenticated and user.profile and user.profile.image %}
             <img src="{{ user.profile.image.url }}" class="profile-pic" alt="Foto de perfil">
           {% else %}
-            <img src="{% static 'mainpage/img/user.png' %}" class="profile-pic" alt="Foto de perfil">
+            <img src="{% static 'mainpage/img/user.webp' %}" class="profile-pic" alt="Foto de perfil">
           {% endif %}
 
           <form action="{% url 'upload_photo' %}" method="POST" enctype="multipart/form-data" id="form-foto">

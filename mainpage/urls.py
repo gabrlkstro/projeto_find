@@ -62,6 +62,8 @@ urlpatterns = [
     path("itens/devolvidos/", views.items_devolvidos, name="items_devolvidos"),
     path("itens/<int:id>/devolver/", views.marcar_devolvido, name="marcar_devolvido"),
     path("itens/<int:id>/achado/", views.marcar_achado, name="marcar_achado"),
+    path("itens/<int:id>/perdido/", views.marcar_perdido, name="marcar_perdido"),
+
 
     # CHAT
     path('chats/', views.chats_list, name='chats_list'),

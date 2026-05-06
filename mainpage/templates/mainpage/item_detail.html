@@ -10,64 +10,38 @@
 <div class="container my-5">
   <div class="row g-4 align-items-start">
 
-    <!-- CARD ITEM -->
+    <!-- ── CARD ITEM ──────────────────────────────────────── -->
     <div class="col-lg-8">
       <div class="card item-detail-card p-4">
 
-        <div class="item-image-wrapper mb-3">
+        <!-- Imagem hero + badge sobreposto -->
+        <div class="item-image-wrapper mb-2">
           <img
             src="{% if item.imagem %}{{ item.imagem.url }}{% else %}{% static 'mainpage/img/item-default.png' %}{% endif %}"
             alt="{{ item.titulo }}"
           >
+          <span class="status-badge status-{{ item.status }}">
+            {% if item.status == "achado" %}
+              <i class="bi bi-check-circle-fill"></i>
+            {% elif item.status == "devolvido" %}
+              <i class="bi bi-arrow-return-left"></i>
+            {% else %}
+              <i class="bi bi-exclamation-triangle-fill"></i>
+            {% endif %}
+            {{ item.get_status_display }}
+          </span>
         </div>
 
-        <!-- STATUS (com ícone) -->
-        <span class="status-badge status-{{ item.status }}">
-          {% if item.status == "achado" %}
-            <i class="bi bi-check-circle-fill"></i>
-          {% elif item.status == "devolvido" %}
-            <i class="bi bi-arrow-return-left"></i>
-          {% else %}
-            <i class="bi bi-exclamation-triangle-fill"></i>
-          {% endif %}
-          {{ item.get_status_display }}
-        </span>
+        <!-- Título -->
+        <h4 class="item-title mt-3">{{ item.titulo }}</h4>
 
-        <h4 class="item-title mt-2">{{ item.titulo }}</h4>
-
+        <!-- Descrição -->
         <p class="item-description">
           {{ item.descricao|default:"Sem descrição." }}
         </p>
 
-        <!-- AÇÕES DO DONO -->
-        {% if user.is_authenticated and user.id == item.usuario_id %}
-          <div class="mt-3 d-flex flex-wrap gap-2">
-
-            {% if item.status != "achado" %}
-              <form method="POST" action="{% url 'marcar_achado' item.id %}">
-                {% csrf_token %}
-                <input type="hidden" name="next" value="{{ request.get_full_path }}">
-                <button type="submit" class="btn btn-outline-primary btn-sm">
-                  <i class="bi bi-check-circle me-1"></i> Marcar como encontrado
-                </button>
-              </form>
-            {% endif %}
-
-            {% if item.status != "devolvido" %}
-              <form method="POST" action="{% url 'marcar_devolvido' item.id %}">
-                {% csrf_token %}
-                <input type="hidden" name="next" value="{{ request.get_full_path }}">
-                <button type="submit" class="btn btn-outline-success btn-sm">
-                  <i class="bi bi-arrow-return-left me-1"></i> Marcar como devolvido
-                </button>
-              </form>
-            {% endif %}
-
-          </div>
-        {% endif %}
-
-        <!-- INFO GRID (Ícone + label em cima + valor embaixo) -->
-        <div class="item-info-grid mt-4">
+        <!-- Info Grid -->
+        <div class="item-info-grid">
 
           <div class="info-box">
             <div class="info-icon">
@@ -75,9 +49,7 @@
             </div>
             <div class="info-text">
               <span class="info-label">Categoria</span>
-              <span class="info-value">
-                {{ item.categoria.nome|default:"—" }}
-              </span>
+              <span class="info-value">{{ item.categoria.nome|default:"—" }}</span>
             </div>
           </div>
 
@@ -87,9 +59,7 @@
             </div>
             <div class="info-text">
               <span class="info-label">Local</span>
-              <span class="info-value">
-                {{ item.local|default:"—" }}
-              </span>
+              <span class="info-value">{{ item.local|default:"—" }}</span>
             </div>
           </div>
 
@@ -101,9 +71,7 @@
               <span class="info-label">
                 {% if item.status == "perdido" %}Perdido em{% else %}Data{% endif %}
               </span>
-              <span class="info-value">
-                {{ item.data|date:"d/m/Y" }}
-              </span>
+              <span class="info-value">{{ item.data|date:"d/m/Y" }}</span>
             </div>
           </div>
 
@@ -113,22 +81,22 @@
             </div>
             <div class="info-text">
               <span class="info-label">Hora da publicação</span>
-              <span class="info-value">
-                {{ item.criado_em|time:"H:i" }}
-              </span>
+              <span class="info-value">{{ item.criado_em|time:"H:i" }}</span>
             </div>
           </div>
 
         </div>
+        <!-- /Info Grid -->
 
       </div>
     </div>
+    <!-- /CARD ITEM -->
 
-    <!-- CARD CONTATO -->
+    <!-- ── CARD CONTATO ───────────────────────────────────── -->
     <div class="col-lg-4">
       <div class="card contact-detail-card p-4">
 
-        <h6 class="contact-title">CONTATO</h6>
+        <h6 class="contact-title">Contato</h6>
 
         <div class="contact-line">
           <i class="bi bi-envelope-fill"></i>
@@ -154,21 +122,130 @@
         {% if user.is_authenticated and user.id != item.usuario_id %}
           {% if item.status != "devolvido" %}
             <a
-              href="{% url 'mainpage:chat_start' item.id %}?next={{ request.get_full_path|urlencode }}"
-              class="btn-chat mt-4"
+              href="{% url 'chat_list' item.id %}?next={{ request.get_full_path|urlencode }}"
+              class="btn-chat mt-3"
             >
               <i class="bi bi-chat-dots-fill me-2"></i> Iniciar conversa
             </a>
           {% else %}
-            <button class="btn-chat mt-4" disabled style="opacity:.65; cursor:not-allowed;">
+            <button class="btn-chat mt-3" disabled>
               <i class="bi bi-check2-circle me-2"></i> Item já devolvido
             </button>
           {% endif %}
         {% endif %}
 
       </div>
+
+      <!-- ── CARD STATUS ──────────────────────────────────── -->
+      <div class="card status-card p-4 mt-4">
+
+        <h6 class="status-card-title">Status do item</h6>
+
+        <!-- Indicador atual -->
+        <div class="status-card-current status-cur-{{ item.status }}">
+          <div class="status-cur-icon">
+            {% if item.status == "achado" %}
+              <i class="bi bi-check-circle-fill"></i>
+            {% elif item.status == "devolvido" %}
+              <i class="bi bi-arrow-return-left"></i>
+            {% else %}
+              <i class="bi bi-exclamation-triangle-fill"></i>
+            {% endif %}
+          </div>
+          <div class="status-cur-text">
+            <span class="status-cur-label">Status atual</span>
+            <span class="status-cur-value">{{ item.get_status_display }}</span>
+          </div>
+        </div>
+
+        <!-- Segmented control — só pro dono -->
+        {% if user.is_authenticated and user.id == item.usuario_id %}
+        <span class="status-switcher-label mt-3">
+          <i class="bi bi-sliders2 me-1"></i> Alterar status
+        </span>
+
+        <div class="status-switcher-track">
+
+          <!-- Perdido -->
+          <div class="status-option opt-perdido {% if item.status == 'perdido' %}is-current{% endif %}">
+            {% if item.status != 'perdido' %}
+              <form method="POST" action="{% url 'marcar_perdido' item.id %}" class="status-form">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                <input type="radio" name="status_switch" id="sw-perdido2" value="perdido">
+                <label for="sw-perdido2">
+                  <i class="bi bi-exclamation-triangle-fill"></i>
+                  Perdido
+                </label>
+              </form>
+            {% else %}
+              <label class="is-active-label">
+                <i class="bi bi-exclamation-triangle-fill"></i>
+                Perdido
+              </label>
+            {% endif %}
+          </div>
+
+          <!-- Achado -->
+          <div class="status-option opt-achado {% if item.status == 'achado' %}is-current{% endif %}">
+            {% if item.status != 'achado' %}
+              <form method="POST" action="{% url 'marcar_achado' item.id %}" class="status-form">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                <input type="radio" name="status_switch" id="sw-achado2" value="achado">
+                <label for="sw-achado2">
+                  <i class="bi bi-check-circle-fill"></i>
+                  Achado
+                </label>
+              </form>
+            {% else %}
+              <label class="is-active-label">
+                <i class="bi bi-check-circle-fill"></i>
+                Achado
+              </label>
+            {% endif %}
+          </div>
+
+          <!-- Devolvido -->
+          <div class="status-option opt-devolvido {% if item.status == 'devolvido' %}is-current{% endif %}">
+            {% if item.status != 'devolvido' %}
+              <form method="POST" action="{% url 'marcar_devolvido' item.id %}" class="status-form">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                <input type="radio" name="status_switch" id="sw-devolvido2" value="devolvido">
+                <label for="sw-devolvido2">
+                  <i class="bi bi-arrow-return-left"></i>
+                  Devolvido
+                </label>
+              </form>
+            {% else %}
+              <label class="is-active-label">
+                <i class="bi bi-arrow-return-left"></i>
+                Devolvido
+              </label>
+            {% endif %}
+          </div>
+
+        </div><!-- /track -->
+      {% endif %}
+      <!-- /switcher -->
+
+      </div><!-- /status-card -->
+      <!-- /CARD STATUS -->
+
     </div>
+    <!-- /CARD CONTATO -->
 
   </div>
 </div>
+
+<script>
+  // Auto-submit ao clicar em qualquer opção do segmented control
+  document.querySelectorAll('.status-option label').forEach(label => {
+    label.addEventListener('click', function () {
+      const form = this.closest('.status-form');
+      if (form) form.submit();
+    });
+  });
+</script>
 {% endblock %}

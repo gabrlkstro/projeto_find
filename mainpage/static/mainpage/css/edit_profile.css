@@ -1,43 +1,61 @@
-/* Estilização Geral do Modal para combinar com o User-Card */
-.modal-content-custom {
-    background-color: #f5feff !important; /* Fundo sólido para leitura */
-    border-radius: 18px !important;
-    border: none !important;
-    overflow: hidden;
+.edit-profile-modal .modal-content {
+  border-radius: 20px;
+  overflow: hidden;
 }
 
-/* Header com o mesmo gradiente do seu .items-card .card-header */
-.modal-header-custom {
-    background: linear-gradient(90deg, #002a35, #016179d3) !important;
-    color: #fff !important;
-    padding: 20px 30px !important;
-    border: none !important;
+.edit-profile-modal .modal-header {
+  background: linear-gradient(135deg, #0d4e5d 0%, #1a7a8c 100%);
+  padding: 1.5rem;
 }
 
-.modal-header-custom .btn-close {
-    filter: invert(1) grayscale(100%) brightness(200%); /* Deixa o X branco */
+.edit-profile-modal .modal-body {
+  background: #f8fdff;
+  padding: 1.5rem;
 }
 
-/* Inputs com a borda no tom azul escuro que você usa */
-.modal-body-custom .form-control {
-    border: 2px solid #003b4a !important;
-    border-radius: 12px !important;
-    padding: 12px !important;
-    background-color: rgba(255, 255, 255, 0.8);
+.edit-profile-modal .modal-footer {
+  background: #f8fdff;
+  padding: 1.5rem;
+  padding-top: 0;
 }
 
-/* Botão de salvar com o mesmo gradiente do seu .user-card .btn */
-.btn-salvar-modal {
-    background: linear-gradient(90deg, #002a35, #01627ad3) !important;
-    color: white !important;
-    border: none !important;
-    border-radius: 30px !important;
-    padding: 10px 30px !important;
-    font-weight: 600;
-    transition: all 0.3s ease;
+.edit-profile-avatar {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
 }
 
-.btn-salvar-modal:hover {
-    transform: scale(1.02);
-    opacity: 0.9;
+.edit-profile-upload-label {
+  font-size: 0.75rem;
 }
+
+.edit-profile-input {
+  border-radius: 12px;
+  padding: 10px 15px;
+}
+
+.edit-profile-input-readonly {
+  cursor: not-allowed;
+}
+
+.edit-profile-hint {
+  font-size: 0.7rem;
+}
+
+.edit-profile-cep,
+.edit-profile-cidade,
+.edit-profile-estado {
+  border-radius: 12px;
+}
+
+.edit-profile-btn-cancel {
+  border-radius: 15px;
+}
+
+.edit-profile-btn-save {
+  background: linear-gradient(to right, #0d4e5d, #1a7a8c);
+  border-radius: 15px;
+  border: none;
+  color: white;
+}
+
