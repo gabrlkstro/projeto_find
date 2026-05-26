@@ -17,3 +17,7 @@ db.sqlite3
 
 # Sistema
 *.log
+
+.github
+
+TODO.md
