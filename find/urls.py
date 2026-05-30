@@ -5,7 +5,8 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('mainpage.urls')),
+    path('api/', include('mainpage.api_urls')),  # API REST para o app mobile
+    path('', include('mainpage.urls')),           # Site web
 ]
 
 
