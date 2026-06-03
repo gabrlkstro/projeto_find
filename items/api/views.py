@@ -182,3 +182,28 @@ def api_stats(request):
 def api_categories(request):
     cats = Categoria.objects.all().values("id", "nome")
     return Response({"ok": True, "results": list(cats)})
+
+
+@api_view(["POST"])
+@permission_classes([AllowAny])
+def api_search_by_image(request):
+    """Busca itens visualmente similares a uma foto enviada (AI visual search)."""
+    imagem = request.FILES.get("imagem") or request.FILES.get("image")
+    if not imagem:
+        return Response({"ok": False, "detail": "Envie uma imagem no campo 'imagem'."}, status=400)
+
+    try:
+        resultados = Item.buscar_por_imagem(imagem)
+        items_data = []
+        for item, similaridade in resultados:
+            d = _item_to_dict(item, request)
+            d["similaridade"] = similaridade
+            items_data.append(d)
+
+        return Response({
+            "ok": True,
+            "total": len(items_data),
+            "results": items_data,
+        })
+    except Exception as e:
+        return Response({"ok": False, "detail": f"Erro ao processar imagem: {str(e)}"}, status=500)

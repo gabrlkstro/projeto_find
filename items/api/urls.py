@@ -12,4 +12,5 @@ urlpatterns = [
     path("meus-itens/", views.api_my_items, name="api_my_items"),
     path("stats/", views.api_stats, name="api_stats"),
     path("categorias/", views.api_categories, name="api_categories"),
+    path("items/busca-visual/", views.api_search_by_image, name="api_search_by_image"),
 ]
