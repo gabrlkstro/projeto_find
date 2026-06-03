@@ -37,7 +37,11 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'corsheaders',
     'whitenoise.runserver_nostatic',
-    # app principal
+    # apps do projeto (modular)
+    'accounts.apps.AccountsConfig',
+    'items.apps.ItemsConfig',
+    'chats.apps.ChatsConfig',
+    # app web (templates, views do site)
     'mainpage.apps.MainpageConfig',
 ]
 
