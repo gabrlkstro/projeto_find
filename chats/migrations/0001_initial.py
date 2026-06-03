@@ -1,7 +1,3 @@
-"""
-Migration state-only: registra Chat e Mensagem no app chats sem criar tabelas.
-As tabelas mainpage_chat e mainpage_mensagem já existem no banco.
-"""
 from django.conf import settings
 from django.db import migrations, models
 import django.db.models.deletion

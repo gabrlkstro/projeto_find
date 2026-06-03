@@ -1,7 +1,3 @@
-"""
-Migration state-only: registra Item e Categoria no app items sem criar tabelas.
-As tabelas mainpage_item e mainpage_categoria já existem no banco.
-"""
 from django.conf import settings
 from django.db import migrations, models
 import django.db.models.deletion

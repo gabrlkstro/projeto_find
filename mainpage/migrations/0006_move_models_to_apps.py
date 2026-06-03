@@ -1,8 +1,3 @@
-"""
-Migration state-only: remove todos os models do mainpage state.
-Os models agora pertencem aos apps accounts, items e chats.
-As tabelas NÃO são deletadas.
-"""
 from django.db import migrations
 
 

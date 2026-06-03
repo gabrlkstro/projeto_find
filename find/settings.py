@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'accounts.apps.AccountsConfig',
     'items.apps.ItemsConfig',
     'chats.apps.ChatsConfig',
-    # app web (templates, views do site)
+    # app principal
     'mainpage.apps.MainpageConfig',
 ]
 
@@ -80,22 +80,30 @@ TEMPLATES = [
 WSGI_APPLICATION = 'find.wsgi.application'
 
 # ─── Banco de dados ───────────────────────────────────────────
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': config('DB_NAME', default='find_db'),
-        'USER': config('DB_USER', default='root'),
-        'PASSWORD': config('DB_PASSWORD', default=''),
-        'HOST': config('DB_HOST', default='localhost'),
-        'PORT': config('DB_PORT', default='3306'),
-        'OPTIONS': {
-            'charset': 'utf8mb4',
-            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-            'connect_timeout': 10,
-        },
-        'CONN_MAX_AGE': 60,
+if os.getenv("RENDER"):
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': config('DB_NAME', default='find_db'),
+            'USER': config('DB_USER', default='root'),
+            'PASSWORD': config('DB_PASSWORD', default=''),
+            'HOST': config('DB_HOST', default='localhost'),
+            'PORT': config('DB_PORT', default='3306'),
+            'OPTIONS': {
+                'charset': 'utf8mb4',
+                'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+                'connect_timeout': 10,
+            },
+            'CONN_MAX_AGE': 60,
+        }
+    } 
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
-}
 
 # ─── CORS ─────────────────────────────────────────────────────
 CORS_ALLOW_ALL_ORIGINS = True   # permite o app mobile se conectar

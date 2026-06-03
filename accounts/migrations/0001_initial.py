@@ -1,7 +1,3 @@
-"""
-Migration state-only: registra Profile no app accounts sem criar tabela.
-A tabela mainpage_profile já existe no banco.
-"""
 from django.conf import settings
 from django.db import migrations, models
 import django.db.models.deletion
