@@ -10,5 +10,6 @@ urlpatterns = [
 ]
 
 
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# Serve media files — em produção no Render o Django precisa servir as imagens
+# pois não há servidor de mídia separado configurado (ex: S3).
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
