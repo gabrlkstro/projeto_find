@@ -24,16 +24,20 @@
 }
 
 /* ===== SEARCH ===== */
+/* ===== SEARCH ===== */
 .search-bar{
   width: 70%;
-  height: 50px;
-  margin-top: 80px;
+  height: 54px;
+  margin-top: 40px;
   max-width: 900px;
-  border-radius: 64px;
-  background: rgba(171, 232, 255, 0.45);
-  border: 1px solid rgba(3, 133, 180, 0.55);
-  box-shadow: 0 3px 10px rgba(0,0,0,.12);
+  border-radius: 18px;
+  background: #FFFFFF;
+  border: 1px solid rgba(11, 58, 74, 0.08);
+  box-shadow: 0 8px 24px rgba(11, 58, 74, 0.04);
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  padding: 5px 12px;
 }
 
 .search-bar input,
@@ -42,63 +46,85 @@
   border: none;
 }
 
+.search-bar input {
+  color: #0F172A;
+  font-size: 15px;
+  margin-left: 8px;
+}
+
 .search-bar input:focus{
   box-shadow: none;
 }
 
+.search-bar .bi-search {
+  color: #9AA3BB;
+}
+
 /* ===== STATUS CARDS ===== */
 .status-card{
-  margin-top: 60px;
-  border-radius: 15px;
-  padding: 35px 15px !important;
-  background: linear-gradient(135deg, #f5feff 50%, #e4f7ff 100%);
-  border: 1px solid rgba(3, 133, 180, 0.7);
+  margin-top: 30px;
+  border-radius: 14px;
+  padding: 18px 10px !important;
+  background: #FFFFFF;
+  border: 1px solid rgba(30, 174, 212, 0.15);
+  box-shadow: 0 4px 14px rgba(11, 58, 74, 0.02);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.status-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(11, 58, 74, 0.05);
 }
 
 .status-card h3{
   font-weight: 800;
-  margin: 8px 0 0;
-  color: #002a35;
+  margin: 4px 0 2px;
+  color: #0B3A4A;
+  font-size: 20px;
 }
 
 .status-card p{
-  margin: 6px 0 0;
-  font-size: 12px;
+  margin: 0;
+  font-size: 9.5px;
   font-weight: 700;
-  letter-spacing: .4px;
-  color: #2a2a2a;
+  letter-spacing: .6px;
+  color: #64748B;
+  text-transform: uppercase;
 }
 
 .status-card i{
-  font-size: 34px;
-  margin-bottom: 6px;
+  font-size: 24px;
+  margin-bottom: 4px;
 }
 
-.icon-total{ color: #ff9d00; }
-.icon-perdidos{ color: #e63946; }
-.icon-encontrados{ color: #06d6a0; }
-.icon-corresp{ color: #0077b6; }
+.icon-total{ color: #F59E0B; }
+.icon-perdidos{ color: #E8514A; }
+.icon-encontrados{ color: #10B981; }
+.icon-corresp{ color: #185FA5; }
 
 /* ===== BOTÃO CADASTRAR ===== */
 .btn-cadastrar-item {
-    padding: 14px 32px;
-    font-weight: 600;
-    margin-top: 60px;
-    letter-spacing: 0.5px;
-    border-radius: 50px;
+    padding: 12px 28px;
+    font-weight: 700;
+    margin-top: 30px;
+    letter-spacing: 0.2px;
+    border-radius: 14px;
     border: none;
-    background: linear-gradient(135deg, #5ec6f7, #90dbf4);
-    box-shadow: 0 8px 20px rgba(107, 208, 255, 0.295);
+    background: #90dbf4;
+    color: #0B3A4A;
+    box-shadow: 0 6px 20px rgba(144, 219, 244, 0.3);
     transition: all 0.3s ease;
 }
 
 .btn-cadastrar-item:hover {
-    background: linear-gradient(135deg, #5ec6f7, #90dbf4);
+    background: #7ecde8;
+    color: #0B3A4A;
     transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(144, 219, 244, 0.4);
 }
 
 .btn-cadastrar-item:focus {
-    outline: none !important; /* remove o contorno azul */
+    outline: none !important;
 }
 /* ================= FILTROS ================= */
 .filters-section{
@@ -156,12 +182,13 @@
 
 /* ================= CARD ITEM ================= */
 .menu-item-card{
-  margin-top: 60px;
-  background: rgba(171, 232, 255, 0.45);
-  border: 1px solid rgba(0, 42, 53, 0.45);
-  border-radius: 6px;
+  margin-top: 30px;
+  background: #FFFFFF;
+  border: 1px solid rgba(30, 174, 212, 0.12);
+  border-radius: 18px;
   overflow: hidden;
   height: 100%;
+  box-shadow: 0 6px 14px rgba(11, 58, 74, 0.03);
 }
 .menu-item-card-link{
   text-decoration: none;
@@ -181,43 +208,43 @@
 
 .menu-item-card:hover{
   transform: translateY(-4px);
-  box-shadow: 0 10px 25px rgba(0,0,0,.15);
+  box-shadow: 0 12px 28px rgba(11, 58, 74, 0.08);
 }
 
 .menu-item-img{
-  padding: 14px;
+  padding: 12px;
 }
 
 .menu-item-img img{
   width: 100%;
   height: 180px;
   object-fit: cover;
-  border-radius: 4px;
+  border-radius: 14px;
   display: block;
 }
 
 .menu-item-body{
-  padding: 0 14px 14px;
+  padding: 0 16px 16px;
 }
 
 .menu-item-title{
-  font-weight: 800;
+  font-weight: 700;
   font-size: 15px;
   margin: 0;
-  color: #0b0b0b;
+  color: #0F172A;
 }
 
 .menu-item-desc{
   margin: 6px 0 10px;
-  font-size: 12.5px;
-  color: #111;
-  line-height: 1.25;
-  min-height: 34px;
+  font-size: 13px;
+  color: #5A6480;
+  line-height: 1.35;
+  min-height: 38px;
 }
 
 .menu-item-meta{
-  font-size: 10.5px;
-  color: #1b1b1b;
+  font-size: 11px;
+  color: #5A6480;
   margin-top: 6px;
 }
 
@@ -265,12 +292,12 @@
 }
 
 .btn-ver-item{
-  background: #002a35;
-  color: #fff;
-  border-radius: 18px;
-  padding: 6px 22px;
+  background: #F1F5F9;
+  color: #0B3A4A;
+  border-radius: 12px;
+  padding: 8px 22px;
   font-size: 10px;
-  font-weight: 800;
+  font-weight: 700;
   text-decoration: none;
   text-transform: uppercase;
   display: inline-flex;
@@ -279,8 +306,8 @@
 }
 
 .btn-ver-item:hover{
-  background: #004d61;
-  color: #fff;
+  background: #E2E8F0;
+  color: #0B3A4A;
 }
 
 /* Quadradinho do status */
