@@ -1,112 +1,256 @@
+/* ============================================================
+   FIND — Item List Premium Styles
+   ============================================================ */
+
 /* ================= CONTAINER GERAL ================= */
 .item-list-container {
-    background-color: rgba(171, 232, 255, 0.45);
-    border-radius: 18px;
-    padding: 26px;
+    background-color: transparent !important;
+    border-radius: 0;
+    padding: 0;
 }
 
 /* ================= TOPO ================= */
 .item-list-header h3 {
-    color: #002a35;
+    color: #0B3A4A;
+    font-size: 2.2rem;
+    font-weight: 800;
+    letter-spacing: -0.8px;
 }
 
 .item-list-header p {
-    font-size: 0.9rem;
+    font-size: 0.95rem;
+    color: #64748B;
+    font-weight: 500;
+}
+
+/* ================= VOLTAR BUTTON ================= */
+.btn-voltar-custom {
+    border-radius: 12px;
+    border: 1px solid rgba(11, 58, 74, 0.15);
+    color: #0B3A4A;
+    background: #FFFFFF;
+    font-weight: 700;
+    padding: 8px 20px;
+    transition: all 0.2s ease;
+    font-size: 14px;
+    box-shadow: 0 2px 6px rgba(11, 58, 74, 0.02);
+}
+
+.btn-voltar-custom:hover {
+    background-color: #0B3A4A;
+    color: #ffffff;
+    border-color: #0B3A4A;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(11, 58, 74, 0.15);
 }
 
 /* ================= CARD FILTRO ================= */
 .item-filter-card {
-    background: rgba(255, 255, 255, 0.55);
-    border-radius: 18px;
+    background: #FFFFFF !important;
+    border-radius: 20px !important;
+    border: 1px solid rgba(144, 219, 244, 0.2) !important;
+    box-shadow: 0 10px 30px rgba(11, 58, 74, 0.02) !important;
+    padding: 20px !important;
 }
 
 .item-filter-card .form-control,
 .item-filter-card .form-select {
-    border-radius: 30px;
-    border: 1px solid #004254;
+    border-radius: 12px !important;
+    border: 1px solid rgba(11, 58, 74, 0.08) !important;
+    background: #F8FAFC !important;
+    height: 46px !important;
+    color: #0B3A4A !important;
+    font-weight: 600 !important;
+    transition: all 0.2s ease;
+    box-shadow: none !important;
+}
+
+.item-filter-card .form-control:focus,
+.item-filter-card .form-select:focus {
+    background: #FFFFFF !important;
+    border-color: #90dbf4 !important;
+    box-shadow: 0 0 0 3px rgba(144, 219, 244, 0.25) !important;
 }
 
 .item-filter-card .btn {
-    border-radius: 30px;
-    background: linear-gradient(90deg, #002a35, #01627ad3);
-    border: none;
-    color: #fff;
+    border-radius: 12px !important;
+    background: #0B3A4A !important;
+    border: none !important;
+    color: #fff !important;
+    font-weight: 700 !important;
+    height: 46px !important;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 12px rgba(11, 58, 74, 0.15);
 }
 
 .item-filter-card .btn:hover {
-    background: linear-gradient(90deg, #001f24, #01404ad3);
+    background: #145fa5 !important;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(11, 58, 74, 0.2);
+}
+
+/* Camera button in filter */
+.item-filter-card .btn-outline-secondary {
+    border: 1px solid rgba(11, 58, 74, 0.08) !important;
+    background: rgba(144, 219, 244, 0.15) !important;
+    border-radius: 12px !important;
+    height: 46px !important;
+    width: 46px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 !important;
+    transition: all 0.2s ease;
+}
+
+.item-filter-card .btn-outline-secondary:hover {
+    background: #90dbf4 !important;
+    transform: scale(1.05);
 }
 
 /* ================= LISTA DE ITENS ================= */
 .item-list-wrapper {
-    background-color: rgba(171, 232, 255, 0.45);
-    border-radius: 18px;
-    padding: 22px;
-}
-
-/* reaproveita o mesmo card horizontal */
-.item-lista-horizontal {
-    background: #ffffff;
-    border-radius: 14px;
-    padding: 14px;
+    background-color: transparent !important;
+    padding: 0 !important;
     display: flex;
-    align-items: center;
-    gap: 14px;
+    flex-direction: column;
+    gap: 16px !important;
 }
 
-/* ================= BOTÃO VOLTAR ================= */
-.btn-voltar-custom {
-    border-radius: 50px;
-    border: 2px solid #004254;
-    color: #004254;
-    background: transparent;
+.item-lista-horizontal {
+    background: #ffffff !important;
+    border: 1px solid rgba(11, 58, 74, 0.06) !important;
+    border-radius: 20px !important;
+    padding: 16px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 20px !important;
+    box-shadow: 0 6px 20px rgba(11, 58, 74, 0.02) !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.item-lista-horizontal:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 28px rgba(11, 58, 74, 0.06) !important;
+    border-color: rgba(144, 219, 244, 0.4) !important;
+}
+
+.item-img-container {
+    width: 90px !important;
+    height: 90px !important;
+    min-width: 90px !important;
+    overflow: hidden;
+    border-radius: 14px !important;
+    background: #f8fafc;
+}
+
+.item-img-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.5s ease;
+}
+
+.item-lista-horizontal:hover .item-img-container img {
+    transform: scale(1.05);
+}
+
+.item-col-info h6 {
+    font-size: 16px;
     font-weight: 700;
-    padding: 8px 20px;
-    transition: all 0.3s ease;
+    color: #0B3A4A;
+    margin-bottom: 4px;
 }
 
-.btn-voltar-custom:hover {
-    background-color: #004254;
-    color: #ffffff;
-    transform: translateY(-2px);
+.item-col-info p {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: #64748B;
+    margin-bottom: 8px;
+}
+
+.item-col-info small {
+    font-size: 11.5px;
+    color: #5A6480;
+    font-weight: 500;
+    margin-bottom: 2px;
+}
+
+.item-col-info small i {
+    color: #145fa5;
+    margin-right: 4px;
+}
+
+.btn-ver-lista {
+    background-color: #90dbf4 !important;
+    color: #0B3A4A !important;
+    border-radius: 12px !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    padding: 8px 20px !important;
+    border: none !important;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: all 0.2s ease !important;
+    box-shadow: 0 4px 10px rgba(144, 219, 244, 0.2);
+}
+
+.btn-ver-lista:hover {
+    background-color: #0B3A4A !important;
+    color: #FFFFFF !important;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 14px rgba(11, 58, 74, 0.15);
+}
+
+.status-badge-horizontal {
+    width: 32px !important;
+    height: 32px !important;
+    border-radius: 50% !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    color: #FFFFFF !important;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.06) !important;
+}
+
+.status-badge-horizontal.status-perdido {
+    background-color: #E8514A !important;
+}
+
+.status-badge-horizontal.status-achado {
+    background-color: #10B981 !important;
+}
+
+.status-badge-horizontal.status-devolvido {
+    background-color: #185FA5 !important;
 }
 
 /* ================= PAGINAÇÃO ================= */
 .pagination .page-link {
-    color: #004254;
-    border-radius: 12px;
-    border: 1px solid #004254;
+    color: #0B3A4A;
+    border-radius: 10px;
+    border: 1px solid rgba(11, 58, 74, 0.1);
+    margin: 0 3px;
+    font-weight: 600;
+    transition: all 0.2s ease;
 }
 
 .pagination .page-link:hover {
-    background-color: #004254;
+    background-color: #0B3A4A;
     color: #ffffff;
+    border-color: #0B3A4A;
 }
 
-.pagination .page-item.disabled .page-link {
-    color: #999;
-    border-color: #ccc;
+.pagination .page-item.active .page-link {
+    background-color: #0B3A4A;
+    border-color: #0B3A4A;
+    color: #FFFFFF;
 }
 
 /* ================= EMPTY STATE ================= */
 .item-empty {
-    padding: 40px 0;
-    color: #003a49;
-    font-style: italic;
-}
-
-.status-devolvido {
-    background-color: #60caff;
-    color: #ffffff;
-}
-
-/* ================= RESPONSIVO ================= */
-@media (max-width: 768px) {
-    .item-list-container {
-        padding: 18px;
-    }
-
-    .item-list-wrapper {
-        padding: 16px;
-    }
+    padding: 60px 0;
+    color: #64748B;
+    font-weight: 500;
 }

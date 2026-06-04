@@ -1,13 +1,19 @@
+/* ============================================================
+   FIND — User Profile Premium Styles
+   ============================================================ */
+
 /* ================= CARD USUÁRIO ================= */
 .user-card {
-    background-color: rgba(171, 232, 255, 0.45);
-    border-radius: 18px;
+    background-color: #FFFFFF !important;
+    border: 1px solid rgba(11, 58, 74, 0.06) !important;
+    border-radius: 24px !important;
     overflow: hidden;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 30px 20px;
+    padding: 30px 20px !important;
     text-align: center;
+    box-shadow: 0 10px 30px rgba(11, 58, 74, 0.02) !important;
 }
 
 .user-card .avatar {
@@ -16,12 +22,18 @@
     height: 120px;
     border-radius: 50%;
     margin-bottom: 20px;
-    border: 2px solid transparent;
+    border: 3px solid transparent;
     background-image:
         linear-gradient(white, white),
-        linear-gradient(90deg, #000102, #0385b4);
+        linear-gradient(135deg, #0B3A4A 0%, #90dbf4 100%);
     background-origin: border-box;
     background-clip: content-box, border-box;
+    padding: 3px;
+    transition: transform 0.3s ease;
+}
+
+.user-card:hover .avatar {
+    transform: scale(1.05);
 }
 
 .user-card .profile-pic {
@@ -31,227 +43,177 @@
     object-fit: cover;
 }
 
-.status-devolvido {
-    background-color: #60caff;
-    color: #ffffff;
-}
-
 /* Badge câmera */
 .upload-badge {
     position: absolute;
-    bottom: 6px;
-    right: 6px;
-    background: #01627a;
+    bottom: 4px;
+    right: 4px;
+    background: #0B3A4A;
     color: white;
-    width: 24px;
-    height: 24px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: transform 0.2s;
+    transition: all 0.2s;
+    border: 2px solid #FFFFFF;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
 }
 
 .upload-badge:hover {
-    transform: scale(1.08);
-    background: #032e38;
+    transform: scale(1.1);
+    background: #145fa5;
 }
 
 .user-card .btn {
-    border-radius: 30px;
-    background: linear-gradient(90deg, #002a35, #01627ad3);
-    border: none;
+    border-radius: 12px !important;
+    background: #0B3A4A !important;
+    border: none !important;
+    color: #FFFFFF !important;
+    font-weight: 700 !important;
+    padding: 10px 24px !important;
+    transition: all 0.2s ease;
 }
 
 .user-card .btn:hover {
-    background: linear-gradient(90deg, #001f24, #01404ad3);
+    background: #145fa5 !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(11, 58, 74, 0.2);
 }
 
 /* ================= MEUS ITENS ================= */
 .items-card {
-    background-color: rgba(171, 232, 255, 0.45);
-    border-radius: 12px;
+    background-color: #FFFFFF !important;
+    border: 1px solid rgba(11, 58, 74, 0.06) !important;
+    border-radius: 24px !important;
+    box-shadow: 0 10px 30px rgba(11, 58, 74, 0.02) !important;
+    overflow: hidden;
 }
 
 .items-card .card-header {
-    background: #004254;
-    color: #fff;
-    padding: 18px 26px;
-    border-top-left-radius: 12px;
-    border-top-right-radius: 12px;
+    background: #0B3A4A !important;
+    color: #fff !important;
+    padding: 20px 26px !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
 }
 
 .items-card .card-body {
-    padding: 22px;
+    padding: 24px !important;
 }
 
-.btn-sm {
-    padding: 6px 16px;
-    background-color: #ffffff;
-    color: black;
-    font-size: 0.85rem;
-}
-
-/* ===== ITEM LISTA (CORRIGIDO) ===== */
+/* Horizontal card in profile */
 .item-lista-horizontal {
-    background: #ffffff;
-    border-radius: 14px;
-    padding: 14px;
-    display: flex;
-    align-items: center;
-    gap: 14px;
+    background: #ffffff !important;
+    border: 1px solid rgba(11, 58, 74, 0.06) !important;
+    border-radius: 20px !important;
+    padding: 16px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 16px !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    box-shadow: 0 6px 14px rgba(11, 58, 74, 0.02) !important;
 }
 
-/* Colunas internas */
-.item-col-img {
-    flex: 0 0 auto;
+.item-lista-horizontal:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(11, 58, 74, 0.05) !important;
+    border-color: rgba(144, 219, 244, 0.4) !important;
 }
 
-.item-col-info {
-    flex: 1 1 auto;
-    min-width: 0; /* evita quebrar o layout do text-truncate */
-}
-
-.item-col-actions {
-    flex: 0 0 auto;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 10px;
-}
-
-/* Foto */
 .item-img-container {
-    width: 78px;
-    height: 78px;
-    min-width: 78px;
+    width: 80px !important;
+    height: 80px !important;
+    min-width: 80px !important;
+    border-radius: 12px !important;
     overflow: hidden;
-    border-radius: 10px;
-    background: #f0f0f0;
 }
 
 .item-img-container img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    display: block;
 }
 
-/* Botão ver item */
 .btn-ver-lista {
-    background-color: #002a35;
-    color: white;
-    border-radius: 50px;
-    font-size: 0.70rem;
-    font-weight: 800;
-    padding: 8px 18px;
-    border: none;
+    background-color: #90dbf4 !important;
+    color: #0B3A4A !important;
+    border-radius: 12px !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    padding: 8px 18px !important;
+    border: none !important;
     text-transform: uppercase;
     text-decoration: none;
+    transition: all 0.2s ease !important;
 }
 
 .btn-ver-lista:hover {
-    background-color: #004d61;
-    color: #fff;
+    background-color: #0B3A4A !important;
+    color: #FFFFFF !important;
 }
 
-/* Linha de ações (editar, excluir, status) */
-.item-actions-row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-/* STATUS HORIZONTAL */
 .status-badge-horizontal {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 30px;
-    height: 30px;
-    border-radius: 10px;
-    color: white;
-    font-size: 0.95rem;
-    flex-shrink: 0;
+    width: 30px !important;
+    height: 30px !important;
+    border-radius: 50% !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    color: white !important;
 }
 
 .status-badge-horizontal.status-perdido {
-    background-color: #ff4d4d;
+    background-color: #E8514A !important;
 }
 
 .status-badge-horizontal.status-achado {
-    background-color: #28c76f;
+    background-color: #10B981 !important;
 }
 
-/* BOTÃO VER TODOS */
-.btn-ver-todos-custom {
-    background-color: transparent;
-    color: #004254;
-    border: 2px solid #004254;
-    border-radius: 50px;
-    padding: 10px 25px;
-    font-weight: 700;
-    font-size: 0.85rem;
-    transition: all 0.3s ease;
-    text-decoration: none;
+.status-badge-horizontal.status-devolvido {
+    background-color: #185FA5 !important;
 }
 
-.btn-ver-todos-custom:hover {
-    background-color: #004254;
-    color: #ffffff;
-    transform: translateY(-3px);
-    box-shadow: 0 5px 15px rgba(0, 66, 84, 0.3);
-}
-
-/* ================= ESTATÍSTICAS (CORRIGIDO) ================= */
+/* ================= ESTATÍSTICAS ================= */
 .stats-card {
-    background-color: rgba(171, 232, 255, 0.45);
-    border-radius: 18px;
-    margin-top: 0; /* quem controla é o row mt-4 do HTML */
+    background-color: transparent !important;
+    border-radius: 0;
+    margin-top: 0;
 }
 
-/* Cada box */
 .stat-card {
-    border: 1px solid #032e38;
-    border-radius: 18px;
-    padding: 14px 10px;
-    background: rgba(255, 255, 255, 0.35);
+    border: 1px solid rgba(144, 219, 244, 0.25) !important;
+    border-radius: 16px !important;
+    padding: 16px 12px !important;
+    background: #FFFFFF !important;
+    box-shadow: 0 4px 14px rgba(11, 58, 74, 0.02) !important;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    min-height: 70px;
+    min-height: 80px;
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(11, 58, 74, 0.05) !important;
+    border-color: rgba(144, 219, 244, 0.4) !important;
 }
 
 .stat-card small {
-    font-size: 0.70rem;
-    letter-spacing: 0.6px;
-    font-weight: 700;
-    color: #003a49;
+    font-size: 10px !important;
+    letter-spacing: 0.8px !important;
+    font-weight: 700 !important;
+    color: #64748B !important;
+    text-transform: uppercase;
 }
 
-/* ================= RESPONSIVO ================= */
-@media (max-width: 768px) {
-    .items-card .card-header {
-        padding: 16px 16px;
-    }
-
-    .items-card .card-body {
-        padding: 16px;
-    }
-
-    .item-lista-horizontal {
-        padding: 12px;
-        gap: 12px;
-    }
-
-    .item-img-container {
-        width: 70px;
-        height: 70px;
-        min-width: 70px;
-    }
-
-    .item-col-actions {
-        gap: 8px;
-    }
+.stat-card h4 {
+    font-size: 24px !important;
+    font-weight: 800 !important;
+    color: #0B3A4A !important;
+    margin-top: 4px;
+    margin-bottom: 0;
 }
