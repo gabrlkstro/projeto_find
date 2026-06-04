@@ -25,60 +25,41 @@
 
 /* ===== MODERN SEARCH SYSTEM (STARTUP STYLE) ===== */
 .search-container-modern {
-  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: #ffffff;
   border-radius: 99px;
   padding: 6px 10px 6px 24px;
   box-shadow: 0 10px 30px rgba(11, 58, 74, 0.05);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   margin-top: 35px;
-  z-index: 1;
-}
-
-/* Pseudo-elemento para a Borda Gradiente Animada (Passando de tom em tom) */
-.search-container-modern::before {
-  content: "";
-  position: absolute;
-  top: -1.5px;
-  left: -1.5px;
-  right: -1.5px;
-  bottom: -1.5px;
-  border-radius: 99px;
-  /* Gradiente com transições de azul claro, médio, royal e ciano */
-  background: linear-gradient(90deg, #90dbf4, #145fa5, #1eaed4, #00b4d8, #90dbf4);
-  background-size: 300% 100%;
-  z-index: -1;
-  opacity: 0.75;
-  transition: all 0.3s ease;
+  
+  /* Borda Gradiente de Respeito com Fundo Sólido Branco */
+  border: 1.5px solid transparent;
+  background-image: linear-gradient(#ffffff, #ffffff), 
+                    linear-gradient(90deg, #90dbf4, #145fa5, #1eaed4, #00b4d8, #90dbf4);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  background-size: 100% 100%, 300% 100%;
   animation: gradientBorderShift 8s linear infinite;
 }
 
 @keyframes gradientBorderShift {
   0% {
-    background-position: 0% 50%;
+    background-position: 0% 0%, 0% 50%;
   }
   50% {
-    background-position: 100% 50%;
+    background-position: 0% 0%, 100% 50%;
   }
   100% {
-    background-position: 0% 50%;
+    background-position: 0% 0%, 0% 50%;
   }
 }
 
 .search-container-modern:focus-within {
   box-shadow: 0 14px 35px rgba(11, 58, 74, 0.09);
   transform: translateY(-1px);
-}
-
-.search-container-modern:focus-within::before {
-  opacity: 1;
-  top: -2px;
-  left: -2px;
-  right: -2px;
-  bottom: -2px;
+  border-width: 2px;
 }
 
 .search-input-wrapper {
