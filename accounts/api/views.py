@@ -140,11 +140,21 @@ def api_update_profile(request):
     nova_foto = request.FILES.get("image")
     if nova_foto:
         profile.image = nova_foto
-    profile.save()
 
+    # Salva sem acionar o processamento automático (usamos update_fields para evitar
+    # que o override de save() redimensione com o tamanho padrão antes de saber o tamanho escolhido)
+    profile.save(update_fields=[
+        'telefone', 'cidade', 'estado', 'cep', 'data_nascimento', 'image'
+    ])
+
+    # Aplica o redimensionamento com o tamanho escolhido pelo usuário
     tamanho = (data.get("tamanho") or "medio").strip().lower()
-    if nova_foto or "tamanho" in data:
-        profile.redimensionar(tamanho)
+    if tamanho not in Profile.TAMANHOS_VALIDOS:
+        tamanho = "medio"
+    profile.redimensionar(tamanho)
+
+    # Recarrega do banco para garantir que a URL aponta para o arquivo correto
+    profile.refresh_from_db()
 
     foto_url = None
     if profile.image:
