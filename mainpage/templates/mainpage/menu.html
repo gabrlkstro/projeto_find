@@ -39,6 +39,10 @@
         placeholder="Buscar itens (nome, descrição, local...)"
       >
 
+      <a href="{% url 'busca_visual' %}" class="btn btn-outline-secondary d-flex align-items-center justify-content-center px-3" style="border: 1px solid rgba(0,0,0,0.1); background: #f8f9fa;" title="Busca por Imagem (IA)">
+        <i class="bi bi-camera" style="font-size: 1.15rem; color: #0B3A4A;"></i>
+      </a>
+
       <input type="hidden" name="status" value="{{ status|default:'todos' }}">
       <input type="hidden" name="categoria" value="{{ categoria|default:'todas' }}">
     </form>

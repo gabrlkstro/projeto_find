@@ -1,0 +1,474 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Busca Visual por IA - FIND{% endblock %}
+
+{% block extra_css %}
+<style>
+  :root {
+    --find-primary: #90dbf4;
+    --find-dark: #0B3A4A;
+    --find-success: #1F7A51;
+    --find-danger: #B32E29;
+    --find-body: #185FA5;
+    --find-muted: #64748B;
+  }
+
+  .visual-search-container {
+    max-width: 900px;
+    margin: 40px auto;
+  }
+
+  .visual-header {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+
+  .visual-title {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: var(--find-dark);
+    margin-bottom: 8px;
+    letter-spacing: -0.8px;
+  }
+
+  .visual-subtitle {
+    color: var(--find-muted);
+    font-size: 1.1rem;
+    font-weight: 500;
+  }
+
+  /* Upload Box Area */
+  .upload-area {
+    background: #ffffff;
+    border: 2px dashed rgba(11, 58, 74, 0.15);
+    border-radius: 24px;
+    padding: 40px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 8px 30px rgba(11, 58, 74, 0.03);
+    position: relative;
+  }
+
+  .upload-area:hover {
+    border-color: var(--find-primary);
+    background: rgba(144, 219, 244, 0.04);
+    transform: translateY(-2px);
+  }
+
+  .upload-icon {
+    font-size: 3.5rem;
+    color: var(--find-primary);
+    margin-bottom: 16px;
+    display: inline-block;
+    transition: transform 0.2s ease;
+  }
+
+  .upload-area:hover .upload-icon {
+    transform: scale(1.1);
+  }
+
+  .upload-text {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--find-dark);
+    margin-bottom: 6px;
+  }
+
+  .upload-hint {
+    font-size: 0.9rem;
+    color: var(--find-muted);
+    margin-bottom: 20px;
+  }
+
+  /* File Input hidden */
+  #id_imagem_busca {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  /* Preview Wrap */
+  .preview-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    margin-top: 10px;
+  }
+
+  .preview-img {
+    width: 180px;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 20px;
+    border: 3px solid var(--find-primary);
+    box-shadow: 0 8px 24px rgba(11, 58, 74, 0.08);
+  }
+
+  .btn-visual-search {
+    background: var(--find-primary);
+    color: var(--find-dark);
+    font-weight: 700;
+    border: none;
+    border-radius: 14px;
+    padding: 12px 32px;
+    font-size: 1.05rem;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 12px rgba(144, 219, 244, 0.3);
+  }
+
+  .btn-visual-search:hover {
+    background: #78cde7;
+    color: var(--find-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(144, 219, 244, 0.4);
+  }
+
+  /* AI Badge */
+  .ai-sparkle-badge {
+    background: rgba(124, 58, 237, 0.1);
+    color: #7c3aed;
+    border-radius: 99px;
+    padding: 4px 12px;
+    font-size: 0.8rem;
+    font-weight: 800;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 12px;
+  }
+
+  /* Results styles */
+  .results-title-row {
+    margin-top: 50px;
+    margin-bottom: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .results-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--find-dark);
+    letter-spacing: -0.4px;
+  }
+
+  .visual-result-card {
+    background: #ffffff;
+    border-radius: 20px;
+    border: 1px solid rgba(11, 58, 74, 0.05);
+    padding: 16px;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 16px;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 20px rgba(11, 58, 74, 0.02);
+    text-decoration: none !important;
+  }
+
+  .visual-result-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(144, 219, 244, 0.4);
+    box-shadow: 0 8px 24px rgba(11, 58, 74, 0.06);
+  }
+
+  .result-img-container {
+    width: 110px;
+    height: 110px;
+    border-radius: 16px;
+    overflow: hidden;
+    background: #f1f5f9;
+    flex-shrink: 0;
+  }
+
+  .result-img-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .result-body {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-width: 0;
+  }
+
+  .result-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .result-item-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--find-dark);
+    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .result-category {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--find-body);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .similarity-badge {
+    background: rgba(124, 58, 237, 0.1);
+    color: #7c3aed;
+    border-radius: 99px;
+    padding: 4px 10px;
+    font-size: 0.8rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+  }
+
+  .result-meta {
+    font-size: 0.9rem;
+    color: var(--find-muted);
+    font-weight: 500;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .result-meta i {
+    color: var(--find-muted);
+    margin-right: 4px;
+  }
+
+  .result-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 8px;
+  }
+
+  .status-badge-visual {
+    padding: 4px 12px;
+    border-radius: 99px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  .status-badge-perdido {
+    background: #fee2e2;
+    color: var(--find-danger);
+  }
+
+  .status-badge-achado {
+    background: rgba(144, 219, 244, 0.15);
+    color: var(--find-dark);
+  }
+
+  .status-badge-devolvido {
+    background: #e2f0fd;
+    color: var(--find-body);
+  }
+
+  /* Empty state */
+  .empty-results {
+    background: #ffffff;
+    border-radius: 24px;
+    padding: 50px 20px;
+    text-align: center;
+    border: 1px solid rgba(11, 58, 74, 0.04);
+    box-shadow: 0 4px 20px rgba(11, 58, 74, 0.02);
+  }
+
+  .empty-icon {
+    font-size: 3rem;
+    color: var(--find-muted);
+    margin-bottom: 12px;
+  }
+
+  .empty-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--find-dark);
+    margin-bottom: 6px;
+  }
+
+  .empty-desc {
+    color: var(--find-muted);
+    font-size: 0.95rem;
+    max-width: 320px;
+    margin: 0 auto;
+  }
+
+  /* Loading Overlay */
+  .loading-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(11, 58, 74, 0.6);
+    backdrop-filter: blur(4px);
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    color: #ffffff;
+  }
+
+  .spinner-ai {
+    width: 50px;
+    height: 50px;
+    border: 4px solid rgba(255, 255, 255, 0.2);
+    border-top: 4px solid var(--find-primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 16px;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="visual-search-container">
+    
+    <!-- HEADER -->
+    <div class="visual-header">
+      <div class="ai-sparkle-badge">
+        <i class="bi bi-sparkles"></i> Inteligência Artificial
+      </div>
+      <h2 class="visual-title">Busca Visual IA</h2>
+      <p class="visual-subtitle">Tire uma foto ou envie uma imagem para encontrar objetos semelhantes cadastrados na plataforma</p>
+    </div>
+
+    <!-- FORMULARIO DE UPLOAD -->
+    <form method="POST" enctype="multipart/form-data" id="visualSearchForm">
+      {% csrf_token %}
+      
+      <div class="upload-area" id="uploadArea">
+        {% if imagem_preview %}
+          <div class="preview-wrap">
+            <img src="{{ imagem_preview }}" alt="Preview" class="preview-img">
+            <span class="upload-text">Alterar imagem enviada</span>
+            <span class="upload-hint">Clique para selecionar outra imagem</span>
+          </div>
+        {% else %}
+          <span class="upload-icon"><i class="bi bi-camera"></i></span>
+          <p class="upload-text">Selecione ou arraste uma foto do item</p>
+          <p class="upload-hint">Formatos suportados: PNG, JPG ou JPEG</p>
+        {% endif %}
+        <input type="file" name="imagem_busca" id="id_imagem_busca" accept="image/*" required>
+      </div>
+
+      <div class="text-center mt-4">
+        <button type="submit" class="btn btn-visual-search btn-lg">
+          <i class="bi bi-sparkles me-1"></i> ANALISAR IMAGEM
+        </button>
+      </div>
+    </form>
+
+    <!-- LOADING OVERLAY -->
+    <div class="loading-overlay" id="loadingOverlay">
+      <div class="spinner-ai"></div>
+      <h4 class="fw-bold">Analisando Imagem...</h4>
+      <p class="text-white-50 small">Gerando hashes e comparando similaridades na base de dados</p>
+    </div>
+
+    <!-- RESULTADOS -->
+    {% if request.method == "POST" %}
+      <div class="results-title-row">
+        <h3 class="results-title">Resultados similares</h3>
+        <span class="text-muted small">Ordenado por nível de similaridade</span>
+      </div>
+
+      <div class="results-list">
+        {% for item, similarity in resultados %}
+          <a href="{% url 'item_detail' item.slug %}" class="visual-result-card">
+            <div class="result-img-container">
+              {% if item.imagem %}
+                <img src="{{ item.imagem.url }}" alt="{{ item.titulo }}">
+              {% else %}
+                <img src="{% static 'mainpage/img/item-default.png' %}" alt="Padrão">
+              {% endif %}
+            </div>
+
+            <div class="result-body">
+              <div class="result-top">
+                <div>
+                  <h4 class="result-item-title">{{ item.titulo }}</h4>
+                  <span class="result-category">{{ item.categoria.nome|default:"Objeto" }}</span>
+                </div>
+                <div class="similarity-badge" title="Taxa de correspondência visual">
+                  <i class="bi bi-sparkles"></i> {{ similarity }}%
+                </div>
+              </div>
+
+              <div class="result-footer">
+                <div class="result-meta">
+                  <small><i class="bi bi-geo-alt"></i> {{ item.local|default:"Não informado" }}</small>
+                  <small><i class="bi bi-calendar3"></i> {{ item.data|date:"d/m/Y" }}</small>
+                </div>
+                
+                {% if item.status == 'perdido' %}
+                  <span class="status-badge-visual status-badge-perdido">Perdido</span>
+                {% elif item.status == 'achado' %}
+                  <span class="status-badge-visual status-badge-achado">Encontrado</span>
+                {% elif item.status == 'devolvido' %}
+                  <span class="status-badge-visual status-badge-devolvido">Devolvido</span>
+                {% endif %}
+              </div>
+            </div>
+          </a>
+        {% empty %}
+          <div class="empty-results">
+            <i class="bi bi-search empty-icon"></i>
+            <h4 class="empty-title">Nenhum item similar encontrado</h4>
+            <p class="empty-desc">Tente cadastrar o item para que a comunidade possa te ajudar a encontrá-lo.</p>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  // Exibir overlay de carregamento quando o formulario é submetido
+  const form = document.getElementById('visualSearchForm');
+  const loader = document.getElementById('loadingOverlay');
+  const fileInput = document.getElementById('id_imagem_busca');
+
+  form.addEventListener('submit', function() {
+    loader.style.display = 'flex';
+  });
+
+  // Submeter automaticamente se o usuário selecionar outro arquivo
+  fileInput.addEventListener('change', function() {
+    if (fileInput.files && fileInput.files[0]) {
+      form.submit();
+    }
+  });
+</script>
+{% endblock %}

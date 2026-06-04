@@ -63,6 +63,8 @@ urlpatterns = [
     path("itens/<int:id>/devolver/", views.marcar_devolvido, name="marcar_devolvido"),
     path("itens/<int:id>/achado/", views.marcar_achado, name="marcar_achado"),
     path("itens/<int:id>/perdido/", views.marcar_perdido, name="marcar_perdido"),
+    path('itens/busca-visual/', views.busca_visual, name='busca_visual'),
+
 
 
     # CHAT

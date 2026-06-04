@@ -756,3 +756,28 @@ def chat_close(request, chat_id):
 
     messages.info(request, "Chat fechado.")
     return redirect("chat_detail", chat_id=chat.id)
+
+
+@login_required(login_url="login")
+def busca_visual(request):
+    resultados = []
+    imagem_base64 = None
+    
+    if request.method == "POST" and request.FILES.get("imagem_busca"):
+        imagem_file = request.FILES["imagem_busca"]
+        try:
+            # Executa a busca
+            resultados = Item.buscar_por_imagem(imagem_file)
+            
+            # Converte a imagem enviada para base64 para exibir como preview
+            import base64
+            imagem_file.seek(0)
+            encoded = base64.b64encode(imagem_file.read()).decode("utf-8")
+            imagem_base64 = f"data:{imagem_file.content_type};base64,{encoded}"
+        except Exception as e:
+            messages.error(request, f"Erro ao processar imagem: {str(e)}")
+
+    return render(request, "mainpage/visual_search.html", {
+        "resultados": resultados,
+        "imagem_preview": imagem_base64,
+    })
