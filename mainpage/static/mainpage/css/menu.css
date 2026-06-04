@@ -99,17 +99,19 @@
   padding-left: 8px;
 }
 
-/* Câmera simples, fundo claro, ícone escuro */
+/* Câmera na cor do header do site */
 .btn-search-camera {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #f8f9fa;
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: rgba(173, 233, 255, 0.85); /* Cor do header */
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(0, 180, 216, 0.25);
   border-radius: 50%;
   width: 42px;
   height: 42px;
-  color: #212529;
+  color: #002a35; /* Cor do texto/logo do header */
   text-decoration: none;
   transition: all 0.2s ease;
 }
@@ -119,9 +121,9 @@
 }
 
 .btn-search-camera:hover {
-  background: #e9ecef;
-  color: #0b3a4a;
-  border-color: rgba(0, 0, 0, 0.25);
+  background: rgba(173, 233, 255, 1);
+  color: #01627a;
+  border-color: rgba(0, 180, 216, 0.45);
   transform: scale(1.05);
 }
 
