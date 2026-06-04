@@ -13,7 +13,7 @@ class Profile(models.Model):
     }
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    image = models.ImageField(default='profile_pics/user.png', upload_to="profile_pics")
+    image = models.ImageField(default='profile_pics/user.svg', upload_to="profile_pics")
     telefone = models.CharField(max_length=20, blank=True, null=True)
     cidade = models.CharField(max_length=100, blank=True, null=True)
     estado = models.CharField(max_length=2, blank=True, null=True)
@@ -34,7 +34,7 @@ class Profile(models.Model):
         from PIL import Image as PILImage
         import os
 
-        if not self.image or self.image.name == 'profile_pics/user.png':
+        if not self.image or self.image.name in ('profile_pics/user.png', 'profile_pics/user.svg') or self.image.name.endswith('.svg'):
             return
         try:
             img_path = self.image.path
