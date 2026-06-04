@@ -42,12 +42,7 @@
       <div class="search-actions-right">
         <a href="{% url 'busca_visual' %}" class="btn-search-camera" title="Busca por Imagem (IA)">
           <i class="bi bi-camera"></i>
-          <span>IA</span>
         </a>
-        <button type="submit" class="btn-search-submit">
-          <i class="bi bi-search me-1 d-md-inline-block d-none"></i>
-          <span>Buscar</span>
-        </button>
       </div>
 
       <input type="hidden" name="status" value="{{ status|default:'todos' }}">
