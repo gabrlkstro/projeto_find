@@ -8,6 +8,9 @@ python manage.py collectstatic --noinput
 echo "==> Running Django Database Migrations..."
 python manage.py migrate
 
+echo "==> Seeding Default Categories..."
+python manage.py criar_categorias
+
 echo "==> Generating Image Hashes..."
 python manage.py gerar_hashes
 
