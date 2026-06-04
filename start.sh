@@ -2,6 +2,9 @@
 # Exit on error
 set -o errexit
 
+echo "==> Collecting static files..."
+python manage.py collectstatic --noinput
+
 echo "==> Running Django Database Migrations..."
 python manage.py migrate
 
