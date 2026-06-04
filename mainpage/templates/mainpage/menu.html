@@ -25,23 +25,30 @@
   </div>
 
   <!-- BUSCA (GET) -->
-  <div class="d-flex justify-content-center mt-4">
-    <form method="GET" class="input-group search-bar" style="max-width: 820px;">
-      <span class="input-group-text">
-        <i class="bi bi-search"></i>
-      </span>
+  <div class="d-flex justify-content-center mt-4 px-3">
+    <form method="GET" class="search-container-modern" style="max-width: 820px; width: 100%;">
+      <div class="search-input-wrapper">
+        <i class="bi bi-search search-icon-left"></i>
+        <input
+          type="text"
+          class="search-input-field"
+          name="q"
+          value="{{ q|default:'' }}"
+          placeholder="Buscar itens (nome, descrição, local...)"
+          autocomplete="off"
+        >
+      </div>
 
-      <input
-        type="text"
-        class="form-control"
-        name="q"
-        value="{{ q|default:'' }}"
-        placeholder="Buscar itens (nome, descrição, local...)"
-      >
-
-      <a href="{% url 'busca_visual' %}" class="btn btn-outline-secondary d-flex align-items-center justify-content-center px-3" style="border: 1px solid rgba(0,0,0,0.1); background: #f8f9fa;" title="Busca por Imagem (IA)">
-        <i class="bi bi-camera" style="font-size: 1.15rem; color: #0B3A4A;"></i>
-      </a>
+      <div class="search-actions-right">
+        <a href="{% url 'busca_visual' %}" class="btn-search-camera" title="Busca por Imagem (IA)">
+          <i class="bi bi-camera"></i>
+          <span>IA</span>
+        </a>
+        <button type="submit" class="btn-search-submit">
+          <i class="bi bi-search me-1 d-md-inline-block d-none"></i>
+          <span>Buscar</span>
+        </button>
+      </div>
 
       <input type="hidden" name="status" value="{{ status|default:'todos' }}">
       <input type="hidden" name="categoria" value="{{ categoria|default:'todas' }}">
