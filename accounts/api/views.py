@@ -123,6 +123,19 @@ def api_update_profile(request):
         profile.estado = data["estado"]
     if "cep" in data:
         profile.cep = data["cep"]
+    if "data_nascimento" in data:
+        raw = (data["data_nascimento"] or "").strip()
+        if raw:
+            try:
+                from datetime import date as _date
+                profile.data_nascimento = _date.fromisoformat(raw)
+            except (ValueError, TypeError):
+                return Response(
+                    {"ok": False, "detail": "Formato de data inválido. Use AAAA-MM-DD."},
+                    status=400,
+                )
+        else:
+            profile.data_nascimento = None
 
     nova_foto = request.FILES.get("image")
     if nova_foto:
