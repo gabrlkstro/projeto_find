@@ -56,20 +56,20 @@ class Item(models.Model):
         try:
             import imagehash
             from PIL import Image as PILImage
-            import os
 
-            img_path = self.imagem.path
-            if not os.path.isfile(img_path):
-                return
-
-            img = PILImage.open(img_path)
+            self.imagem.open()
+            img = PILImage.open(self.imagem)
             phash = str(imagehash.phash(img, hash_size=16))
+            self.imagem.close()
 
             if self.image_hash != phash:
                 Item.objects.filter(pk=self.pk).update(image_hash=phash)
                 self.image_hash = phash
         except Exception:
-            pass
+            try:
+                self.imagem.close()
+            except Exception:
+                pass
 
     @staticmethod
     def buscar_por_imagem(imagem_file, limite=20):
