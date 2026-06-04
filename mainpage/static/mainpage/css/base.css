@@ -6,31 +6,32 @@
 
 /* ── Design Tokens ──────────────────────────────────────── */
 :root {
-  --brand-dark:          #0B3A4A;
-  --brand-mid:           #145fa5;
-  --brand-light:         #90dbf4;
-  --brand-accent:        #90dbf4;
+  --brand-dark:          #002a35;
+  --brand-mid:           #01627a;
+  --brand-light:         #00b4d8;
+  --brand-accent:        #00d9ff;
 
   /* Navbar */
   --nav-h:               84px;
-  --nav-bg:              rgba(144, 219, 244, 0.85);
-  --nav-bg-scrolled:     rgba(144, 219, 244, 0.92);
-  --nav-border:          rgba(11, 58, 74, 0.12);
-  --nav-shadow:          0 1px 0 rgba(11, 58, 74, 0.08);
-  --nav-shadow-scrolled: 0 4px 28px rgba(11, 58, 74, 0.10);
+  --nav-bg:              rgba(173, 233, 255, 0.75);
+  --nav-bg-scrolled:     rgba(173, 233, 255, 0.70);
+  --nav-border:          rgba(0, 180, 216, 0.18);
+  --nav-shadow:          0 1px 0 rgba(0, 180, 216, 0.12);
+  --nav-shadow-scrolled: 0 4px 28px rgba(0, 42, 53, 0.10);
 
   /* Links */
-  --link-hover-bg:       rgba(11, 58, 74, 0.08);
-  --link-active-bg:      rgba(11, 58, 74, 0.12);
-  --link-active-color:   #0B3A4A;
+  --link-hover-bg:       rgba(1, 98, 122, 0.08);
+  --link-active-bg:      rgba(1, 98, 122, 0.12);
+  --link-active-color:   #01627a;
 
   /* Footer */
-  --footer-bg:           rgba(144, 219, 244, 0.65);
-  --footer-text:         rgba(11, 58, 74, 0.65);
-  --footer-heading:      rgba(11, 58, 74, 0.55);
-  --footer-link:         #0B3A4A;
-  --footer-link-hover:   #145fa5;
-  --footer-border:       rgba(11, 58, 74, 0.08);
+
+--footer-bg: rgba(173, 233, 255, 0.65);
+--footer-text: rgba(0, 42, 53, 0.65);
+--footer-heading: rgba(0, 42, 53, 0.55);
+--footer-link: #002a35;
+--footer-link-hover: #01627a;
+--footer-border: rgba(0, 42, 53, 0.08);
 
   --radius-md:           12px;
   --transition:          all 0.24s cubic-bezier(0.4, 0, 0.2, 1);
