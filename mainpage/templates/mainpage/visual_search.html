@@ -406,7 +406,7 @@
           <a href="{% url 'item_detail' item.slug %}" class="visual-result-card">
             <div class="result-img-container">
               {% if item.imagem %}
-                <img src="{{ item.imagem.url }}" alt="{{ item.titulo }}">
+                <img src="{{ item.imagem.url }}" alt="{{ item.titulo }}" onerror="this.onerror=null; this.src='{% static 'mainpage/img/item-default.png' %}';">
               {% else %}
                 <img src="{% static 'mainpage/img/item-default.png' %}" alt="Padrão">
               {% endif %}

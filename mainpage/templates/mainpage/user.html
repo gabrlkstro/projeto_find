@@ -23,7 +23,7 @@
 
           {# Foto do perfil com fallback #}
           {% if user.is_authenticated and user.profile and user.profile.image %}
-            <img src="{{ user.profile.image.url }}" class="profile-pic" alt="Foto de perfil">
+            <img src="{{ user.profile.image.url }}" class="profile-pic" alt="Foto de perfil" onerror="this.onerror=null; this.src='{% static 'mainpage/img/user.webp' %}';">
           {% else %}
             <img src="{% static 'mainpage/img/user.webp' %}" class="profile-pic" alt="Foto de perfil">
           {% endif %}
@@ -115,7 +115,7 @@
                   <div class="item-col-img">
                     <div class="item-img-container">
                       {% if item.imagem %}
-                        <img src="{{ item.imagem.url }}" alt="{{ item.titulo }}">
+                        <img src="{{ item.imagem.url }}" alt="{{ item.titulo }}" onerror="this.onerror=null; this.src='{% static 'mainpage/img/item-default.png' %}';">
                       {% else %}
                         <img src="{% static 'mainpage/img/item-default.png' %}" alt="Imagem padrão">
                       {% endif %}

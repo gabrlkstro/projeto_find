@@ -5,265 +5,644 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FIND — Plataforma de Achados e Perdidos</title>
-
-  <!-- Google Fonts: Syne (display) + DM Sans (body) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
-
-  <!-- Bootstrap Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css">
-
-  <!-- CSS próprio -->
   <link rel="stylesheet" href="{% static 'mainpage/css/index.css' %}">
-
-  <!-- Favicon -->
   <link rel="icon" type="image/webp" href="{% static 'mainpage/img/find.webp' %}">
-
 </head>
 <body>
 
-  <!-- Background decorative layers -->
+  <!-- Background layers -->
   <div class="bg-layer" aria-hidden="true"></div>
   <div class="dot-grid" aria-hidden="true"></div>
 
   <!-- ====================================================
-       NAV
+       NAVBAR
        ==================================================== -->
-  <nav class="nav">
-    <img src="{% static 'mainpage/img/logo-find.png' %}" alt="logo-find" class="logo-find">
-    <div class="nav-links">
-      <a href="#benefits" class="nav-link">Benefícios</a>
-      <a href="#how" class="nav-link">Como funciona</a>
-      <a href="{% url 'login' %}" class="nav-link">Entrar</a>
-      <a href="{% url 'register' %}" class="nav-btn">Criar conta</a>
+  <header class="nav-wrapper">
+    <div class="nav-container">
+      <a href="/"><img src="{% static 'mainpage/img/logo-find.png' %}" alt="FIND logo" class="logo-find"></a>
+      <nav class="nav-menu">
+        <a href="#benefits"     class="nav-link-item"><i class="bi bi-star"></i> Benefícios</a>
+        <a href="#how"          class="nav-link-item"><i class="bi bi-question-circle"></i> Como funciona</a>
+        <a href="#testimonials" class="nav-link-item"><i class="bi bi-chat-left-text"></i> Depoimentos</a>
+      </nav>
+      <div class="nav-actions">
+        <a href="{% url 'login' %}"    class="btn-login"><i class="bi bi-box-arrow-in-right"></i> Entrar</a>
+        <a href="{% url 'register' %}" class="btn-register-nav">Cadastre-se <i class="bi bi-arrow-right"></i></a>
+      </div>
     </div>
-  </nav>
+  </header>
 
   <!-- ====================================================
-       HERO
+       HERO SECTION
        ==================================================== -->
-  <section class="hero">
-    <div class="hero-inner">
+  <section class="hero-section">
 
-      <div class="hero-badge">
-        <i class="bi bi-stars"></i>
-        Plataforma nº 1 de achados e perdidos
+    <!-- Side decoration LEFT -->
+    <div class="side-decoration left-decor" aria-hidden="true">
+      <div class="vertical-signal-line"></div>
+      <div class="side-card float-anim-1 card-match">
+        <div class="side-card-badge"><span class="badge-dot pulse"></span> Match em tempo real</div>
+        <div class="side-card-title">iPhone Recuperado</div>
+        <div class="side-card-desc"><i class="bi bi-geo-alt"></i> Pinheiros, SP · há 3m</div>
       </div>
+      <div class="side-icon-bubble float-anim-3">
+        <i class="bi bi-key-fill"></i>
+      </div>
+      <div class="side-card float-anim-2 card-devolvido" style="min-width:160px; max-width:180px;">
+        <div class="side-card-badge"><span class="badge-dot green pulse"></span> Devolvido</div>
+        <div class="side-card-title">Carteira recuperada</div>
+        <div class="side-card-desc"><i class="bi bi-clock"></i> em 47 minutos</div>
+      </div>
+      <div class="vertical-signal-line"></div>
+    </div>
 
-      <h1 class="hero-headline">
+    <!-- Hero Content -->
+    <div class="hero-content reveal">
+      <div class="section-badge">
+        <i class="bi bi-search"></i>
+        <span class="section-badge-text">Achados e perdidos</span>
+      </div>
+      <h1 class="hero-title">
         Perdeu algo?<br>
-        <span class="highlight">Encontre aqui.</span>
+        <span class="hero-title-accent">Encontre agora.</span>
       </h1>
-
       <p class="hero-sub">
-        Centralize, gerencie e resolva achados e perdidos com eficiência, segurança e total rastreabilidade.
+        O Find conecta quem perdeu a quem achou. Cadastre itens, receba alertas e recupere o que é seu.
       </p>
-
-      <div class="hero-cta-group">
-        <a href="{% url 'register' %}" class="btn-primary">
-          <i class="bi bi-person-plus-fill"></i>
-          Criar conta grátis
-        </a>
-        <a href="{% url 'login' %}" class="btn-ghost">
-          <i class="bi bi-box-arrow-in-right"></i>
-          Já tenho conta
-        </a>
-      </div>
-
-      <div class="hero-social-proof">
-        <div class="proof-stat">
-          <strong>{{ total_itens }}</strong>
-          <span>Itens cadastrados</span>
+      <div class="stats-row">
+        <div class="stat-item">
+          <div class="stat-icon-wrap"><i class="bi bi-bag-check"></i></div>
+          <span class="stat-number">{{ total_itens }}</span>
+          <span class="stat-label">Itens cadastrados</span>
         </div>
-        <div class="proof-divider"></div>
-        <div class="proof-stat">
-          <strong>{{ devolvidos }}</strong>
-          <span>Itens devolvidos</span>
+        <div class="stat-item">
+          <div class="stat-icon-wrap"><i class="bi bi-shield-check"></i></div>
+          <span class="stat-number">{{ devolvidos }}</span>
+          <span class="stat-label">Itens devolvidos</span>
         </div>
-        <div class="proof-divider"></div>
-        <div class="proof-stat">
-          <strong>{{ encontrados }}</strong>
-          <span>Itens encontrados</span>
+        <div class="stat-item">
+          <div class="stat-icon-wrap"><i class="bi bi-geo-alt"></i></div>
+          <span class="stat-number">{{ encontrados }}</span>
+          <span class="stat-label">Itens encontrados</span>
         </div>
       </div>
-
+      <a href="{% url 'register' %}" class="btn-hero-cta">
+        <i class="bi bi-rocket-takeoff"></i>
+        <span class="btn-hero-cta-text">Começar agora</span>
+        <div class="btn-hero-arrow"><i class="bi bi-arrow-right"></i></div>
+      </a>
+      <br>
+      <div class="hero-trust">
+        <div class="hero-avatars">
+          <div class="avatar-initials" style="background-color:#abe8ff;color:#0a6680;">MR</div>
+          <div class="avatar-initials" style="background-color:#C7B8F5;color:#4a2fa0;">JF</div>
+          <div class="avatar-initials" style="background-color:#9EE5C4;color:#0a6641;">AL</div>
+        </div>
+        <div class="trust-meta">
+          <div class="trust-title-row"><i class="bi bi-heart-fill"></i> Pessoas reais. Itens reais.</div>
+          <span class="trust-subtitle">Comunidade ativa no Brasil inteiro</span>
+        </div>
+      </div>
+      <div class="pill-row">
+        <div class="feature-pill"><i class="bi bi-gift"></i><span class="feature-pill-text">Gratuito</span></div>
+        <div class="feature-pill"><i class="bi bi-bell"></i><span class="feature-pill-text">Alertas</span></div>
+        <div class="feature-pill"><i class="bi bi-shield-check"></i><span class="feature-pill-text">Seguro</span></div>
+      </div>
     </div>
+
+    <!-- Side decoration RIGHT -->
+    <div class="side-decoration right-decor" aria-hidden="true">
+      <div class="vertical-signal-line"></div>
+      <div class="side-card float-anim-2 card-rede">
+        <div class="side-card-badge success"><span class="badge-dot green pulse"></span> Rede ativa</div>
+        <div class="side-card-title">1.2k Buscas Ativas</div>
+        <div class="side-card-desc"><i class="bi bi-shield-check"></i> Cruzamento inteligente</div>
+      </div>
+      <div class="side-icon-bubble float-anim-4">
+        <i class="bi bi-wallet2"></i>
+      </div>
+      <div class="side-card float-anim-1 card-novo" style="min-width:160px; max-width:180px;">
+        <div class="side-card-badge"><span class="badge-dot pulse"></span> Novo match</div>
+        <div class="side-card-title">Mochila encontrada</div>
+        <div class="side-card-desc"><i class="bi bi-geo-alt"></i> Moema, SP · agora</div>
+      </div>
+      <div class="vertical-signal-line"></div>
+    </div>
+
   </section>
 
   <!-- ====================================================
-       BENEFITS
+       SOCIAL PROOF SECTION
        ==================================================== -->
-  <section class="section" id="benefits">
-    <div class="section-inner">
-      <div class="section-header text-center">
-        <span class="section-label">Por que escolher</span>
-        <h2 class="section-title">Tudo que você precisa<br>para recuperar o que é seu</h2>
-        <p class="section-sub">Desenvolvemos uma experiência sem atrito para maximizar as chances de você reencontrar o que perdeu.</p>
+  <section class="social-proof-section">
+    <div class="reveal" style="text-align:center;width:100%;">
+      <div class="section-badge">
+        <i class="bi bi-bar-chart"></i>
+        <span class="section-badge-text">Números que impressionam</span>
       </div>
-
-      <div class="benefits-grid">
-        <div class="benefit-card reveal">
-          <div class="benefit-icon"><i class="bi bi-shield-fill-check"></i></div>
-          <h3 class="benefit-title">100% Seguro</h3>
-          <p class="benefit-desc">Seus dados são protegidos com criptografia de ponta a ponta. Suas informações nunca são compartilhadas sem sua permissão.</p>
+      <div class="metrics-container" style="margin:0 auto;">
+        <div class="metric-item">
+          <div class="stat-icon-wrap"><i class="bi bi-graph-up-arrow"></i></div>
+          <span class="metric-number-text">98<span class="metric-number-suffix">%</span></span>
+          <span class="stat-label">taxa de recuperação</span>
         </div>
-        <div class="benefit-card reveal">
-          <div class="benefit-icon"><i class="bi bi-lightning-charge-fill"></i></div>
-          <h3 class="benefit-title">Resposta Rápida</h3>
-          <p class="benefit-desc">Notificações em tempo real assim que houver uma correspondência com seu item. Não perca a janela de recuperação.</p>
+        <div class="metric-item">
+          <div class="stat-icon-wrap"><i class="bi bi-bag-heart"></i></div>
+          <span class="metric-number-text">40<span class="metric-number-suffix">K+</span></span>
+          <span class="stat-label">itens encontrados</span>
         </div>
-        <div class="benefit-card reveal">
-          <div class="benefit-icon"><i class="bi bi-geo-alt-fill"></i></div>
-          <h3 class="benefit-title">Localização Inteligente</h3>
-          <p class="benefit-desc">Filtramos os achados por região para aumentar a relevância das correspondências e agilizar a devolução.</p>
-        </div>
-        <div class="benefit-card reveal">
-          <div class="benefit-icon"><i class="bi bi-gift-fill"></i></div>
-          <h3 class="benefit-title">Totalmente Gratuito</h3>
-          <p class="benefit-desc">Sem taxas, sem surpresas. Cadastre quantos itens precisar e use todos os recursos da plataforma sem pagar nada.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ====================================================
-       HOW IT WORKS
-       ==================================================== -->
-  <section class="section how-section" id="how">
-    <div class="section-inner">
-      <div class="section-header text-center">
-        <span class="section-label">Simples assim</span>
-        <h2 class="section-title">Como funciona?</h2>
-        <p class="section-sub">Três passos para começar. Menos de dois minutos para cadastrar seu item.</p>
-      </div>
-
-      <div class="steps-grid">
-        <div class="step-item reveal">
-          <div class="step-number"><i class="bi bi-person-plus"></i></div>
-          <h3 class="step-title">1. Crie sua conta</h3>
-          <p class="step-desc">Cadastro rápido e gratuito. Apenas nome e e-mail para começar.</p>
-        </div>
-        <div class="step-item reveal">
-          <div class="step-number"><i class="bi bi-pencil-square"></i></div>
-          <h3 class="step-title">2. Cadastre o item</h3>
-          <p class="step-desc">Descreva o objeto perdido ou encontrado com fotos e localização.</p>
-        </div>
-        <div class="step-item reveal">
-          <div class="step-number"><i class="bi bi-bell-fill"></i></div>
-          <h3 class="step-title">3. Receba alertas</h3>
-          <p class="step-desc">Avisamos você imediatamente quando encontrarmos uma correspondência.</p>
+        <div class="metric-item">
+          <div class="stat-icon-wrap"><i class="bi bi-star"></i></div>
+          <span class="metric-number-text">4.9<span class="metric-number-suffix">★</span></span>
+          <span class="stat-label">avaliação média</span>
         </div>
       </div>
     </div>
   </section>
 
   <!-- ====================================================
-       TESTIMONIALS
+       BENEFITS SECTION
        ==================================================== -->
-  <section class="section">
-    <div class="section-inner">
-      <div class="section-header text-center">
-        <span class="section-label">Histórias reais</span>
-        <h2 class="section-title">Quem usou, aprovou</h2>
-        <p class="section-sub">Pessoas que recuperaram itens importantes graças à comunidade FIND.</p>
+  <section class="benefits-section" id="benefits">
+
+    <!--
+      Em 1280px+: layout vira row com header sticky à esquerda.
+      Em telas menores: header-col não aparece (display:none via CSS
+      inline abaixo), e o badge/title dentro do reveal-wrapper funciona.
+    -->
+
+    <!-- Sticky header column (desktop 1280+) -->
+    <div class="benefits-header-col">
+      <div class="section-badge">
+        <i class="bi bi-star"></i>
+        <span class="section-badge-text">Benefícios</span>
+      </div>
+      <h2 class="section-title">
+        Tudo para<br>
+        <span class="section-title-accent">recuperar o que perdeu</span>
+      </h2>
+      <p class="section-desc">Ferramentas pensadas para cada etapa: do cadastro ao reencontro com seu item.</p>
+    </div>
+
+    <!-- Main content (visible always) -->
+    <div class="reveal" style="text-align:center;width:100%;">
+      <!-- Badge & Title — hidden on desktop 1280+ via JS toggle below -->
+      <div class="benefits-center-header">
+        <div class="section-badge">
+          <i class="bi bi-star"></i>
+          <span class="section-badge-text">Benefícios</span>
+        </div>
+        <h2 class="section-title">
+          Tudo para recuperar<br>
+          <span class="section-title-accent">o que você perdeu</span>
+        </h2>
+      </div>
+      <div class="benefits-layout-grid" style="margin:0 auto;">
+        <div class="benefit-card-app benefit-alertas">
+          <div class="benefit-icon-wrap"><i class="bi bi-bell"></i></div>
+          <h3 class="benefit-card-title">Alertas em tempo real</h3>
+          <p class="benefit-card-desc">Notificações instantâneas quando alguém registrar um item que combina com o seu.</p>
+        </div>
+        <div class="benefit-card-app benefit-chat">
+          <div class="benefit-icon-wrap"><i class="bi bi-shield-lock"></i></div>
+          <h3 class="benefit-card-title">Chat seguro</h3>
+          <p class="benefit-card-desc">Converse com o achador de forma privada sem precisar expor seus dados pessoais.</p>
+        </div>
+        <div class="benefit-card-app benefit-busca">
+          <div class="benefit-icon-wrap"><i class="bi bi-stars"></i></div>
+          <h3 class="benefit-card-title">Busca inteligente</h3>
+          <p class="benefit-card-desc">Algoritmo que cruza descrições e fotos para sugerir correspondências instantâneas.</p>
+        </div>
+        <div class="benefit-card-app benefit-geo">
+          <div class="benefit-icon-wrap"><i class="bi bi-geo-alt"></i></div>
+          <h3 class="benefit-card-title">Geolocalização</h3>
+          <p class="benefit-card-desc">Veja exatamente onde o item foi localizado e organize a devolução com segurança.</p>
+        </div>
+        <div class="benefit-card-app benefit-painel">
+          <div class="benefit-icon-wrap"><i class="bi bi-grid-1x2"></i></div>
+          <h3 class="benefit-card-title">Painel de controle</h3>
+          <p class="benefit-card-desc">Gerencie todos os seus pertences perdidos ou encontrados em um único lugar simplificado.</p>
+        </div>
+        <div class="benefit-card-app benefit-recompensas">
+          <div class="benefit-icon-wrap"><i class="bi bi-gift"></i></div>
+          <h3 class="benefit-card-title">Recompensas</h3>
+          <p class="benefit-card-desc">Defina recompensas personalizadas para motivar e incentivar a devolução de itens valiosos.</p>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ====================================================
+       DEMO SECTION / HOW IT WORKS
+       ==================================================== -->
+  <section class="demo-section" id="how">
+    <div class="mockup-wrapper reveal">
+      <!-- Phone Frame Elements -->
+      <div class="phone-dynamic-island"></div>
+      <div class="phone-status-bar">
+        <span class="phone-time">09:41</span>
+        <div class="phone-status-icons">
+          <i class="bi bi-reception-4"></i>
+          <i class="bi bi-wifi"></i>
+          <i class="bi bi-battery-full"></i>
+        </div>
       </div>
 
-      <div class="testimonials-grid">
-        <div class="testimonial-card reveal">
-          <div class="testimonial-stars">
-            <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-            <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-            <i class="bi bi-star-fill"></i>
-          </div>
-          <p class="testimonial-text">"Perdi minha carteira com todos os documentos. Em menos de 24 horas, alguém a cadastrou no FIND e consegui recuperar tudo. Inacreditável!"</p>
-          <div class="testimonial-author">
-            <div class="author-avatar">MR</div>
-            <div class="author-info">
-              <strong>Mariana R.</strong>
-              <span>São Paulo, SP</span>
+      <!-- App Screen Content Container -->
+      <div class="mockup-app-screen">
+        <div class="mockup-header-bar">
+          <img src="{% static 'mainpage/img/logo-find.png' %}" alt="FIND" class="mockup-logo">
+          <div class="mockup-header-right">
+            <div class="mockup-bell-wrap">
+              <i class="bi bi-bell"></i>
+              <span class="mockup-notification-badge"></span>
+            </div>
+            <div class="mockup-avatar-circle">
+              <span class="mockup-avatar-initials">GS</span>
             </div>
           </div>
         </div>
-
-        <div class="testimonial-card reveal">
-          <div class="testimonial-stars">
-            <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-            <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-            <i class="bi bi-star-fill"></i>
+        <div class="mockup-search-container">
+          <i class="bi bi-search"></i>
+          <div class="mockup-search-placeholder">Buscar item perdido...</div>
+          <div class="mockup-search-filter-box"><i class="bi bi-sliders"></i></div>
+        </div>
+        <span class="mockup-section-label">Recentes</span>
+        <div class="mockup-item-card">
+          <div class="mockup-card-icon-wrap" style="background-color:var(--c-accent);">
+            <i class="bi bi-wallet2" style="color:var(--c-button);"></i>
           </div>
-          <p class="testimonial-text">"Encontrei um celular na rua e não sabia o que fazer. Cadastrei no FIND e em horas o dono entrou em contato. Fácil demais."</p>
-          <div class="testimonial-author">
-            <div class="author-avatar">CS</div>
-            <div class="author-info">
-              <strong>Carlos S.</strong>
-              <span>Rio de Janeiro, RJ</span>
+          <div class="mockup-card-details">
+            <h4 class="mockup-card-title">Carteira preta</h4>
+            <div class="mockup-card-sub-row">
+              <i class="bi bi-geo-alt"></i>
+              <span class="mockup-card-sub-text">Copacabana, RJ · há 2h</span>
             </div>
+          </div>
+          <div class="mockup-badge" style="background-color:rgba(0,194,100,0.12);">
+            <span class="mockup-badge-text" style="color:#00a855;">Encontrado</span>
           </div>
         </div>
-
-        <div class="testimonial-card reveal">
-          <div class="testimonial-stars">
-            <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-            <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-            <i class="bi bi-star-half"></i>
+        <div class="mockup-item-card">
+          <div class="mockup-card-icon-wrap" style="background-color:rgba(255,100,80,0.10);">
+            <i class="bi bi-phone" style="color:#e05540;"></i>
           </div>
-          <p class="testimonial-text">"A plataforma é muito intuitiva. Cadastrei meu notebook perdido e recebi uma notificação no mesmo dia. Recomendo demais!"</p>
-          <div class="testimonial-author">
-            <div class="author-avatar">AL</div>
-            <div class="author-info">
-              <strong>Ana L.</strong>
-              <span>Curitiba, PR</span>
+          <div class="mockup-card-details">
+            <h4 class="mockup-card-title">iPhone 15 Pro</h4>
+            <div class="mockup-card-sub-row">
+              <i class="bi bi-geo-alt"></i>
+              <span class="mockup-card-sub-text">Pinheiros, SP · há 5h</span>
             </div>
+          </div>
+          <div class="mockup-badge" style="background-color:rgba(255,100,80,0.10);">
+            <span class="mockup-badge-text" style="color:#e05540;">Perdido</span>
+          </div>
+        </div>
+        <div class="mockup-item-card">
+          <div class="mockup-card-icon-wrap" style="background-color:var(--c-accent);">
+            <i class="bi bi-key" style="color:var(--c-button);"></i>
+          </div>
+          <div class="mockup-card-details">
+            <h4 class="mockup-card-title">Chaves Honda Civic</h4>
+            <div class="mockup-card-sub-row">
+              <i class="bi bi-geo-alt"></i>
+              <span class="mockup-card-sub-text">Moema, SP · há 1h</span>
+            </div>
+          </div>
+          <div class="mockup-badge" style="background-color:rgba(0,194,100,0.12);">
+            <span class="mockup-badge-text" style="color:#00a855;">Encontrado</span>
           </div>
         </div>
       </div>
 
+      <!-- Phone Navigation & Bottom Indicators -->
+      <div class="phone-navigation-bar">
+        <div class="nav-tab active">
+          <i class="bi bi-house-door-fill"></i>
+          <span>Início</span>
+        </div>
+        <div class="nav-tab">
+          <i class="bi bi-map"></i>
+          <span>Mapa</span>
+        </div>
+        <div class="nav-tab nav-tab-add">
+          <div class="add-button-circle">
+            <i class="bi bi-plus-lg"></i>
+          </div>
+        </div>
+        <div class="nav-tab">
+          <i class="bi bi-chat-dots"></i>
+          <span>Mensagens</span>
+        </div>
+        <div class="nav-tab">
+          <i class="bi bi-person"></i>
+          <span>Perfil</span>
+        </div>
+      </div>
+      <div class="phone-home-indicator"></div>
+    </div>
+
+    <div class="demo-content-right reveal">
+      <div class="section-badge">
+        <i class="bi bi-info-circle"></i>
+        <span class="section-badge-text">Como funciona</span>
+      </div>
+      <h2 class="section-title">Simples, em<br><span class="section-title-accent">3 passos</span></h2>
+      <div class="steps-list">
+        <div class="step-card">
+          <div class="step-number-circle"><span class="step-number-value">1</span></div>
+          <div class="step-icon-wrap-alt"><i class="bi bi-camera"></i></div>
+          <div class="step-text-details">
+            <span class="step-text-bold">Cadastre o item</span>
+            <span class="step-text-rest"> com foto, descrição e localização aproximada.</span>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-number-circle"><span class="step-number-value">2</span></div>
+          <div class="step-icon-wrap-alt"><i class="bi bi-stars"></i></div>
+          <div class="step-text-details">
+            <span class="step-text-bold">Cruzamento inteligente</span>
+            <span class="step-text-rest"> nosso sistema analisa descrições e propõe matches.</span>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-number-circle"><span class="step-number-value">3</span></div>
+          <div class="step-icon-wrap-alt"><i class="bi bi-check-circle"></i></div>
+          <div class="step-text-details">
+            <span class="step-text-bold">Receba o match</span>
+            <span class="step-text-rest"> e combine a devolução de forma totalmente segura.</span>
+          </div>
+        </div>
+      </div>
+      <a href="{% url 'register' %}" class="btn-demo-cta">
+        <i class="bi bi-rocket-takeoff"></i>
+        <span class="btn-demo-cta-text">Cadastrar agora</span>
+        <div class="btn-demo-arrow"><i class="bi bi-arrow-right"></i></div>
+      </a>
     </div>
   </section>
 
   <!-- ====================================================
-       CTA BANNER
+       DIFFERENTIALS SECTION
        ==================================================== -->
-  <section class="section" style="padding-top: 0;">
-    <div class="section-inner">
-      <div class="cta-banner reveal">
-        <h2 class="cta-banner-title">Pronto para encontrar<br>o que perdeu?</h2>
-        <p class="cta-banner-sub">Crie sua conta gratuita em menos de um minuto<br>e faça parte da maior rede de achados e perdidos.</p>
-        <div class="cta-banner-actions">
-          <a href="{% url 'register' %}" class="btn-light">
-            <i class="bi bi-person-plus-fill"></i>
-            Criar conta grátis
-          </a>
-          <a href="{% url 'login' %}" class="btn-outline-light">
-            <i class="bi bi-box-arrow-in-right"></i>
-            Já tenho conta
-          </a>
+  <section class="differentials-section">
+
+    <!-- Sticky header column (desktop 1280+) -->
+    <div class="differentials-header-col">
+      <div class="section-badge">
+        <i class="bi bi-award"></i>
+        <span class="section-badge-text">Diferenciais</span>
+      </div>
+      <h2 class="section-title">
+        Por que o Find<br>
+        <span class="section-title-accent">é diferente</span>
+      </h2>
+      <p class="section-desc">Tecnologia real, comunidade ativa e privacidade em cada interação.</p>
+    </div>
+
+    <div class="reveal" style="text-align:center;width:100%;">
+      <div class="differentials-center-header">
+        <div class="section-badge">
+          <i class="bi bi-award"></i>
+          <span class="section-badge-text">Diferenciais</span>
+        </div>
+        <h2 class="section-title">Por que o Find<br><span class="section-title-accent">é diferente</span></h2>
+      </div>
+      <div class="diff-grid" style="margin:0 auto;text-align:left;">
+        <div class="diff-hero-card">
+          <div class="diff-orb-decor-1"></div>
+          <div class="diff-orb-decor-2"></div>
+          <div class="diff-hero-top">
+            <div class="diff-hero-icon"><i class="bi bi-cpu"></i></div>
+            <div class="diff-hero-badge">
+              <div class="diff-hero-badge-dot"></div>
+              <span class="diff-hero-badge-text">IA ativa</span>
+            </div>
+          </div>
+          <h3 class="diff-hero-title">Tecnologia de matching inteligente</h3>
+          <p class="diff-hero-desc">Precisão de 94% na identificação de semelhanças entre os itens cadastrados. O Find trabalha para você, 24 horas por dia.</p>
+          <div class="diff-hero-stats">
+            <div class="diff-hero-stat-item">
+              <i class="bi bi-graph-up-arrow"></i>
+              <span class="diff-hero-stat-value">94%</span>
+              <span class="diff-hero-stat-label">precisão</span>
+            </div>
+            <div class="diff-hero-stat-item">
+              <i class="bi bi-clock"></i>
+              <span class="diff-hero-stat-value">24h</span>
+              <span class="diff-hero-stat-label">ativo</span>
+            </div>
+            <div class="diff-hero-stat-item">
+              <i class="bi bi-lightning-charge"></i>
+              <span class="diff-hero-stat-value">18min</span>
+              <span class="diff-hero-stat-label">p/ match</span>
+            </div>
+          </div>
+        </div>
+        <div class="diff-secondary-card">
+          <div class="diff-sec-top">
+            <div class="diff-sec-icon-wrap"><i class="bi bi-shield-lock"></i></div>
+            <div class="diff-sec-badge"><i class="bi bi-lock"></i><span class="diff-sec-badge-text">Criptografado</span></div>
+          </div>
+          <h3 class="diff-sec-title">Privacidade total</h3>
+          <p class="diff-sec-desc">Seus dados de contato nunca são expostos. Toda a comunicação ocorre de forma mediada e segura pelo chat interno.</p>
+          <div class="diff-sec-footer"><div class="diff-sec-footer-line"></div><i class="bi bi-chevron-right"></i></div>
+        </div>
+        <div class="diff-secondary-card">
+          <div class="diff-sec-top">
+            <div class="diff-sec-icon-wrap"><i class="bi bi-lightning-charge"></i></div>
+            <div class="diff-sec-badge"><i class="bi bi-activity"></i><span class="diff-sec-badge-text">Tempo real</span></div>
+          </div>
+          <h3 class="diff-sec-title">Resposta em minutos</h3>
+          <p class="diff-sec-desc">Tempo médio de apenas 18 minutos entre o cadastro do item perdido e o primeiro contato da outra pessoa.</p>
+          <div class="diff-sec-footer"><div class="diff-sec-footer-line"></div><i class="bi bi-chevron-right"></i></div>
+        </div>
+        <div class="diff-secondary-card">
+          <div class="diff-sec-top">
+            <div class="diff-sec-icon-wrap"><i class="bi bi-people"></i></div>
+            <div class="diff-sec-badge"><i class="bi bi-people-fill"></i><span class="diff-sec-badge-text">120k+ membros</span></div>
+          </div>
+          <h3 class="diff-sec-title">Comunidade ativa</h3>
+          <p class="diff-sec-desc">Mais de 120 mil usuários em todo o Brasil, criando uma rede colaborativa forte e eficiente de devolução.</p>
+          <div class="diff-sec-footer"><div class="diff-sec-footer-line"></div><i class="bi bi-chevron-right"></i></div>
         </div>
       </div>
+    </div>
+
+  </section>
+
+  <!-- ====================================================
+       TESTIMONIALS SECTION
+       ==================================================== -->
+  <section class="testimonials-section-app" id="testimonials">
+
+    <!-- Sticky header column (desktop 1280+) -->
+    <div class="testimonials-header-col">
+      <div class="section-badge">
+        <i class="bi bi-chat-left-quote"></i>
+        <span class="section-badge-text">Depoimentos</span>
+      </div>
+      <h2 class="section-title">
+        Quem usou,<br>
+        <span class="section-title-accent">aprova</span>
+      </h2>
+      <p class="section-desc">Histórias reais de pessoas que recuperaram o que era seu com o Find.</p>
+    </div>
+
+    <div class="reveal" style="text-align:center;width:100%;">
+      <div class="testimonials-center-header">
+        <div class="section-badge">
+          <i class="bi bi-chat-left-quote"></i>
+          <span class="section-badge-text">Depoimentos</span>
+        </div>
+        <h2 class="section-title">Quem usou,<br><span class="section-title-accent">aprova</span></h2>
+      </div>
+      <div class="test-grid" style="margin:0 auto;">
+        <div class="test-card-app">
+          <div class="test-card-top">
+            <div class="test-stars-row">
+              <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+            </div>
+            <div class="test-item-tag"><i class="bi bi-wallet2"></i><span class="test-item-tag-text">Carteira recuperada</span></div>
+          </div>
+          <div class="test-quote-wrap"><i class="bi bi-chat-quote"></i></div>
+          <p class="test-quote-text">"Perdi minha carteira com todos os documentos importantes e consegui recuperar em menos de 3 horas. Indiquei a todos."</p>
+          <div class="test-divider"></div>
+          <div class="test-footer">
+            <div class="test-avatar-circle" style="background-color:var(--c-accent);">
+              <span class="test-avatar-text" style="color:var(--c-button-deep);">AM</span>
+            </div>
+            <div class="test-author-info">
+              <h4 class="test-author-name">Ana Martins</h4>
+              <div class="test-author-meta">
+                <i class="bi bi-briefcase"></i><span class="test-author-meta-text">Designer</span>
+                <span class="test-author-dot">·</span>
+                <i class="bi bi-geo-alt"></i><span class="test-author-meta-text">São Paulo, SP</span>
+              </div>
+            </div>
+            <div class="test-time-tag"><i class="bi bi-lightning-fill"></i><span class="test-time-tag-text">3h</span></div>
+          </div>
+        </div>
+        <div class="test-card-app">
+          <div class="test-card-top">
+            <div class="test-stars-row">
+              <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+            </div>
+            <div class="test-item-tag" style="background-color:rgba(5,150,105,0.12);">
+              <i class="bi bi-phone" style="color:#047857;"></i>
+              <span class="test-item-tag-text" style="color:#047857;">Celular devolvido</span>
+            </div>
+          </div>
+          <div class="test-quote-wrap"><i class="bi bi-chat-quote"></i></div>
+          <p class="test-quote-text">"Devolvi um celular que encontrei no metrô. O sistema me deu toda a segurança para entrar em contato. Foi muito gratificante."</p>
+          <div class="test-divider"></div>
+          <div class="test-footer">
+            <div class="test-avatar-circle" style="background-color:rgba(5,150,105,0.12);">
+              <span class="test-avatar-text" style="color:#047857;">RC</span>
+            </div>
+            <div class="test-author-info">
+              <h4 class="test-author-name">Rafael Costa</h4>
+              <div class="test-author-meta">
+                <i class="bi bi-briefcase"></i><span class="test-author-meta-text">Engenheiro</span>
+                <span class="test-author-dot">·</span>
+                <i class="bi bi-geo-alt"></i><span class="test-author-meta-text">Curitiba, PR</span>
+              </div>
+            </div>
+            <div class="test-time-tag"><i class="bi bi-lightning-fill"></i><span class="test-time-tag-text">1h</span></div>
+          </div>
+        </div>
+        <div class="test-card-app">
+          <div class="test-card-top">
+            <div class="test-stars-row">
+              <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i><i class="bi bi-star-half"></i>
+            </div>
+            <div class="test-item-tag" style="background-color:rgba(124,58,237,0.10);">
+              <i class="bi bi-laptop" style="color:#6d28d9;"></i>
+              <span class="test-item-tag-text" style="color:#6d28d9;">Laptop recuperado</span>
+            </div>
+          </div>
+          <div class="test-quote-wrap"><i class="bi bi-chat-quote"></i></div>
+          <p class="test-quote-text">"Esqueci meu notebook de trabalho em uma lanchonete. Cadastrei no Find e o gerente logo me contatou. A comunidade é fantástica!"</p>
+          <div class="test-divider"></div>
+          <div class="test-footer">
+            <div class="test-avatar-circle" style="background-color:rgba(124,58,237,0.10);">
+              <span class="test-avatar-text" style="color:#6d28d9;">JS</span>
+            </div>
+            <div class="test-author-info">
+              <h4 class="test-author-name">Juliana Santos</h4>
+              <div class="test-author-meta">
+                <i class="bi bi-briefcase"></i><span class="test-author-meta-text">Gerente</span>
+                <span class="test-author-dot">·</span>
+                <i class="bi bi-geo-alt"></i><span class="test-author-meta-text">Rio de Janeiro, RJ</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ====================================================
+       FINAL CTA BANNER
+       ==================================================== -->
+  <section class="final-cta-section">
+    <div class="final-cta-orb-1"></div>
+    <div class="final-cta-orb-2"></div>
+    <div class="final-cta-badge">
+      <div class="final-cta-badge-dot"></div>
+      <span class="final-cta-badge-text">Comece agora — é grátis</span>
+    </div>
+    <h2 class="final-cta-title">
+      Pronto para recuperar<br>
+      <span class="final-cta-title-accent">o que é seu?</span>
+    </h2>
+    <p class="final-cta-sub">Mais de 40 mil itens recuperados. O seu pode ser o próximo.</p>
+    <div class="final-cta-pills">
+      <div class="final-cta-pill"><i class="bi bi-gift"></i><span class="final-cta-pill-text">Gratuito</span></div>
+      <div class="final-cta-pill"><i class="bi bi-shield-check"></i><span class="final-cta-pill-text">Seguro</span></div>
+      <div class="final-cta-pill"><i class="bi bi-lightning-charge"></i><span class="final-cta-pill-text">Instantâneo</span></div>
+    </div>
+    <a href="{% url 'register' %}" class="btn-final-cta">
+      <i class="bi bi-rocket-takeoff"></i>
+      <span class="btn-final-cta-text">Cadastrar gratuitamente</span>
+      <div class="btn-final-arrow"><i class="bi bi-arrow-right"></i></div>
+    </a>
+    <div class="final-cta-trust">
+      <i class="bi bi-lock"></i>
+      <span class="final-cta-trust-text">Sem cartão de crédito · Cancele quando quiser</span>
     </div>
   </section>
 
   <!-- ====================================================
        FOOTER
        ==================================================== -->
-  <footer>
-    <div class="footer-inner">
-      <img src="{% static 'mainpage/img/logo-find.png' %}" alt="FIND logo" class="logo-find">
-      <div class="footer-links">
-        <a href="#">Sobre</a>
-        <a href="#">Privacidade</a>
-        <a href="#">Termos</a>
-        <a href="#">Contato</a>
+  <footer class="footer-wrapper">
+    <div class="footer-container">
+      <img src="{% static 'mainpage/img/logo-find.png' %}" alt="FIND logo" class="footer-logo">
+      <div class="footer-links-row">
+        <a href="#" class="footer-link-item-app">Sobre</a>
+        <a href="#" class="footer-link-item-app">Privacidade</a>
+        <a href="#" class="footer-link-item-app">Termos</a>
+        <a href="#" class="footer-link-item-app">Contato</a>
       </div>
-      <span class="footer-copy">© 2025 FIND. Todos os direitos reservados.</span>
+      <span class="footer-copyright">© 2026 FIND. Todos os direitos reservados.</span>
     </div>
   </footer>
 
   <!-- ====================================================
-       JS — Scroll reveal
+       JS — Scroll reveal + desktop layout toggle
        ==================================================== -->
   <script>
+    // Scroll reveal
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -271,8 +650,7 @@
           observer.unobserve(entry.target);
         }
       });
-    }, { threshold: 0.12 });
-
+    }, { threshold: 0.1 });
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
   </script>
 

@@ -31,30 +31,54 @@ class Profile(models.Model):
         self._processar_imagem()
 
     def _processar_imagem(self, tamanho_max=300):
+        """Processa a imagem do perfil (compatível com armazenamento local e Cloudinary)."""
         from PIL import Image as PILImage
-        import os
+        from io import BytesIO
+        from django.core.files.base import ContentFile
 
-        if not self.image or self.image.name in ('profile_pics/user.png', 'profile_pics/user.svg') or self.image.name.endswith('.svg'):
+        if not self.image:
             return
+
+        # Ignora imagens padrão (SVG / PNG default)
+        nomes_padrao = ('profile_pics/user.png', 'profile_pics/user.svg')
+        if self.image.name in nomes_padrao or self.image.name.endswith('.svg'):
+            return
+
         try:
-            img_path = self.image.path
+            # Abre a imagem via storage (funciona com local e Cloudinary)
+            self.image.open('rb')
+            img = PILImage.open(self.image)
+            img.load()  # força leitura completa antes de fechar
+            self.image.close()
         except Exception:
             return
-        if not os.path.isfile(img_path):
-            return
+
         try:
-            img = PILImage.open(img_path)
             if img.mode in ('RGBA', 'P', 'LA'):
                 img = img.convert('RGB')
+
+            # Crop quadrado centralizado
             largura, altura = img.size
             if largura != altura:
                 lado = min(largura, altura)
                 left = (largura - lado) // 2
                 top = (altura - lado) // 2
                 img = img.crop((left, top, left + lado, top + lado))
+
+            # Redimensiona se necessário
             if tamanho_max and img.size[0] > tamanho_max:
                 img = img.resize((tamanho_max, tamanho_max), PILImage.LANCZOS)
-            img.save(img_path, 'JPEG', quality=85, optimize=True)
+
+            # Salva em buffer na memória
+            buffer = BytesIO()
+            img.save(buffer, format='JPEG', quality=85, optimize=True)
+            buffer.seek(0)
+
+            # Re-salva pelo storage backend (Cloudinary ou local)
+            nome_arquivo = self.image.name
+            self.image.save(nome_arquivo, ContentFile(buffer.read()), save=False)
+            # Atualiza só o campo image sem chamar save() de novo (evita loop)
+            Profile.objects.filter(pk=self.pk).update(image=self.image.name)
         except Exception:
             pass
 

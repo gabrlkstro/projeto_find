@@ -182,7 +182,7 @@
               <div class="menu-item-card">
                 <div class="menu-item-img">
                   {% if item.imagem %}
-                    <img src="{{ item.imagem.url }}" alt="{{ item.titulo }}">
+                    <img src="{{ item.imagem.url }}" alt="{{ item.titulo }}" onerror="this.onerror=null; this.src='{% static 'mainpage/img/item-default.png' %}';">
                   {% else %}
                     <img src="{% static 'mainpage/img/item-default.png' %}" alt="Imagem padrão">
                   {% endif %}
@@ -312,7 +312,7 @@
                 <a href="{% url 'item_detail' item.slug %}" class="menu-item-card-link">
                 <div class="menu-item-img">
                   {% if item.imagem %}
-                    <img src="{{ item.imagem.url }}" alt="{{ item.titulo }}">
+                    <img src="{{ item.imagem.url }}" alt="{{ item.titulo }}" onerror="this.onerror=null; this.src='{% static 'mainpage/img/item-default.png' %}';">
                   {% else %}
                     <img src="{% static 'mainpage/img/item-default.png' %}" alt="Imagem padrão">
                   {% endif %}
@@ -382,7 +382,7 @@
                 <a href="{% url 'item_detail' item.slug %}" class="menu-item-card-link">
                 <div class="menu-item-img">
                   {% if item.imagem %}
-                    <img src="{{ item.imagem.url }}" alt="{{ item.titulo }}">
+                    <img src="{{ item.imagem.url }}" alt="{{ item.titulo }}" onerror="this.onerror=null; this.src='{% static 'mainpage/img/item-default.png' %}';">
                   {% else %}
                     <img src="{% static 'mainpage/img/item-default.png' %}">
                   {% endif %}

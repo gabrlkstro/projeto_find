@@ -3,6 +3,23 @@ from django.contrib.auth.models import User
 from django.utils.text import slugify
 
 
+class ArquivoMidia(models.Model):
+    """Armazena arquivos de mídia (imagens) diretamente no banco de dados."""
+    nome = models.CharField(max_length=255, unique=True, db_index=True)
+    conteudo = models.BinaryField()
+    content_type = models.CharField(max_length=100, default='image/jpeg')
+    tamanho = models.PositiveIntegerField(default=0)
+    criado_em = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'arquivos_midia'
+        verbose_name = 'Arquivo de Mídia'
+        verbose_name_plural = 'Arquivos de Mídia'
+
+    def __str__(self):
+        return self.nome
+
+
 class Categoria(models.Model):
     nome = models.CharField(max_length=45)
     descricao = models.CharField(max_length=45, blank=True)
@@ -50,17 +67,19 @@ class Item(models.Model):
         self._gerar_image_hash()
 
     def _gerar_image_hash(self):
-        """Gera pHash da imagem para busca visual."""
+        """Gera pHash da imagem para busca visual (compatível com DatabaseStorage)."""
         if not self.imagem:
             return
         try:
             import imagehash
             from PIL import Image as PILImage
 
-            self.imagem.open()
+            self.imagem.open('rb')
             img = PILImage.open(self.imagem)
-            phash = str(imagehash.phash(img, hash_size=16))
+            img.load()  # força leitura completa (importante para storage remoto)
             self.imagem.close()
+
+            phash = str(imagehash.phash(img, hash_size=16))
 
             if self.image_hash != phash:
                 Item.objects.filter(pk=self.pk).update(image_hash=phash)

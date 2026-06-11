@@ -69,7 +69,7 @@
         <div class="find-nav-divider"></div>
         <a href="{% url 'screen_user' %}" class="find-nav-avatar">
           {% if user.profile and user.profile.image %}
-            <img src="{{ user.profile.image.url }}" alt="Perfil">
+            <img src="{{ user.profile.image.url }}" alt="Perfil" onerror="this.onerror=null; this.src='{% static 'mainpage/img/user.webp' %}';">
           {% else %}
             <span class="find-nav-avatar-icon"><i class="bi bi-person-fill"></i></span>
           {% endif %}
@@ -136,7 +136,7 @@
     <div class="drawer-foot">
       <a href="{% url 'screen_user' %}" class="drawer-profile">
         {% if user.profile and user.profile.image %}
-          <img src="{{ user.profile.image.url }}" alt="Perfil">
+          <img src="{{ user.profile.image.url }}" alt="Perfil" onerror="this.onerror=null; this.src='{% static 'mainpage/img/user.webp' %}';">
         {% else %}
           <span class="drawer-profile-icon"><i class="bi bi-person-fill"></i></span>
         {% endif %}

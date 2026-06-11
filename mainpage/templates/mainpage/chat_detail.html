@@ -100,7 +100,7 @@
       {% if chat.item %}
         <div class="chat-sidebar-img">
           {% if chat.item.imagem %}
-            <img src="{{ chat.item.imagem.url }}" alt="{{ chat.item.titulo }}">
+            <img src="{{ chat.item.imagem.url }}" alt="{{ chat.item.titulo }}" onerror="this.onerror=null; this.src='{% static 'mainpage/img/item-default.png' %}';">
           {% else %}
             <img src="{% static 'mainpage/img/item-default.png' %}" alt="Sem imagem">
           {% endif %}

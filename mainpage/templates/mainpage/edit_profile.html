@@ -36,6 +36,7 @@
               <img
                 src="{% if user.profile.image %}{{ user.profile.image.url }}{% else %}{% static 'mainpage/img/user.webp' %}{% endif %}"
                 class="rounded-circle border border-3 border-info shadow-sm edit-profile-avatar"
+                onerror="this.onerror=null; this.src='{% static 'mainpage/img/user.webp' %}';"
               />
 
               <div class="mt-2">

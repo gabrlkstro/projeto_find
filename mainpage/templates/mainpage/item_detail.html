@@ -19,6 +19,7 @@
           <img
             src="{% if item.imagem %}{{ item.imagem.url }}{% else %}{% static 'mainpage/img/item-default.png' %}{% endif %}"
             alt="{{ item.titulo }}"
+            onerror="this.onerror=null; this.src='{% static 'mainpage/img/item-default.png' %}';"
           >
           <span class="status-badge status-{{ item.status }}">
             {% if item.status == "achado" %}

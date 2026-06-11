@@ -12,7 +12,7 @@
     <div class="item-img-col">
 
       {% if item.imagem %}
-        <img src="{{ item.imagem.url }}" alt="Imagem do item" class="item-img-preview">
+        <img src="{{ item.imagem.url }}" alt="Imagem do item" class="item-img-preview" onerror="this.onerror=null; this.src='{% static 'mainpage/img/item-default.png' %}';">
       {% else %}
         <img src="{% static 'mainpage/img/item-default.png' %}" alt="Imagem padrão" class="item-img-preview">
       {% endif %}

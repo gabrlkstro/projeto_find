@@ -1,7 +1,5 @@
 from django.contrib import admin
 from django.urls import path, include
-from django.conf import settings
-from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -15,10 +13,9 @@ urlpatterns = [
     path('', include('mainpage.urls')),
 ]
 
-from django.views.static import serve
-from django.urls import re_path
+# Serve arquivos de mídia do banco de dados (funciona no Render)
+from find.storage import serve_db_media
 
-# Serve media files em produção (Render)
 urlpatterns += [
-    re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
+    path('media-db/<path:path>', serve_db_media, name='serve_db_media'),
 ]
