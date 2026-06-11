@@ -4,129 +4,202 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Find - Login</title>
+    <title>FIND — Entrar</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="{% static 'mainpage/css/login.css' %}">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded" />
-    <link rel="icon" type="image/png" href="{% static 'mainpage/img/find.png' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="icon" type="image/webp" href="{% static 'mainpage/img/find.webp' %}">
 </head>
 <body>
 
-<div class="container d-flex justify-content-center align-items-center min-vh-100 py-4">
-    <div class="card shadow-none login-card" role="main">
+<!-- Background Layer: Orbs & Grid -->
+<div class="bg-layer">
+    <div class="bg-orb-center"></div>
+</div>
+<div class="dot-grid"></div>
 
-        <!-- Logo -->
-        <div class="image-logo text-center mb-3">
-            <img src="{% static 'mainpage/img/logo-find.png' %}"
-                 alt="Find – página inicial"
-                 class="mx-auto d-block"
-                 style="width: 140px; height: auto;">
+<!-- Top Glassmorphic Navbar -->
+<div class="nav-wrapper">
+    <div class="nav-container">
+        <a href="{% url 'home' %}" class="logo-link">
+            <img src="{% static 'mainpage/img/logo-find.png' %}" alt="FIND" class="logo-find">
+        </a>
+        <div class="nav-actions">
+            <a href="{% url 'home' %}" class="btn-login-nav">
+                <span class="material-symbols-rounded">arrow_back</span>
+                <span>Início</span>
+            </a>
+            <a href="{% url 'register' %}" class="btn-register-nav">Cadastre-se</a>
+        </div>
+    </div>
+</div>
+
+<!-- Main Wrapper -->
+<div class="login-wrapper">
+    <div class="container-custom">
+
+        <!-- Left Column: Side Info Cards -->
+        <div class="side-decor left-decor">
+            <div class="side-mini-stat">
+                <span class="material-symbols-rounded">check_circle</span>
+                <span class="side-mini-stat-value">98.4%</span>
+                <span class="side-mini-stat-label">Sucesso</span>
+            </div>
+            <div class="side-card card-match float-anim-1">
+                <div class="side-card-badge"><span class="badge-dot pulse"></span>Nova Conexão</div>
+                <div class="side-card-title">iPhone 15 Pro Max</div>
+                <div class="side-card-desc">
+                    <span class="material-symbols-rounded">near_me</span>
+                    <span>Encontrado a 150m</span>
+                </div>
+                <div class="side-card-progress">
+                    <div class="side-card-progress-bar" style="width: 100%;"></div>
+                </div>
+            </div>
+            <div class="vertical-signal-line"></div>
+            <div class="side-icon-bubble">
+                <span class="material-symbols-rounded">handshake</span>
+            </div>
         </div>
 
-        <hr class="hr-custom" aria-hidden="true">
+        <!-- Central Column: Glassmorphic Login Card -->
+        <div class="login-card-container">
+            <div class="card shadow-none login-card" role="main">
 
-        <h1 class="text-center title-gradient mb-4" style="font-size:1.6rem;">Entrar na sua conta</h1>
+                <!-- Logo inside card for mobile -->
+                <div class="image-logo text-center mb-3 d-block d-lg-none">
+                    <img src="{% static 'mainpage/img/logo-find.png' %}"
+                         alt="Find logo"
+                         class="mx-auto d-block"
+                         style="width: 110px; height: auto;">
+                </div>
 
-        <!-- Alerta de erro do Django -->
-        {% if messages %}
-            {% for message in messages %}
-                {% if 'error' in message.tags %}
-                    <div class="alert alert-danger"
-                         role="alert"
-                         aria-live="assertive"
-                         aria-atomic="true"
-                         id="django-error-alert">
-                        <span class="alert-icon" aria-hidden="true">error</span>
-                        <span>{{ message }}</span>
-                    </div>
+                <h1 class="text-center title-gradient mb-2">Entrar na FIND</h1>
+                <p class="text-center text-muted mb-4 subtitle-desc">Acesse sua conta para gerenciar seus achados e perdidos.</p>
+
+                <!-- Django error alerts -->
+                {% if messages %}
+                    {% for message in messages %}
+                        {% if 'error' in message.tags %}
+                            <div class="alert alert-danger"
+                                 role="alert"
+                                 aria-live="assertive"
+                                 aria-atomic="true"
+                                 id="django-error-alert">
+                                <span class="alert-icon" aria-hidden="true">error</span>
+                                <span>{{ message }}</span>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
                 {% endif %}
-            {% endfor %}
-        {% endif %}
 
-        <!-- Formulário -->
-        <form method="post" id="login-form" novalidate>
-            {% csrf_token %}
+                <!-- Form -->
+                <form method="post" id="login-form" novalidate>
+                    {% csrf_token %}
 
-            <!-- Usuário -->
-            <div class="field-wrapper">
-                <label for="id_username" class="field-label">Usuário ou email</label>
-                <div class="input-group" id="group-username">
-                    <span class="input-group-text border-0 bg-transparent" aria-hidden="true">
-                        <span class="material-symbols-rounded">person</span>
-                    </span>
-                    <input type="text"
-                           id="id_username"
-                           name="username"
-                           class="form-control"
-                           placeholder="seu@email.com"
-                           autocomplete="username"
-                           autocapitalize="none"
-                           spellcheck="false"
-                           autofocus
-                           required
-                           aria-required="true"
-                           aria-describedby="error-username">
-                </div>
-                <span id="error-username" class="field-error-msg" style="display:none;" role="alert"></span>
-            </div>
+                    <!-- Username -->
+                    <div class="field-wrapper">
+                        <label for="id_username" class="field-label">Usuário ou e-mail</label>
+                        <div class="input-group" id="group-username">
+                            <span class="input-group-text border-0 bg-transparent" aria-hidden="true">
+                                <span class="material-symbols-rounded">person</span>
+                            </span>
+                            <input type="text"
+                                   id="id_username"
+                                   name="username"
+                                   class="form-control"
+                                   placeholder="seu@email.com ou usuário"
+                                   autocomplete="username"
+                                   autocapitalize="none"
+                                   spellcheck="false"
+                                   autofocus
+                                   required
+                                   aria-required="true"
+                                   aria-describedby="error-username">
+                        </div>
+                        <span id="error-username" class="field-error-msg" style="display:none;" role="alert"></span>
+                    </div>
 
-            <!-- Senha -->
-            <div class="field-wrapper">
-                <label for="id_password" class="field-label">Senha</label>
-                <div class="input-group" id="group-password">
-                    <span class="input-group-text border-0 bg-transparent" aria-hidden="true">
-                        <span class="material-symbols-rounded">lock</span>
-                    </span>
-                    <input type="password"
-                           id="id_password"
-                           name="password"
-                           class="form-control"
-                           placeholder="Sua senha"
-                           autocomplete="current-password"
-                           required
-                           aria-required="true"
-                           aria-describedby="error-password">
-                    <!-- Toggle mostrar/ocultar senha -->
-                    <button type="button"
-                            class="btn-toggle-password"
-                            id="toggle-password"
-                            aria-label="Mostrar senha"
-                            aria-pressed="false"
-                            tabindex="0">
-                        <span class="material-symbols-rounded" id="toggle-icon" aria-hidden="true">visibility</span>
+                    <!-- Password -->
+                    <div class="field-wrapper">
+                        <label for="id_password" class="field-label">Senha</label>
+                        <div class="input-group" id="group-password">
+                            <span class="input-group-text border-0 bg-transparent" aria-hidden="true">
+                                <span class="material-symbols-rounded">lock</span>
+                            </span>
+                            <input type="password"
+                                   id="id_password"
+                                   name="password"
+                                   class="form-control"
+                                   placeholder="Digite sua senha"
+                                   autocomplete="current-password"
+                                   required
+                                   aria-required="true"
+                                   aria-describedby="error-password">
+                            <!-- Toggle mostrar/ocultar senha -->
+                            <button type="button"
+                                    class="btn-toggle-password"
+                                    id="toggle-password"
+                                    aria-label="Mostrar senha"
+                                    aria-pressed="false"
+                                    tabindex="0">
+                                <span class="material-symbols-rounded" id="toggle-icon" aria-hidden="true">visibility</span>
+                            </button>
+                        </div>
+                        <span id="error-password" class="field-error-msg" style="display:none;" role="alert"></span>
+                    </div>
+
+                    <div class="small-password text-end">
+                        <a href="{% url 'password_reset' %}" class="small-password-link">Esqueceu a senha?</a>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button class="btn btn-primary w-100 mt-2"
+                            type="submit"
+                            id="btn-submit"
+                            aria-label="Entrar na conta">
+                        <span class="btn-text">ENTRAR</span>
+                        <span class="btn-spinner" aria-hidden="true">
+                            <span class="spinner-dot"></span>
+                            <span class="spinner-dot"></span>
+                            <span class="spinner-dot"></span>
+                        </span>
                     </button>
-                </div>
-                <span id="error-password" class="field-error-msg" style="display:none;" role="alert"></span>
+
+                    <p class="small-password-register text-center mt-4">
+                        Não tem uma conta?
+                        <a href="{% url 'register' %}" class="small-password-link">Cadastre-se</a>
+                    </p>
+
+                </form>
             </div>
+        </div>
 
-            <p class="small-password">
-                Esqueceu a senha?
-                <a href="{% url 'password_reset' %}" class="small-password-link">Redefinir</a>
-            </p>
+        <!-- Right Column: Side Info Cards -->
+        <div class="side-decor right-decor">
+            <div class="side-card card-devolvido float-anim-2">
+                <div class="side-card-badge success"><span class="badge-dot green"></span>Recuperado</div>
+                <div class="side-card-title">Chaves & Carteira</div>
+                <div class="side-card-desc">
+                    <span class="material-symbols-rounded">done_all</span>
+                    <span>Entregue hoje</span>
+                </div>
+                <div class="side-card-progress">
+                    <div class="side-card-progress-bar" style="width: 100%; background: linear-gradient(90deg, #10b981, #059669);"></div>
+                </div>
+            </div>
+            <div class="vertical-signal-line"></div>
+            <div class="side-mini-stat">
+                <span class="material-symbols-rounded">groups</span>
+                <span class="side-mini-stat-value">1,500+</span>
+                <span class="side-mini-stat-label">Conexões</span>
+            </div>
+        </div>
 
-            <!-- Botão submit -->
-            <button class="btn btn-primary w-100 mt-1"
-                    type="submit"
-                    id="btn-submit"
-                    aria-label="Entrar na conta">
-                <span class="btn-text">ENTRAR</span>
-                <span class="btn-spinner" aria-hidden="true">
-                    <span class="spinner-dot"></span>
-                    <span class="spinner-dot"></span>
-                    <span class="spinner-dot"></span>
-                </span>
-            </button>
-
-            <p class="small-password-register text-center">
-                Não tem uma conta?
-                <a href="{% url 'register' %}" class="small-password-link">Cadastre-se</a>
-            </p>
-
-        </form>
     </div>
 </div>
 
@@ -191,7 +264,7 @@
         let valid = true;
 
         if (!usernameInput.value.trim()) {
-            showError(groupUser, errUser, 'Informe seu usuário ou email.');
+            showError(groupUser, errUser, 'Informe seu usuário ou e-mail.');
             valid = false;
         }
 
@@ -199,7 +272,7 @@
             showError(groupPass, errPass, 'Informe sua senha.');
             valid = false;
         } else if (passwordInput.value.length < 4) {
-            showError(groupPass, errPass, 'Senha muito curta.');
+            showError(groupPass, errPass, 'A senha deve ter pelo menos 4 caracteres.');
             valid = false;
         }
 

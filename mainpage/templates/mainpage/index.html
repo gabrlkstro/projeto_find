@@ -15,8 +15,16 @@
 <body>
 
   <!-- Background layers -->
-  <div class="bg-layer" aria-hidden="true"></div>
+  <div class="bg-layer" aria-hidden="true">
+    <div class="bg-orb-center"></div>
+  </div>
   <div class="dot-grid" aria-hidden="true"></div>
+  <!-- Background edge lines -->
+  <div class="bg-vertical-line bg-line-left" aria-hidden="true"></div>
+  <div class="bg-vertical-line bg-line-right" aria-hidden="true"></div>
+  <!-- Side ambient orbs -->
+  <div class="bg-orb-decor orb-left-middle" aria-hidden="true"></div>
+  <div class="bg-orb-decor orb-right-middle" aria-hidden="true"></div>
 
   <!-- ====================================================
        NAVBAR
@@ -48,14 +56,22 @@
         <div class="side-card-badge"><span class="badge-dot pulse"></span> Match em tempo real</div>
         <div class="side-card-title">iPhone Recuperado</div>
         <div class="side-card-desc"><i class="bi bi-geo-alt"></i> Pinheiros, SP · há 3m</div>
+        <div class="side-card-progress">
+          <div class="side-card-progress-bar" style="width:87%"></div>
+        </div>
       </div>
       <div class="side-icon-bubble float-anim-3">
         <i class="bi bi-key-fill"></i>
       </div>
-      <div class="side-card float-anim-2 card-devolvido" style="min-width:160px; max-width:180px;">
+      <div class="side-card float-anim-2 card-devolvido">
         <div class="side-card-badge"><span class="badge-dot green pulse"></span> Devolvido</div>
         <div class="side-card-title">Carteira recuperada</div>
         <div class="side-card-desc"><i class="bi bi-clock"></i> em 47 minutos</div>
+      </div>
+      <div class="side-mini-stat float-anim-4">
+        <i class="bi bi-graph-up-arrow"></i>
+        <span class="side-mini-stat-value">+238</span>
+        <span class="side-mini-stat-label">hoje</span>
       </div>
       <div class="vertical-signal-line"></div>
     </div>
@@ -121,14 +137,22 @@
         <div class="side-card-badge success"><span class="badge-dot green pulse"></span> Rede ativa</div>
         <div class="side-card-title">1.2k Buscas Ativas</div>
         <div class="side-card-desc"><i class="bi bi-shield-check"></i> Cruzamento inteligente</div>
+        <div class="side-card-progress" style="--bar-color: #a855f7;">
+          <div class="side-card-progress-bar" style="width:74%; background: linear-gradient(90deg, #a855f7, #7c3aed);"></div>
+        </div>
       </div>
       <div class="side-icon-bubble float-anim-4">
         <i class="bi bi-wallet2"></i>
       </div>
-      <div class="side-card float-anim-1 card-novo" style="min-width:160px; max-width:180px;">
+      <div class="side-card float-anim-1 card-novo">
         <div class="side-card-badge"><span class="badge-dot pulse"></span> Novo match</div>
         <div class="side-card-title">Mochila encontrada</div>
         <div class="side-card-desc"><i class="bi bi-geo-alt"></i> Moema, SP · agora</div>
+      </div>
+      <div class="side-mini-stat float-anim-3">
+        <i class="bi bi-people-fill"></i>
+        <span class="side-mini-stat-value">120k</span>
+        <span class="side-mini-stat-label">membros</span>
       </div>
       <div class="vertical-signal-line"></div>
     </div>
