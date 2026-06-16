@@ -144,14 +144,11 @@
           <img src="{{ user.profile.image.url }}"
                alt="{{ user.get_full_name|default:user.username }}"
                class="nav-avatar-img"
-               onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-          <div class="nav-avatar-initials" style="display:none;">
-            {{ user.get_full_name|default:user.username|slice:":2"|upper }}
-          </div>
+               onerror="this.onerror=null; this.src='{% static 'mainpage/img/user.webp' %}';">
         {% else %}
-          <div class="nav-avatar-initials">
-            {{ user.get_full_name|default:user.username|slice:":2"|upper }}
-          </div>
+          <img src="{% static 'mainpage/img/user.webp' %}"
+               alt="{{ user.get_full_name|default:user.username }}"
+               class="nav-avatar-img">
         {% endif %}
 
         <div class="nav-avatar-meta">
@@ -286,14 +283,11 @@
           <img src="{{ user.profile.image.url }}"
                alt="{{ user.get_full_name|default:user.username }}"
                class="nav-avatar-img"
-               onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-          <div class="nav-avatar-initials" style="display:none;">
-            {{ user.get_full_name|default:user.username|slice:":2"|upper }}
-          </div>
+               onerror="this.onerror=null; this.src='{% static 'mainpage/img/user.webp' %}';">
         {% else %}
-          <div class="nav-avatar-initials">
-            {{ user.get_full_name|default:user.username|slice:":2"|upper }}
-          </div>
+          <img src="{% static 'mainpage/img/user.webp' %}"
+               alt="{{ user.get_full_name|default:user.username }}"
+               class="nav-avatar-img">
         {% endif %}
         <div class="drawer-profile-meta">
           <span class="drawer-profile-name">{{ user.get_full_name|default:user.username }}</span>
