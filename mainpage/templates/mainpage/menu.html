@@ -308,8 +308,8 @@
         <div class="swiper-wrapper">
           {% for item in itens %}
             <div class="swiper-slide">
+              <a href="{% url 'item_detail' item.slug %}" class="menu-item-card-link">
               <div class="menu-item-card">
-                <a href="{% url 'item_detail' item.slug %}" class="menu-item-card-link">
                 <div class="menu-item-img">
                   {% if item.imagem %}
                     <img src="{{ item.imagem.url }}" alt="{{ item.titulo }}" onerror="this.onerror=null; this.src='{% static 'mainpage/img/item-default.png' %}';">
@@ -323,14 +323,14 @@
                   <p class="menu-item-desc">{{ item.descricao|truncatechars:85 }}</p>
 
                   <div class="menu-item-actions">
-                    <a href="{% url 'item_detail' item.slug %}" class="btn-ver-item">VER ITEM</a>
+                    <span class="btn-ver-item">VER ITEM</span>
 
                     {% if item.status == "achado" %}
                       <span class="status-square status-green" title="Achado">
                         <i class="bi bi-check-circle-fill"></i>
                       </span>
                     {% elif item.status == "devolvido" %}
-                      <span class="status-square" style="background:#60caff;color:#fff;" title="Devolvido">
+                      <span class="status-square" style="background:rgba(96,202,255,0.12);color:#60caff;" title="Devolvido">
                         <i class="bi bi-arrow-repeat"></i>
                       </span>
                     {% else %}
@@ -346,9 +346,9 @@
           {% endfor %}
         </div>
 
-        <!-- Botões de navegação (só 1 vez) -->
-        <button class="swiper-button-prev" type="button"></button>
-        <button class="swiper-button-next" type="button"></button>
+        <!-- Botões de navegação -->
+        <button class="swiper-nav swiper-button-prev" type="button" aria-label="Anterior"></button>
+        <button class="swiper-nav swiper-button-next" type="button" aria-label="Próximo"></button>
         <!-- Paginação -->
         <div class="swiper-pagination"></div>
       </div>

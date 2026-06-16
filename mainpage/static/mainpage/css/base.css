@@ -4,34 +4,33 @@
    Paleta original preservada
    ============================================================ */
 
-/* ── Design Tokens ──────────────────────────────────────── */
+/* ── Design Tokens (alinhado com o app mobile) ───────────── */
 :root {
-  --brand-dark:          #002a35;
-  --brand-mid:           #01627a;
-  --brand-light:         #00b4d8;
-  --brand-accent:        #00d9ff;
+  --brand-dark:          #0B3A4A;   /* primaryDark do app */
+  --brand-mid:           #185FA5;   /* info/textBody do app */
+  --brand-light:         #90dbf4;   /* primary do app */
+  --brand-accent:        #1eaed4;   /* primaryDeep */
 
   /* Navbar */
-  --nav-h:               84px;
-  --nav-bg:              rgba(173, 233, 255, 0.75);
-  --nav-bg-scrolled:     rgba(173, 233, 255, 0.70);
-  --nav-border:          rgba(0, 180, 216, 0.18);
-  --nav-shadow:          0 1px 0 rgba(0, 180, 216, 0.12);
-  --nav-shadow-scrolled: 0 4px 28px rgba(0, 42, 53, 0.10);
+  --nav-h:               78px;
+  --nav-bg:              rgba(227, 246, 252, 0.82);   /* cardBg com transparência */
+  --nav-bg-scrolled:     rgba(255, 255, 255, 0.90);
+  --nav-border:          rgba(144, 219, 244, 0.22);
+  --nav-shadow:          0 1px 0 rgba(11, 58, 74, 0.06);
+  --nav-shadow-scrolled: 0 4px 24px rgba(11, 58, 74, 0.10);
 
   /* Links */
-  --link-hover-bg:       rgba(1, 98, 122, 0.08);
-  --link-active-bg:      rgba(1, 98, 122, 0.12);
-  --link-active-color:   #01627a;
+  --link-hover-bg:       rgba(144, 219, 244, 0.14);
+  --link-active-bg:      rgba(24, 95, 165, 0.10);
+  --link-active-color:   #185FA5;
 
   /* Footer */
-
---footer-bg: rgba(173, 233, 255, 0.65);
---footer-text: rgba(0, 42, 53, 0.65);
---footer-heading: rgba(0, 42, 53, 0.55);
---footer-link: #002a35;
---footer-link-hover: #01627a;
---footer-border: rgba(0, 42, 53, 0.08);
+  --footer-bg:      rgba(235, 245, 251, 0.90);  /* surface-alt do app */
+  --footer-text:    rgba(11, 58, 74, 0.60);
+  --footer-heading: rgba(11, 58, 74, 0.45);
+  --footer-link:    #0B3A4A;
+  --footer-link-hover: #185FA5;
+  --footer-border:  rgba(11, 58, 74, 0.08);
 
   --radius-md:           12px;
   --transition:          all 0.24s cubic-bezier(0.4, 0, 0.2, 1);
@@ -43,25 +42,22 @@
 
 body {
   min-height: 100vh;
-  background: linear-gradient(145deg, #f3feff 0%, #e0f5ff 60%, #d4eefa 100%);
-  font-family: 'Segoe UI', system-ui, sans-serif;
-  color: #1a2e35;
+  background: #F4F7FA;  /* bg do app */
+  font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+  color: #052E3B;   /* textDark do app */
   margin: 0; padding: 0;
   overflow-x: hidden;
 }
 
-/* Orbs decorativos */
+/* Orbs decorativos de fundo */
 body::before, body::after {
   content: "";
-  position: fixed;
-  border-radius: 50%;
-  filter: blur(90px);
-  opacity: 0.11;
-  pointer-events: none;
-  z-index: 0;
+  position: fixed; border-radius: 50%;
+  filter: blur(100px); opacity: 0.09;
+  pointer-events: none; z-index: 0;
 }
-body::before { width:600px; height:600px; background:#00d5ff; top:-160px; left:-160px; }
-body::after  { width:500px; height:500px; background:#90dbf4; bottom:-160px; right:-160px; }
+body::before { width: 500px; height: 500px; background: #90dbf4; top: -180px; left: -140px; }
+body::after  { width: 400px; height: 400px; background: #b8e9fa; bottom: -140px; right: -120px; }
 
 
 /* ══════════════════════════════════════════════════════════
@@ -500,7 +496,7 @@ body::after  { width:500px; height:500px; background:#90dbf4; bottom:-160px; rig
 }
 .footer-copy {
   font-size: 0.76rem;
-  color: rgba(255,255,255,0.26);
+  color: rgba(11, 58, 74, 0.38);
   letter-spacing: 0.2px;
 }
 .footer-bottom-links {
@@ -508,11 +504,11 @@ body::after  { width:500px; height:500px; background:#90dbf4; bottom:-160px; rig
 }
 .footer-bottom-links a {
   font-size: 0.76rem;
-  color: rgba(255,255,255,0.26);
+  color: rgba(11, 58, 74, 0.38);
   text-decoration: none;
   transition: var(--transition);
 }
-.footer-bottom-links a:hover { color: rgba(255,255,255,0.60); }
+.footer-bottom-links a:hover { color: var(--brand-mid); }
 
 
 /* ══════════════════════════════════════════════════════════
