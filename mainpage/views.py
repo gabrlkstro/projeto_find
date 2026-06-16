@@ -179,6 +179,28 @@ def register_view(request):
 # Menu / Perfil
 # -----------------------------
 @login_required(login_url="login")
+def menu_search_suggestions(request):
+    q = _get_stripped(request, "q", "")
+    if not q:
+        return JsonResponse([], safe=False)
+
+    itens = Item.objects.filter(
+        Q(titulo__icontains=q) |
+        Q(descricao__icontains=q) |
+        Q(local__icontains=q)
+    ).order_by("-id")[:8]
+
+    suggestions = [
+        {
+            "titulo": item.titulo,
+            "subtitulo": item.local or (item.categoria.nome if item.categoria else ""),
+            "url": reverse("item_detail", args=[item.slug])
+        }
+        for item in itens
+    ]
+    return JsonResponse(suggestions, safe=False)
+
+@login_required(login_url="login")
 def menu_view(request):
     categorias = Categoria.objects.all()
 

@@ -322,8 +322,8 @@
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: rgba(11, 58, 74, 0.6);
-    backdrop-filter: blur(4px);
+    background: rgba(11, 58, 74, 0.75);
+    backdrop-filter: blur(8px);
     z-index: 9999;
     justify-content: center;
     align-items: center;
@@ -332,18 +332,84 @@
   }
 
   .spinner-ai {
-    width: 50px;
-    height: 50px;
-    border: 4px solid rgba(255, 255, 255, 0.2);
-    border-top: 4px solid var(--find-primary);
+    width: 44px;
+    height: 44px;
+    border: 3px solid rgba(255, 255, 255, 0.15);
+    border-top: 3px solid var(--find-primary);
     border-radius: 50%;
-    animation: spin 1s linear infinite;
+    animation: spin 0.8s linear infinite;
+    margin-top: 20px;
     margin-bottom: 16px;
   }
 
   @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
+  }
+
+  /* Laser Scan Animation overlay */
+  .scan-container-overlay {
+    position: relative;
+    width: 180px;
+    height: 180px;
+    border-radius: 24px;
+    overflow: hidden;
+    border: 3px solid var(--find-primary);
+    box-shadow: 0 0 40px rgba(144, 219, 244, 0.4);
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .scan-preview-img-overlay {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .scan-line-overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 6px;
+    background: linear-gradient(to right, transparent, #90dbf4, #1eaed4, #90dbf4, transparent);
+    box-shadow: 0 0 15px #90dbf4, 0 0 5px #1eaed4;
+    animation: scan-anim 2.2s ease-in-out infinite;
+    z-index: 10;
+  }
+
+  @keyframes scan-anim {
+    0%   { top: 0%; }
+    50%  { top: calc(100% - 6px); }
+    100% { top: 0%; }
+  }
+
+  /* Upload Area dragover custom styling */
+  .upload-area.dragover {
+    border-color: var(--find-primary);
+    background: rgba(144, 219, 244, 0.08);
+    box-shadow: 0 12px 40px rgba(144, 219, 244, 0.12);
+    transform: translateY(-2px);
+  }
+
+  /* Cascade Result Animation */
+  .visual-result-card {
+    opacity: 0;
+    transform: translateY(15px);
+    animation: fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  .visual-result-card:nth-child(1) { animation-delay: 0.05s; }
+  .visual-result-card:nth-child(2) { animation-delay: 0.1s; }
+  .visual-result-card:nth-child(3) { animation-delay: 0.15s; }
+  .visual-result-card:nth-child(4) { animation-delay: 0.2s; }
+  .visual-result-card:nth-child(5) { animation-delay: 0.25s; }
+  .visual-result-card:nth-child(6) { animation-delay: 0.3s; }
+  .visual-result-card:nth-child(7) { animation-delay: 0.35s; }
+  .visual-result-card:nth-child(8) { animation-delay: 0.4s; }
+
+  @keyframes fadeInUp {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 </style>
 {% endblock %}
@@ -389,9 +455,13 @@
 
     <!-- LOADING OVERLAY -->
     <div class="loading-overlay" id="loadingOverlay">
+      <div class="scan-container-overlay mb-4">
+        <div class="scan-line-overlay"></div>
+        <img id="scanPreviewImg" src="" alt="Escaneando..." class="scan-preview-img-overlay">
+      </div>
       <div class="spinner-ai"></div>
-      <h4 class="fw-bold">Analisando Imagem...</h4>
-      <p class="text-white-50 small">Gerando hashes e comparando similaridades na base de dados</p>
+      <h4 class="fw-bold">Analisando Imagem com IA...</h4>
+      <p class="text-white-50 small">Gerando hashes e calculando similaridade estrutural e de cores...</p>
     </div>
 
     <!-- RESULTADOS -->
@@ -455,13 +525,29 @@
 
 {% block extra_js %}
 <script>
-  // Exibir overlay de carregamento quando o formulario é submetido
   const form = document.getElementById('visualSearchForm');
   const loader = document.getElementById('loadingOverlay');
   const fileInput = document.getElementById('id_imagem_busca');
+  const scanPreviewImg = document.getElementById('scanPreviewImg');
+  const uploadArea = document.getElementById('uploadArea');
 
+  // Preview & Scan Overlay Trigger
   form.addEventListener('submit', function() {
     loader.style.display = 'flex';
+    
+    // Copiar imagem de preview para a tela de escaneamento
+    const currentPreview = document.querySelector('.preview-img');
+    if (currentPreview) {
+      scanPreviewImg.src = currentPreview.src;
+    } else if (fileInput.files && fileInput.files[0]) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        scanPreviewImg.src = e.target.result;
+      };
+      reader.readAsDataURL(fileInput.files[0]);
+    } else {
+      scanPreviewImg.style.display = 'none';
+    }
   });
 
   // Submeter automaticamente se o usuário selecionar outro arquivo
@@ -470,5 +556,33 @@
       form.submit();
     }
   });
+
+  // Ouvintes de evento para Drag & Drop (arrastar e soltar)
+  if (uploadArea && fileInput) {
+    ['dragenter', 'dragover'].forEach(eventName => {
+      uploadArea.addEventListener(eventName, (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        uploadArea.classList.add('dragover');
+      }, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+      uploadArea.addEventListener(eventName, (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        uploadArea.classList.remove('dragover');
+      }, false);
+    });
+
+    uploadArea.addEventListener('drop', (e) => {
+      const dt = e.dataTransfer;
+      const files = dt.files;
+      if (files && files[0]) {
+        fileInput.files = files;
+        form.submit();
+      }
+    });
+  }
 </script>
 {% endblock %}

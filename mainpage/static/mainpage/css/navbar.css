@@ -37,13 +37,15 @@
 
 /* ── Barra ──────────────────────────────────────────────── */
 .find-navbar {
+  position: relative;
   height: var(--nav-h);
   background: var(--nav-bg);
   backdrop-filter: blur(20px) saturate(1.8);
   -webkit-backdrop-filter: blur(20px) saturate(1.8);
   border-bottom: 1px solid var(--nav-border);
   box-shadow: var(--nav-shadow);
-  display: flex;
+  display: grid !important;
+  grid-template-columns: auto minmax(520px, 1fr) auto !important;
   align-items: center;
   padding: 0 clamp(20px, 4vw, 48px);
   gap: 8px;
@@ -61,9 +63,28 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-right: auto;
   text-decoration: none;
   flex-shrink: 0;
+  grid-column: 1;
+}
+
+.find-nav-center {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 4px !important;
+  white-space: nowrap !important;
+  grid-column: 2 !important;
+  justify-self: center !important;
+}
+
+.find-nav-right {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  flex-shrink: 0 !important;
+  grid-column: 3 !important;
+  justify-self: end !important;
 }
 
 /* Logomark quadrado com gradiente */
@@ -106,6 +127,7 @@
   list-style: none;
   margin: 0;
   padding: 0;
+  flex-shrink: 0;
 }
 
 .find-nav-link {
@@ -113,16 +135,18 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 8px 16px;
-  border-radius: var(--radius-btn);
-  font-size: 0.85rem;
+  padding: 10px 22px;
+  border-radius: 999px;
+  font-size: 0.9rem;
   font-weight: 600;
   color: var(--link-idle);
   text-decoration: none;
   letter-spacing: -0.015em;
   white-space: nowrap;
-  border: 1px solid transparent;
-  transition: var(--transition);
+  border: 1px solid rgba(255,255,255,0.18);
+  background: rgba(255,255,255,0.16);
+  backdrop-filter: blur(12px) saturate(150%);
+  transition: transform 0.24s ease, background 0.24s ease, border-color 0.24s ease, box-shadow 0.24s ease, color 0.24s ease;
   cursor: pointer;
 }
 
@@ -131,27 +155,42 @@
   width: 16px;
   height: 16px;
   flex-shrink: 0;
-  opacity: 0.85;
+  opacity: 0.82;
   transition: var(--transition);
 }
 
 .find-nav-link:hover {
-  background: var(--link-hover-bg);
+  transform: translateY(-1px);
+  background: rgba(255,255,255,0.34);
+  border-color: rgba(30, 174, 212, 0.32);
   color: var(--brand-dark);
+  box-shadow: 0 16px 30px rgba(15, 60, 90, 0.08);
 }
 .find-nav-link:hover .nav-ico {
   transform: translateY(-1px);
+  opacity: 1;
 }
 
 .find-nav-link.active {
-  background: var(--link-active-bg);
-  color: var(--link-active-c);
+  background: rgba(255,255,255,0.55);
+  border-color: rgba(30, 174, 212, 0.5);
+  color: var(--brand-dark);
   font-weight: 700;
-  box-shadow: 0 4px 14px rgba(11, 58, 74, 0.2);
+  box-shadow: 0 18px 36px rgba(30, 174, 212, 0.12);
+}
+.find-nav-link.active::after {
+  content: '';
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  bottom: 6px;
+  height: 3px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(30,174,212,1), rgba(89,149,246,0.75));
 }
 .find-nav-link.active .nav-ico {
   opacity: 1;
-  color: #fff !important;
+  color: var(--brand-dark) !important;
 }
 
 /* ── Separador ──────────────────────────────────────────── */
@@ -231,12 +270,25 @@
 .nav-avatar-img {
   width: 32px;
   height: 32px;
-  border-radius: 10px;
+  border-radius: 50%;
   object-fit: cover;
   display: block;
   flex-shrink: 0;
   border: 2px solid #fff;
   box-shadow: 0 2px 6px rgba(11, 58, 74, 0.15);
+}
+
+.find-nav-avatar-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.95);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--brand-dark);
+  font-size: 1rem;
+  box-shadow: 0 2px 6px rgba(11, 58, 74, 0.12);
 }
 
 .nav-avatar-meta {

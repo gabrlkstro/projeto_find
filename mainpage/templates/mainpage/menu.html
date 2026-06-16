@@ -4,7 +4,7 @@
 {% block title %}Início - FIND{% endblock %}
 
 {% block extra_css %}
-  <link rel="stylesheet" href="{% static 'mainpage/css/menu.css' %}">
+  <link rel="stylesheet" href="{% static 'mainpage/css/menu.css' %}?v=2.6">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css">
 
   <!-- Swiper -->
@@ -25,34 +25,41 @@
   </div>
 
   <!-- BUSCA (GET) -->
-  <div class="d-flex justify-content-center mt-4 px-3">
-    <form method="GET" class="search-container-modern" style="max-width: 820px; width: 100%;">
-      <div class="search-input-wrapper">
-        <i class="bi bi-search search-icon-left"></i>
-        <input
-          type="text"
-          class="search-input-field"
-          name="q"
-          value="{{ q|default:'' }}"
-          placeholder="Buscar itens (nome, descrição, local...)"
-          autocomplete="off"
-        >
-      </div>
+  <div class="d-flex justify-content-center mt-4 px-3 search-row-wrapper">
+    <div class="search-container-modern" style="max-width: 820px; width: 100%; position: relative;">
+      <form method="GET" class="w-100">
+        <div class="search-input-wrapper">
+          <i class="bi bi-search search-icon-left"></i>
+          <input
+            id="menuSearchInput"
+            type="text"
+            class="search-input-field"
+            name="q"
+            value="{{ q|default:'' }}"
+            placeholder="Buscar itens (nome, descrição, local...)"
+            autocomplete="off"
+            aria-label="Buscar itens"
+          >
 
-      <div class="search-actions-right">
-        <a href="{% url 'busca_visual' %}" class="btn-search-camera" title="Busca por Imagem (IA)">
-          <i class="bi bi-camera"></i>
-        </a>
-      </div>
+          <div class="search-actions-right">
+            <a href="{% url 'busca_visual' %}" class="btn-search-camera" title="Busca por Imagem (IA)">
+              <i class="bi bi-camera"></i>
+            </a>
 
-      <input type="hidden" name="status" value="{{ status|default:'todos' }}">
-      <input type="hidden" name="categoria" value="{{ categoria|default:'todas' }}">
-    </form>
+            <button type="button" class="btn-search-filter" data-bs-toggle="modal" data-bs-target="#filterModal" title="Filtrar itens">
+              <i class="bi bi-funnel-fill"></i>
+            </button>
+          </div>
+        </div>
+      </form>
+
+      <ul class="autocomplete-list" id="searchSuggestionsList" role="listbox" aria-label="Sugestões de busca"></ul>
+    </div>
   </div>
 
   <!-- STATUS CARDS -->
-<div class="container text-center mt-5">
-  <div class="row status-row g-3 justify-content-center">
+  <div class="container text-center mt-5">
+    <div class="row status-row g-3 justify-content-center">
 
     <div class="col">
       <a href="{% url 'item_list' %}" class="status-link">
@@ -111,53 +118,72 @@
 
 </section>
 
-<!-- FILTROS -->
-<section class="filters-section">
-  <div class="container">
-    <form method="GET" class="filters-box">
-      <div class="row g-3 align-items-end">
+<!-- FILTRO MODAL (ESTILO APP MOBILE) -->
+<div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0">
+      
+      <!-- Linha indicadora estilo bottom-sheet no topo (visível no mobile) -->
+      <div class="modal-indicator"></div>
+      
+      <div class="modal-header pb-0 border-0">
+        <div class="text-start">
+          <h5 class="modal-title-premium" id="filterModalLabel">Filtrar</h5>
+          <p class="modal-subtitle-premium">Escolha o que deseja encontrar</p>
+        </div>
+        <button type="button" class="btn-clear-filters" onclick="resetFilterForm()">Limpar tudo</button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+      </div>
 
-        <div class="col-12 col-md-4">
-          <label class="filters-label">BUSCAR</label>
-          <input
-            type="text"
-            class="form-control filters-input"
-            name="q"
-            value="{{ q|default:'' }}"
-            placeholder="Nome"
-          >
+      <form id="filterForm" method="GET" class="modal-body p-4 pt-2">
+        <input type="hidden" name="q" value="{{ q|default:'' }}">
+
+        <!-- Seção: Status -->
+        <div class="mb-4">
+          <div class="filter-section-title">Status do Objeto</div>
+          <div class="options-row">
+            <label class="option-chip {% if status == 'todos' or not status %}selected{% endif %}">
+              <input type="radio" name="status" value="todos" {% if status == 'todos' or not status %}checked{% endif %} class="d-none" onchange="updateChipSelection(this)">
+              <i class="bi bi-grid-3x3-gap chip-icon"></i>
+              <span>Todos</span>
+            </label>
+            <label class="option-chip {% if status == 'perdido' %}selected{% endif %}">
+              <input type="radio" name="status" value="perdido" {% if status == 'perdido' %}checked{% endif %} class="d-none" onchange="updateChipSelection(this)">
+              <i class="bi bi-exclamation-circle chip-icon"></i>
+              <span>Perdido</span>
+            </label>
+            <label class="option-chip {% if status == 'achado' %}selected{% endif %}">
+              <input type="radio" name="status" value="achado" {% if status == 'achado' %}checked{% endif %} class="d-none" onchange="updateChipSelection(this)">
+              <i class="bi bi-check-circle chip-icon"></i>
+              <span>Encontrado</span>
+            </label>
+            <label class="option-chip {% if status == 'devolvido' %}selected{% endif %}">
+              <input type="radio" name="status" value="devolvido" {% if status == 'devolvido' %}checked{% endif %} class="d-none" onchange="updateChipSelection(this)">
+              <i class="bi bi-arrow-counterclockwise chip-icon"></i>
+              <span>Devolvido</span>
+            </label>
+          </div>
         </div>
 
-        <div class="col-12 col-md-3">
-          <label class="filters-label">STATUS</label>
-          <select name="status" class="form-select filters-input">
-            <option value="todos" {% if status == 'todos' %}selected{% endif %}>Todos</option>
-            <option value="perdido" {% if status == 'perdido' %}selected{% endif %}>Perdidos</option>
-            <option value="achado" {% if status == 'achado' %}selected{% endif %}>Encontrados</option>
-            <option value="devolvido" {% if status == 'devolvido' %}selected{% endif %}>Devolvidos</option>
-          </select>
-        </div>
-
-        <div class="col-12 col-md-3">
-          <label class="filters-label">CATEGORIA</label>
-          <select name="categoria" class="form-select filters-input">
-            <option value="todas" {% if categoria == 'todas' %}selected{% endif %}>Todas</option>
+        <!-- Seção: Categoria -->
+        <div class="mb-4">
+          <div class="filter-section-title">Categoria</div>
+          <select name="categoria" id="filterCategorySelect" class="form-select custom-premium-select">
+            <option value="todas" {% if categoria == 'todas' %}selected{% endif %}>Todas as categorias</option>
             {% for cat in categorias %}
-              <option value="{{ cat.id }}" {% if categoria == cat.id|stringformat:"s" %}selected{% endif %}>
-                {{ cat.nome }}
-              </option>
+              <option value="{{ cat.id }}" {% if categoria == cat.id|stringformat:"s" %}selected{% endif %}>{{ cat.nome }}</option>
             {% endfor %}
           </select>
         </div>
 
-        <div class="col-12 col-md-2 d-grid">
-          <button type="submit" class="btn btn-filtrar">FILTRAR</button>
+        <!-- Botão de Ação -->
+        <div class="d-grid mt-4">
+          <button type="submit" class="btn btn-apply-filters">Aplicar Filtros</button>
         </div>
-
-      </div>
-    </form>
+      </form>
+    </div>
   </div>
-</section>
+</div>
 
 <!-- ===== ITENS RECENTES (CARROSSEL) ===== -->
 <section class="items-section section-pad">
@@ -458,6 +484,117 @@ document.addEventListener('DOMContentLoaded', () => {
   initSwiper('.mySwiper');          
   initSwiper('.todosSwiper');       
   initSwiper('.devolvidosSwiper');  
+
+  const searchInput = document.getElementById('menuSearchInput');
+  const suggestionList = document.getElementById('searchSuggestionsList');
+  const suggestionsUrl = '{% url "menu_search_suggestions" %}';
+
+  if (!searchInput || !suggestionList) return;
+
+  const escapeHtml = (text) => {
+    const span = document.createElement('span');
+    span.textContent = text;
+    return span.innerHTML;
+  };
+
+  const clearSuggestions = () => {
+    suggestionList.innerHTML = '';
+    suggestionList.style.display = 'none';
+  };
+
+  const createSuggestionItem = (item) => `
+    <li class="autocomplete-item" role="option" data-url="${item.url}">
+      <span class="autocomplete-item-title">${escapeHtml(item.titulo)}</span>
+      <span class="autocomplete-item-subtitle">${escapeHtml(item.subtitulo)}</span>
+    </li>
+  `;
+
+  const showSuggestions = (items) => {
+    if (!items.length) {
+      clearSuggestions();
+      return;
+    }
+
+    suggestionList.innerHTML = items.map(createSuggestionItem).join('');
+    suggestionList.style.display = 'block';
+  };
+
+  const debounce = (fn, delay) => {
+    let timer;
+    return (...args) => {
+      clearTimeout(timer);
+      timer = setTimeout(() => fn(...args), delay);
+    };
+  };
+
+  const fetchSuggestions = debounce(async (query) => {
+    const term = query.trim();
+    if (term.length < 2) {
+      clearSuggestions();
+      return;
+    }
+
+    try {
+      const response = await fetch(`${suggestionsUrl}?q=${encodeURIComponent(term)}`, {
+        headers: { Accept: 'application/json' }
+      });
+      if (!response.ok) {
+        clearSuggestions();
+        return;
+      }
+
+      const data = await response.json();
+      showSuggestions(data);
+    } catch (error) {
+      clearSuggestions();
+    }
+  }, 240);
+
+  searchInput.addEventListener('input', (event) => {
+    fetchSuggestions(event.target.value);
+  });
+
+  searchInput.addEventListener('focus', (event) => {
+    if (event.target.value.trim().length >= 2) {
+      fetchSuggestions(event.target.value);
+    }
+  });
+
+  document.addEventListener('click', (event) => {
+    const item = event.target.closest('.autocomplete-item');
+    if (item) {
+      window.location.href = item.dataset.url;
+      return;
+    }
+
+    if (!event.target.closest('.search-container-modern')) {
+      clearSuggestions();
+    }
+  });
 });
+
+function updateChipSelection(radioInput) {
+  const row = radioInput.closest('.options-row');
+  row.querySelectorAll('.option-chip').forEach(chip => {
+    chip.classList.remove('selected');
+  });
+  if (radioInput.checked) {
+    radioInput.closest('.option-chip').classList.add('selected');
+  }
+}
+
+function resetFilterForm() {
+  const form = document.getElementById('filterForm');
+  const todosRadio = form.querySelector('input[name="status"][value="todos"]');
+  if (todosRadio) {
+    todosRadio.checked = true;
+    updateChipSelection(todosRadio);
+  }
+  const catSelect = document.getElementById('filterCategorySelect');
+  if (catSelect) {
+    catSelect.value = 'todas';
+  }
+  form.submit();
+}
 </script>
 {% endblock %}

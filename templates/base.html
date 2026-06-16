@@ -18,7 +18,7 @@
   {# CSS base existente do projeto #}
   <link rel="stylesheet" href="{% static 'mainpage/css/base.css' %}">
   {# CSS novo da navbar #}
-  <link rel="stylesheet" href="{% static 'mainpage/css/navbar.css' %}">
+  <link rel="stylesheet" href="{% static 'mainpage/css/navbar.css' %}?v=3">
 
   <link rel="icon" type="image/webp" href="{% static 'mainpage/img/find.webp' %}">
 
@@ -34,15 +34,6 @@
 
     <!-- Logo -->
     <a href="{% url 'home' %}" class="find-nav-logo">
-      <div class="find-nav-logomark">
-        <!-- Ícone de busca (lupa) inline — premium, sem dependência de icon lib -->
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.3"
-             stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="10.5" cy="10.5" r="6.5"/>
-          <line x1="15.5" y1="15.5" x2="21" y2="21"/>
-        </svg>
-      </div>
-      <!-- Tenta usar imagem; se não tiver, cai no texto -->
       <img src="{% static 'mainpage/img/logo-find.png' %}"
            alt="FIND"
            class="find-nav-wordmark"
@@ -52,83 +43,86 @@
 
     {% if user.is_authenticated %}
 
-      <!-- Links desktop -->
-      <ul class="find-nav-links">
+      <div class="find-nav-center">
+        <!-- Links desktop -->
+        <ul class="find-nav-links">
 
-        <li>
-          <a href="{% url 'menu' %}"
-             class="find-nav-link {% if request.resolver_match.url_name == 'menu' %}active{% endif %}">
-            <!-- Casa -->
-            <svg class="nav-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-              <polyline points="9 22 9 12 15 12 15 22"/>
-            </svg>
-            Início
-          </a>
-        </li>
+          <li>
+            <a href="{% url 'menu' %}"
+               class="find-nav-link {% if request.resolver_match.url_name == 'menu' %}active{% endif %}">
+              <!-- Casa -->
+              <svg class="nav-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                   stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                <polyline points="9 22 9 12 15 12 15 22"/>
+              </svg>
+              Início
+            </a>
+          </li>
 
-        <li>
-          <a href="{% url 'items_encontrados' %}"
-             class="find-nav-link {% if request.resolver_match.url_name == 'items_encontrados' %}active{% endif %}">
-            <!-- Check circle -->
-            <svg class="nav-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-              <polyline points="22 4 12 14.01 9 11.01"/>
-            </svg>
-            Encontrados
-          </a>
-        </li>
+          <li>
+            <a href="{% url 'items_encontrados' %}"
+               class="find-nav-link {% if request.resolver_match.url_name == 'items_encontrados' %}active{% endif %}">
+              <!-- Check circle -->
+              <svg class="nav-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                   stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                <polyline points="22 4 12 14.01 9 11.01"/>
+              </svg>
+              Encontrados
+            </a>
+          </li>
 
-        <li>
-          <a href="{% url 'items_perdidos' %}"
-             class="find-nav-link {% if request.resolver_match.url_name == 'items_perdidos' %}active{% endif %}">
-            <!-- Alert circle -->
-            <svg class="nav-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="10"/>
-              <line x1="12" y1="8" x2="12" y2="12"/>
-              <line x1="12" y1="16" x2="12.01" y2="16"/>
-            </svg>
-            Perdidos
-          </a>
-        </li>
+          <li>
+            <a href="{% url 'items_perdidos' %}"
+               class="find-nav-link {% if request.resolver_match.url_name == 'items_perdidos' %}active{% endif %}">
+              <!-- Alert circle -->
+              <svg class="nav-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                   stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="12" y1="8" x2="12" y2="12"/>
+                <line x1="12" y1="16" x2="12.01" y2="16"/>
+              </svg>
+              Perdidos
+            </a>
+          </li>
 
-        <li>
-          <a href="{% url 'items_devolvidos' %}"
-             class="find-nav-link {% if request.resolver_match.url_name == 'items_devolvidos' %}active{% endif %}">
-            <!-- Repeat -->
-            <svg class="nav-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="17 1 21 5 17 9"/>
-              <path d="M3 11V9a4 4 0 0 1 4-4h14"/>
-              <polyline points="7 23 3 19 7 15"/>
-              <path d="M21 13v2a4 4 0 0 1-4 4H3"/>
-            </svg>
-            Devolvidos
-          </a>
-        </li>
+          <li>
+            <a href="{% url 'items_devolvidos' %}"
+               class="find-nav-link {% if request.resolver_match.url_name == 'items_devolvidos' %}active{% endif %}">
+              <!-- Repeat -->
+              <svg class="nav-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                   stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="17 1 21 5 17 9"/>
+                <path d="M3 11V9a4 4 0 0 1 4-4h14"/>
+                <polyline points="7 23 3 19 7 15"/>
+                <path d="M21 13v2a4 4 0 0 1-4 4H3"/>
+              </svg>
+              Devolvidos
+            </a>
+          </li>
 
-        <li>
-          <a href="{% url 'chats_list' %}"
-             class="find-nav-link {% if request.resolver_match.url_name == 'chats_list' %}active{% endif %}">
-            <!-- Message -->
-            <svg class="nav-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-            </svg>
-            Chat
-          </a>
-        </li>
+          <li>
+            <a href="{% url 'chats_list' %}"
+               class="find-nav-link {% if request.resolver_match.url_name == 'chats_list' %}active{% endif %}">
+              <!-- Message -->
+              <svg class="nav-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                   stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+              </svg>
+              Chat
+            </a>
+          </li>
 
-      </ul>
+        </ul>
+      </div>
 
-      <!-- Separador -->
-      <div class="find-nav-sep"></div>
+      <div class="find-nav-right">
+        <!-- Separador -->
+        <div class="find-nav-sep"></div>
 
-      <!-- Notificações (opcional — linkar quando tiver a URL) -->
-      <a href="#" class="find-nav-notif" title="Notificações" aria-label="Notificações">
+        <!-- Notificações (opcional — linkar quando tiver a URL) -->
+        <a href="#" class="find-nav-notif" title="Notificações" aria-label="Notificações">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
              stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
           <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
@@ -140,16 +134,10 @@
 
       <!-- Avatar pill -->
       <a href="{% url 'screen_user' %}" class="find-nav-avatar-pill">
-        {% if user.profile and user.profile.image %}
-          <img src="{{ user.profile.image.url }}"
-               alt="{{ user.get_full_name|default:user.username }}"
-               class="nav-avatar-img"
-               onerror="this.onerror=null; this.src='{% static 'mainpage/img/user.webp' %}';">
-        {% else %}
-          <img src="{% static 'mainpage/img/user.webp' %}"
-               alt="{{ user.get_full_name|default:user.username }}"
-               class="nav-avatar-img">
-        {% endif %}
+        <img src="{% if user.profile and user.profile.image %}{{ user.profile.image.url }}{% else %}{% static 'mainpage/img/user.webp' %}{% endif %}"
+             alt="{{ user.get_full_name|default:user.username }}"
+             class="nav-avatar-img"
+             onerror="this.onerror=null; this.src='{% static 'mainpage/img/user.webp' %}';">
 
         <div class="nav-avatar-meta">
           <span class="nav-avatar-name">{{ user.get_full_name|default:user.username }}</span>
@@ -157,6 +145,7 @@
         </div>
 
       </a>
+      </div>
 
       <!-- Toggler mobile -->
       <button class="find-nav-toggler" id="drawerToggler" aria-label="Abrir menu" aria-expanded="false">
@@ -272,16 +261,10 @@
     <!-- Perfil no rodapé -->
     <div class="drawer-foot">
       <a href="{% url 'screen_user' %}" class="drawer-profile">
-        {% if user.profile and user.profile.image %}
-          <img src="{{ user.profile.image.url }}"
-               alt="{{ user.get_full_name|default:user.username }}"
-               class="nav-avatar-img"
-               onerror="this.onerror=null; this.src='{% static 'mainpage/img/user.webp' %}';">
-        {% else %}
-          <img src="{% static 'mainpage/img/user.webp' %}"
-               alt="{{ user.get_full_name|default:user.username }}"
-               class="nav-avatar-img">
-        {% endif %}
+        <img src="{% if user.profile and user.profile.image %}{{ user.profile.image.url }}{% else %}{% static 'mainpage/img/user.webp' %}{% endif %}"
+             alt="{{ user.get_full_name|default:user.username }}"
+             class="nav-avatar-img"
+             onerror="this.onerror=null; this.src='{% static 'mainpage/img/user.webp' %}';">
         <div class="drawer-profile-meta">
           <span class="drawer-profile-name">{{ user.get_full_name|default:user.username }}</span>
           <span class="drawer-profile-sub">Ver perfil</span>

@@ -540,7 +540,6 @@ main {
   min-height: calc(100vh - var(--nav-h) - 340px);
   padding: 40px 20px;
   position: relative;
-  z-index: 1;
 }
 
 /* ================= MODAIS ================= */

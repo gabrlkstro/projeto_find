@@ -176,3 +176,6 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
 
+# ─── Gemini API (Busca Visual Inteligente) ──────────────────────
+GEMINI_API_KEY = config('GEMINI_API_KEY', default='')
+
