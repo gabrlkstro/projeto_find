@@ -11,18 +11,18 @@
   --brand-light:         #90dbf4;   /* primary do app */
   --brand-accent:        #1eaed4;   /* primaryDeep */
 
-  /* Navbar */
-  --nav-h:               78px;
-  --nav-bg:              rgba(227, 246, 252, 0.82);   /* cardBg com transparência */
-  --nav-bg-scrolled:     rgba(255, 255, 255, 0.90);
-  --nav-border:          rgba(144, 219, 244, 0.22);
-  --nav-shadow:          0 1px 0 rgba(11, 58, 74, 0.06);
-  --nav-shadow-scrolled: 0 4px 24px rgba(11, 58, 74, 0.10);
+  /* Navbar (Cor idêntica ao azul #90dbf4 do app com Glassmorphism) */
+  --nav-h:               74px;
+  --nav-bg:              rgba(144, 219, 244, 0.88);   /* #90dbf4 com transparência */
+  --nav-bg-scrolled:     rgba(144, 219, 244, 0.95);
+  --nav-border:          rgba(11, 58, 74, 0.12);
+  --nav-shadow:          0 2px 12px rgba(11, 58, 74, 0.05);
+  --nav-shadow-scrolled: 0 8px 30px rgba(11, 58, 74, 0.12);
 
-  /* Links */
-  --link-hover-bg:       rgba(144, 219, 244, 0.14);
-  --link-active-bg:      rgba(24, 95, 165, 0.10);
-  --link-active-color:   #185FA5;
+  /* Links na Navbar (contraste escuro sobre o azul claro) */
+  --link-hover-bg:       rgba(11, 58, 74, 0.06);
+  --link-active-bg:      #0B3A4A;
+  --link-active-color:   #ffffff;
 
   /* Footer */
   --footer-bg:      rgba(235, 245, 251, 0.90);  /* surface-alt do app */
@@ -134,16 +134,18 @@ body::after  { width: 400px; height: 400px; background: #b8e9fa; bottom: -140px;
 }
 .find-nav-link i {
   font-size: 0.95rem;
-  color: var(--brand-mid);
+  color: var(--brand-dark);
   transition: transform 0.2s ease;
+  opacity: 0.8;
 }
 .find-nav-link:hover {
   background: var(--link-hover-bg);
-  color: var(--brand-mid);
-  border-color: rgba(144, 219, 244, 0.18);
+  color: var(--brand-dark);
+  border-color: rgba(11, 58, 74, 0.15);
 }
 .find-nav-link:hover i {
   transform: translateY(-1px);
+  opacity: 1;
 }
 .find-nav-link.active {
   background: var(--link-active-bg);
