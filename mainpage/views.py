@@ -544,8 +544,8 @@ def items_devolvidos(request):
 @login_required(login_url="login")
 @require_POST
 def marcar_devolvido(request, id):
-    next_url = request.POST.get("next") or reverse("view_item", kwargs={"id": id})
     item = get_object_or_404(Item, id=id, usuario=request.user)
+    next_url = request.POST.get("next") or reverse("item_detail", kwargs={"slug": item.slug})
 
     item.status = "devolvido"
     item.save(update_fields=["status", "atualizado_em"])
@@ -560,8 +560,8 @@ def marcar_devolvido(request, id):
 @require_POST
 def marcar_achado(request, id):
     # volta pra página atual (item_detail) se vier next
-    next_url = request.POST.get("next") or reverse("view_item", kwargs={"id": id})
     item = get_object_or_404(Item, id=id, usuario=request.user)
+    next_url = request.POST.get("next") or reverse("item_detail", kwargs={"slug": item.slug})
 
     item.status = "achado"
     item.save(update_fields=["status", "atualizado_em"])
@@ -572,8 +572,8 @@ def marcar_achado(request, id):
 @login_required(login_url="login")
 @require_POST
 def marcar_perdido(request, id):
-    next_url = request.POST.get("next") or reverse("item_detail", kwargs={"id": id})
     item = get_object_or_404(Item, id=id, usuario=request.user)
+    next_url = request.POST.get("next") or reverse("item_detail", kwargs={"slug": item.slug})
  
     item.status = "perdido"
     item.save(update_fields=["status", "atualizado_em"])

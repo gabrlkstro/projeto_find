@@ -21,3 +21,8 @@ db.sqlite3
 *.log
 
 TODO.md
+
+# Pytest and Coverage
+.pytest_cache/
+.coverage
+htmlcov/

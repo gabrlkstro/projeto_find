@@ -6,6 +6,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('items', '0001_initial'),
+        ('mainpage', '0001_initial'),
     ]
 
     operations = [
