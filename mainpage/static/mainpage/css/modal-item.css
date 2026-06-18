@@ -1,91 +1,523 @@
 /* ===== MODAL BASE ===== */
 #modalNovoItem .modal-content {
-    border-radius: 10px; /* Mais quadrado conforme a foto 2 */
-    background-color: #b4ebff;
-    border: 1px solid #333;
-    padding: 20px;
+  border-radius: 32px;
+  background: linear-gradient(160deg, #f0fbff 0%, #EBF9FE 60%, #e2f6fd 100%);
+  border: none;
+  box-shadow:
+    0 32px 80px rgba(11, 58, 74, 0.16),
+    0 8px 24px rgba(11, 58, 74, 0.08),
+    inset 0 1px 0 rgba(255,255,255,0.9);
+  padding: 12px 12px 16px 12px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Decoração de fundo sutil */
+#modalNovoItem .modal-content::before {
+  content: '';
+  position: absolute;
+  top: -80px;
+  right: -80px;
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(144, 219, 244, 0.22) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+#modalNovoItem .modal-content::after {
+  content: '';
+  position: absolute;
+  bottom: -60px;
+  left: -60px;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(30, 174, 212, 0.08) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+#modalNovoItem .modal-dialog {
+  max-width: 900px; /* Alinhado com a largura split modal */
+  z-index: 1;
+}
+
+/* ===== INDICADOR ESTILO BOTTOM SHEET ===== */
+#modalNovoItem .modal-indicator {
+  width: 44px;
+  height: 4px;
+  border-radius: 99px;
+  background: linear-gradient(90deg, rgba(11,58,74,0.08), rgba(11,58,74,0.15), rgba(11,58,74,0.08));
+  margin: 0 auto 10px auto;
+  display: block;
 }
 
 /* ===== HEADER ===== */
 #modalNovoItem .modal-header {
-    position: relative;
-    border: none;
-    flex-direction: column;
-    align-items: center;
-    padding-bottom: 0;
+  border: none;
+  padding: 2px 28px 8px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: transparent !important;
+  position: relative;
+  z-index: 2;
 }
+
+#modalNovoItem .modal-header-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(144, 219, 244, 0.35), rgba(30, 174, 212, 0.2));
+  border: 1px solid rgba(144, 219, 244, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #1eaed4;
+  font-size: 1.15rem;
+  margin-bottom: 10px;
+  box-shadow: 0 4px 12px rgba(30, 174, 212, 0.15);
+}
+
+#modalNovoItem .modal-title-premium {
+  color: #0B3A4A;
+  font-weight: 800;
+  font-size: 1.55rem;
+  letter-spacing: -0.8px;
+  margin: 0;
+  line-height: 1.1;
+}
+
+#modalNovoItem .modal-subtitle-premium {
+  font-size: 0.83rem;
+  color: rgba(11, 58, 74, 0.55);
+  font-weight: 500;
+  margin: 4px 0 0 0;
+  letter-spacing: 0.1px;
+}
+
 #modalNovoItem .btn-close {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-}
-#modalNovoItem .modal-header img {
-    height: 50px;
-    margin-bottom: 10px;
-}
-
-#modalNovoItem .modal-title {
-    color: #000;
-    font-weight: 500;
-    font-size: 1.4rem;
-    border-top: 2px solid #003845; /* Linha em cima do título igual à foto */
-    padding-top: 10px;
-    width: 60%;
-    text-align: center;
+  background-size: 9px;
+  background-color: rgba(11, 58, 74, 0.06);
+  border-radius: 12px;
+  padding: 11px;
+  position: absolute;
+  top: -8px;
+  right: 28px;
+  transition: all 0.2s ease;
+  filter: none;
+  opacity: 0.6;
+  z-index: 10;
+  border: 1px solid rgba(11, 58, 74, 0.06);
+  margin: 0;
 }
 
-/* ===== LABELS (CAIXA ALTA) ===== */
+#modalNovoItem .btn-close:hover {
+  border-color: rgba(11, 58, 74, 0.12);
+  opacity: 1;
+  transform: scale(1.05);
+}
+
+/* ===== LABELS ===== */
 #modalNovoItem .form-label {
-    font-size: 0.75rem;
-    font-weight: 700;
-    text-transform: uppercase; /* TRANSFORMA EM MAIÚSCULO */
-    color: #333;
-    margin-bottom: 4px;
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: #0B3A4A;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+  opacity: 0.75;
 }
 
-/* ===== INPUTS ===== */
+/* ===== DIVISOR ENTRE SEÇÕES ===== */
+#modalNovoItem .section-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(11,58,74,0.07) 20%, rgba(11,58,74,0.07) 80%, transparent);
+  margin: 4px 0 16px 0;
+  border: none;
+}
+
+/* ===== INPUT GROUP COM ÍCONE ===== */
+#modalNovoItem .input-group-custom {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+#modalNovoItem .input-group-custom .input-icon {
+  position: absolute;
+  left: 15px;
+  color: rgba(11, 58, 74, 0.35);
+  font-size: 1rem;
+  pointer-events: none;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease;
+}
+
+#modalNovoItem .input-group-custom:focus-within .input-icon {
+  color: #1eaed4;
+}
+
+#modalNovoItem .input-group-custom .form-control,
+#modalNovoItem .input-group-custom .form-select {
+  padding-left: 42px !important;
+}
+
+#modalNovoItem .input-group-custom .form-select {
+  background-position: right 16px center;
+}
+
+/* ===== STATUS CHIPS ===== */
+#modalNovoItem .options-row {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+}
+
+#modalNovoItem .option-chip {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 13px 6px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1.5px solid rgba(11, 58, 74, 0.08);
+  border-radius: 16px;
+  color: rgba(11, 58, 74, 0.55);
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow:
+    0 2px 8px rgba(11, 58, 74, 0.03),
+    inset 0 1px 0 rgba(255,255,255,0.8);
+  letter-spacing: 0.1px;
+  user-select: none;
+}
+
+#modalNovoItem .option-chip:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(11, 58, 74, 0.08);
+  border-color: rgba(11, 58, 74, 0.15);
+  color: #0B3A4A;
+}
+
+#modalNovoItem .option-chip.selected {
+  background: linear-gradient(135deg, rgba(144, 219, 244, 0.55), rgba(108, 207, 251, 0.4));
+  color: #0B3A4A;
+  border-color: rgba(144, 219, 244, 0.6);
+  box-shadow:
+    0 6px 20px rgba(144, 219, 244, 0.3),
+    inset 0 1px 0 rgba(255,255,255,0.7);
+}
+
+#modalNovoItem .option-chip .chip-icon {
+  font-size: 1rem;
+  opacity: 0.8;
+}
+
+#modalNovoItem .option-chip.selected .chip-icon {
+  opacity: 1;
+}
+
+/* ===== INPUTS & SELECTS ===== */
 #modalNovoItem .form-control,
 #modalNovoItem .form-select {
-    background: #a8a8a8b1; /* Cinza da segunda imagem */
-    border: none;
-    border-radius: 2px; /* Quase nada de arredondamento */
-    height: 40px;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1.5px solid rgba(11, 58, 74, 0.08);
+  border-radius: 16px;
+  padding: 12px 18px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #0B3A4A;
+  box-shadow:
+    0 2px 8px rgba(11, 58, 74, 0.03),
+    inset 0 1px 0 rgba(255,255,255,0.9);
+  transition: all 0.22s ease;
+  height: auto;
+}
+
+#modalNovoItem .form-control::placeholder {
+  color: rgba(11, 58, 74, 0.38);
+  font-weight: 500;
+}
+
+#modalNovoItem .form-select {
+  color: rgba(11, 58, 74, 0.55);
+}
+
+#modalNovoItem .form-select.has-value {
+  color: #0B3A4A;
+}
+
+#modalNovoItem .form-control:focus,
+#modalNovoItem .form-select:focus {
+  border-color: rgba(30, 174, 212, 0.55);
+  box-shadow:
+    0 0 0 4px rgba(144, 219, 244, 0.2),
+    0 2px 8px rgba(11, 58, 74, 0.04);
+  outline: none;
+  background: #FFFFFF;
 }
 
 #modalNovoItem textarea.form-control {
-    height: 120px;
+  min-height: 108px;
+  resize: vertical;
+  line-height: 1.6;
 }
 
-/* ===== BOTÕES (ESTILO RETANGULAR) ===== */
+/* File input */
+#modalNovoItem .form-control[type="file"] {
+  padding: 10px 14px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+#modalNovoItem .form-control[type="file"]::file-selector-button {
+  background: linear-gradient(135deg, rgba(144, 219, 244, 0.3), rgba(30, 174, 212, 0.15));
+  border: 1px solid rgba(30, 174, 212, 0.25);
+  border-radius: 10px;
+  padding: 4px 12px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #0B3A4A;
+  cursor: pointer;
+  margin-right: 10px;
+  transition: all 0.2s ease;
+}
+
+#modalNovoItem .form-control[type="file"]::file-selector-button:hover {
+  background: linear-gradient(135deg, rgba(144, 219, 244, 0.45), rgba(30, 174, 212, 0.25));
+}
+
+/* ===== CROPPER SECTION ===== */
+#modalNovoItem .cropper-wrapper {
+  max-height: 260px;
+  background: rgba(241, 245, 249, 0.8);
+  border-radius: 18px;
+  overflow: hidden;
+  display: block;
+  border: 1.5px dashed rgba(11, 58, 74, 0.18);
+  margin-top: 12px;
+  margin-bottom: 12px;
+  box-shadow: inset 0 2px 8px rgba(11, 58, 74, 0.04);
+}
+
+#modalNovoItem .cropper-wrapper img {
+  max-width: 100%;
+  display: block;
+}
+
+#modalNovoItem .btn-cropper-action {
+  font-size: 0.73rem;
+  font-weight: 700;
+  color: #0B3A4A;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1.5px solid rgba(11, 58, 74, 0.12);
+  border-radius: 12px;
+  padding: 7px 14px;
+  transition: all 0.2s ease;
+  letter-spacing: 0.2px;
+}
+
+#modalNovoItem .btn-cropper-action:hover {
+  background: rgba(255, 255, 255, 1);
+  border-color: rgba(30, 174, 212, 0.4);
+  color: #1eaed4;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(11, 58, 74, 0.08);
+}
+
+/* ===== PREVIEW PANEL (DIREITA) ===== */
+#modalNovoItem .preview-panel-container {
+  background: linear-gradient(160deg, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0.4) 100%);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 26px;
+  padding: 28px 22px;
+  border: 1.5px solid rgba(255, 255, 255, 0.65);
+  box-shadow:
+    0 8px 32px rgba(11, 58, 74, 0.05),
+    inset 0 1px 0 rgba(255,255,255,0.9),
+    inset 0 -1px 0 rgba(11,58,74,0.02);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+}
+
+/* Badge "Preview" no canto superior direito do painel */
+#modalNovoItem .preview-panel-container::before {
+  content: 'LIVE';
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  font-size: 0.6rem;
+  font-weight: 900;
+  letter-spacing: 1.5px;
+  color: #1eaed4;
+  background: rgba(30, 174, 212, 0.1);
+  border: 1px solid rgba(30, 174, 212, 0.2);
+  padding: 2px 7px;
+  border-radius: 99px;
+}
+
+#modalNovoItem .preview-card-wrapper {
+  max-width: 280px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+#modalNovoItem .filter-section-title {
+  font-size: 0.68rem;
+  font-weight: 800;
+  color: rgba(11, 58, 74, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+}
+
+@media (max-width: 991.98px) {
+  #modalNovoItem .preview-panel-container {
+    margin-top: 20px;
+    padding: 22px 18px;
+  }
+
+  #modalNovoItem .preview-panel-container::before {
+    display: none;
+  }
+}
+
+/* ===== MODAL BODY POSITION ===== */
+#modalNovoItem .modal-body {
+  position: relative;
+  z-index: 2;
+}
+
+/* ===== FOOTER BUTTONS ===== */
 #modalNovoItem .modal-footer {
-    border: none;
-    padding-top: 20px;
+  border: none;
+  position: relative;
+  z-index: 2;
 }
 
-/* Botão Salvar (Azul Escuro) */
-#modalNovoItem .btn-salvar {
-    background: linear-gradient(to right, #002d38, #005a70);
-    color: white;
-    border-radius: 12px;
-    padding: 10px 0;
-    width: 45%;
-    font-weight: bold;
-    border: none;
+/* Linha separadora sutil acima do footer */
+#modalNovoItem .modal-footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 28px;
+  right: 28px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(11,58,74,0.07) 30%, rgba(11,58,74,0.07) 70%, transparent);
 }
 
-/* Botão Cancelar (Branco com borda) */
-#modalNovoItem .btn-cancelar {
-    background: white;
-    color: #003845;
-    border: 2px solid #003845;
-    border-radius: 12px;
-    padding: 10px 0;
-    width: 45%;
-    font-weight: bold;
+#modalNovoItem .btn-salvar-premium {
+  background: linear-gradient(135deg, #6ccffb 0%, #1eaed4 100%) !important;
+  color: #FFFFFF !important;
+  font-weight: 800 !important;
+  font-size: 0.9rem !important;
+  letter-spacing: 0.3px !important;
+  padding: 15px 32px !important;
+  border: none !important;
+  border-radius: 18px !important;
+  box-shadow:
+    0 8px 24px rgba(30, 174, 212, 0.3),
+    inset 0 1px 0 rgba(255,255,255,0.25) !important;
+  transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  flex: 1;
+  max-width: 210px;
+  cursor: pointer !important;
+  display: inline-block !important;
+  text-align: center !important;
+  line-height: 1.2 !important;
 }
 
-/* Efeito de sublinhado nos textos dos botões */
-#modalNovoItem .btn-salvar u, 
-#modalNovoItem .btn-cancelar u {
-    text-decoration-thickness: 2px;
+#modalNovoItem .btn-salvar-premium:hover {
+  transform: translateY(-2px) !important;
+  box-shadow:
+    0 14px 32px rgba(30, 174, 212, 0.38),
+    inset 0 1px 0 rgba(255,255,255,0.3) !important;
+  filter: brightness(1.05) !important;
+  color: #FFFFFF !important;
+}
+
+#modalNovoItem .btn-salvar-premium:active {
+  transform: translateY(0px) !important;
+  box-shadow: 0 4px 12px rgba(30, 174, 212, 0.25) !important;
+}
+
+#modalNovoItem .btn-cancelar-premium {
+  background: rgba(255, 255, 255, 0.85) !important;
+  color: rgba(11, 58, 74, 0.7) !important;
+  border: 1.5px solid rgba(11, 58, 74, 0.1) !important;
+  font-weight: 700 !important;
+  font-size: 0.9rem !important;
+  padding: 15px 32px !important;
+  border-radius: 18px !important;
+  transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  flex: 1;
+  max-width: 210px;
+  cursor: pointer !important;
+  display: inline-block !important;
+  text-align: center !important;
+  line-height: 1.2 !important;
+  box-shadow: 0 2px 8px rgba(11, 58, 74, 0.04) !important;
+}
+
+#modalNovoItem .btn-cancelar-premium:hover {
+  background: rgba(255, 255, 255, 1) !important;
+  border-color: rgba(11, 58, 74, 0.18) !important;
+  transform: translateY(-2px) !important;
+  color: #0B3A4A !important;
+  box-shadow: 0 6px 18px rgba(11, 58, 74, 0.08) !important;
+}
+
+#modalNovoItem .btn-cancelar-premium:active {
+  transform: translateY(0px) !important;
+}
+
+/* Centralizar o botão "VER ITEM" na prévia */
+#modalNovoItem .btn-ver-item {
+  flex-grow: 1 !important;
+  justify-content: center !important;
+  text-align: center !important;
+  display: inline-flex !important;
+}
+
+/* ===== MOBILE BOTTOM SHEET ===== */
+@media (max-width: 576px) {
+  #modalNovoItem {
+    padding-right: 0 !important;
+  }
+
+  #modalNovoItem .modal-dialog {
+    margin: 0;
+    max-width: 100%;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1055;
+  }
+
+  #modalNovoItem .modal-content {
+    border-radius: 32px 32px 0 0;
+    padding-bottom: 32px;
+    border-bottom: none;
+  }
+
+  .btn-salvar-premium,
+  .btn-cancelar-premium {
+    max-width: none !important;
+  }
 }

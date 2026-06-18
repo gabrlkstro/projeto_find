@@ -1,14 +1,21 @@
 {% load static %}
-<link rel="stylesheet" href="{% static 'mainpage/css/modal-item.css' %}">
+<link rel="stylesheet" href="{% static 'mainpage/css/modal-item.css' %}?v={% now 'U' %}">
+<!-- Cropper.js CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css">
 
 <div class="modal fade" id="modalNovoItem" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg">
-    <div class="modal-content shadow-lg">
+    <div class="modal-content border-0">
+
+      <!-- Linha indicadora estilo bottom-sheet no topo (visível no mobile) -->
+      <div class="modal-indicator"></div>
 
       <!-- HEADER -->
-      <div class="modal-header text-center position-relative">
-        <img src="{% static 'mainpage/img/logo-find.png' %}" alt="Find" />
-        <h5 class="modal-title mt-2">Cadastrar Item</h5>
+      <div class="modal-header pb-0 border-0 d-flex justify-content-center text-center position-relative">
+        <div class="text-center w-100">
+          <h5 class="modal-title-premium" id="modalNovoItemLabel">Cadastrar Item</h5>
+          <p class="modal-subtitle-premium">Preencha os detalhes do objeto</p>
+        </div>
         <button type="button"
                 class="btn-close"
                 data-bs-dismiss="modal"
@@ -16,87 +23,179 @@
       </div>
 
       <!-- FORM -->
-      <form method="POST" action="{% url 'register_item' %}" enctype="multipart/form-data">
+      <form id="formNovoItem" method="POST" action="{% url 'register_item' %}?next={{ request.path }}" enctype="multipart/form-data">
         {% csrf_token %}
 
-        <div class="modal-body">
+        <div class="modal-body p-4 pt-2">
+          <div class="row g-4">
+            
+            <!-- CAMPOS DO FORMULÁRIO (ESQUERDA) -->
+            <div class="col-lg-7">
+              <!-- TÍTULO + STATUS -->
+              <div class="row mb-3 g-3">
+                <div class="col-md-7">
+                  <label class="form-label">Título do item *</label>
+                  <div class="input-group-custom">
+                    <span class="input-icon"><i class="bi bi-fonts"></i></span>
+                    <input type="text" name="titulo" class="form-control" placeholder="Ex: Chaveiro azul com chaves" required>
+                  </div>
+                </div>
 
-          <!-- TÍTULO + STATUS -->
-          <div class="row mb-3">
-            <div class="col-md-8">
-              <label class="form-label">Título do item *</label>
-              <input type="text" name="titulo" class="form-control" required>
+                <div class="col-md-5">
+                  <label class="form-label">Status *</label>
+                  <div class="options-row">
+                    <label class="option-chip selected">
+                      <input type="radio" name="status" value="perdido" checked class="d-none" onchange="updateChipSelection(this)">
+                      <i class="bi bi-exclamation-circle chip-icon"></i>
+                      <span>Perdido</span>
+                    </label>
+                    <label class="option-chip">
+                      <input type="radio" name="status" value="achado" class="d-none" onchange="updateChipSelection(this)">
+                      <i class="bi bi-check-circle chip-icon"></i>
+                      <span>Achado</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- DESCRIÇÃO -->
+              <div class="mb-3">
+                <label class="form-label">Descrição *</label>
+                <textarea name="descricao"
+                          class="form-control"
+                          rows="4"
+                          placeholder="Descreva o item com o máximo de detalhes possível"
+                          required></textarea>
+              </div>
+
+              <!-- CATEGORIA + DATA -->
+              <div class="row mb-3 g-3">
+                <div class="col-md-6">
+                  <label class="form-label">Categoria *</label>
+                  <div class="input-group-custom">
+                    <span class="input-icon"><i class="bi bi-tag"></i></span>
+                    <select name="categoria" class="form-select" required>
+                      <option value="">Selecione a categoria</option>
+                      {% for cat in categorias %}
+                        <option value="{{ cat.id }}">{{ cat.nome }}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <label class="form-label">Data *</label>
+                  <div class="input-group-custom">
+                    <span class="input-icon"><i class="bi bi-calendar3"></i></span>
+                    <input type="date" name="data" class="form-control" required>
+                  </div>
+                </div>
+              </div>
+
+              <!-- LOCAL -->
+              <div class="mb-3">
+                <label class="form-label">Local *</label>
+                <div class="input-group-custom">
+                  <span class="input-icon"><i class="bi bi-geo-alt"></i></span>
+                  <input type="text"
+                         name="local"
+                         class="form-control"
+                         placeholder="Onde o item foi perdido ou encontrado"
+                         required>
+                </div>
+              </div>
+
+              <!-- IMAGEM -->
+              <div class="mb-2">
+                <label class="form-label">Foto do item (opcional)</label>
+                <div class="input-group-custom mb-1">
+                  <span class="input-icon"><i class="bi bi-image"></i></span>
+                  <input type="file"
+                         id="itemImageInput"
+                         name="imagem"
+                         class="form-control"
+                         accept="image/*">
+                </div>
+
+                <!-- CROPPER CONTAINER -->
+                <div id="cropperContainer" class="mt-3 d-none">
+                  <label class="form-label d-block text-muted" style="font-size: 0.68rem;">Ajustar e Cortar Imagem</label>
+                  <div class="cropper-wrapper">
+                    <img id="cropperImage" src="" alt="Imagem para cortar">
+                  </div>
+                  <div class="mt-2 d-flex gap-2 justify-content-end">
+                    <button type="button" class="btn btn-light btn-sm btn-cropper-action" id="btnRotateLeft">
+                      <i class="bi bi-arrow-counterclockwise"></i> Rotacionar
+                    </button>
+                    <button type="button" class="btn btn-light btn-sm btn-cropper-action" id="btnResetCrop">
+                      <i class="bi bi-arrow-repeat"></i> Resetar
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
 
-            <div class="col-md-4">
-              <label class="form-label">Status *</label>
-              <select name="status" class="form-select" required>
-                <option value="">---------</option>
-                <option value="perdido">Perdido</option>
-                <option value="achado">Achado</option>
-              </select>
+            <!-- COLUNA PRÉVIA DO CARD (DIREITA) -->
+            <div class="col-lg-5">
+              <div class="preview-panel-container">
+                <div class="filter-section-title text-center mb-3">Prévia do Card</div>
+                <div class="preview-card-wrapper">
+                  
+                  <div class="menu-item-card" style="position: relative;">
+                    <div class="menu-item-img" style="position: relative;">
+                      <img id="previewImg" src="{% static 'mainpage/img/item-default.png' %}" alt="Imagem padrão">
+                      <span id="previewStatusBadge" class="status-square status-red" title="Perdido" style="position: absolute; top: 12px; right: 12px; z-index: 5; margin: 0; box-shadow: 0 4px 12px rgba(0,0,0,0.18);">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                      </span>
+                    </div>
+
+                    <div class="menu-item-body">
+                      <h6 class="menu-item-title" id="previewTitle">Título do Item</h6>
+                      <p class="menu-item-desc" id="previewDesc">A descrição detalhada do item aparecerá aqui conforme você digita.</p>
+
+                      <div class="menu-item-meta">
+                        <div class="menu-item-meta-line">
+                          <span class="meta-left">
+                            <i class="bi bi-tag"></i>
+                            <span id="previewCategory">Sem categoria</span>
+                          </span>
+                          <span class="meta-right">
+                            <i class="bi bi-geo-alt"></i>
+                            <span id="previewLocal">---</span>
+                          </span>
+                        </div>
+                        <div class="menu-item-meta-line">
+                          <span class="meta-left">
+                            <i class="bi bi-calendar3"></i>
+                            <span id="previewDate">{% now "d/m/Y" %}</span>
+                          </span>
+                          <span class="meta-right">
+                            <i class="bi bi-clock"></i>
+                            <span id="previewTime">{% now "H:i" %}</span>
+                          </span>
+                        </div>
+                      </div>
+
+                      <div class="menu-item-actions d-flex justify-content-center w-100">
+                        <span class="btn-ver-item" style="margin: 0 auto !important; display: inline-flex !important;">VER ITEM</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                </div>
+              </div>
             </div>
+
           </div>
-
-          <!-- DESCRIÇÃO -->
-          <div class="mb-3">
-            <label class="form-label">Descrição *</label>
-            <textarea name="descricao"
-                      class="form-control"
-                      rows="4"
-                      placeholder="Descreva o item com o máximo de detalhes possível"
-                      required></textarea>
-          </div>
-
-          <!-- CATEGORIA + DATA -->
-          <div class="row mb-3">
-            <div class="col-md-6">
-              <label class="form-label">Categoria *</label>
-              <select name="categoria" class="form-select" required>
-                <option value="">---------</option>
-                {% for cat in categorias %}
-                  <option value="{{ cat.id }}">{{ cat.nome }}</option>
-                {% endfor %}
-              </select>
-            </div>
-
-            <div class="col-md-6">
-              <label class="form-label">Data *</label>
-              <input type="date" name="data" class="form-control" required>
-            </div>
-          </div>
-
-          <!-- LOCAL -->
-          <div class="mb-3">
-            <label class="form-label">Local *</label>
-            <input type="text"
-                   name="local"
-                   class="form-control"
-                   placeholder="Onde o item foi perdido ou encontrado"
-                   required>
-          </div>
-
-          <!-- IMAGEM -->
-          <div class="mb-3">
-            <label class="form-label">Foto do item (opcional)</label>
-            <input type="file"
-                   name="imagem"
-                   class="form-control"
-                   accept="image/*">
-            <small class="text-muted">
-              Uma foto ajuda outras pessoas a identificarem o item
-            </small>
-          </div>
-
         </div>
 
         <!-- FOOTER -->
-        <div class="modal-footer d-flex justify-content-center gap-3">
-          <button type="submit" class="btn btn-salvar">
+        <div class="modal-footer d-flex justify-content-center gap-3 border-0 pb-4 pt-0">
+          <button type="submit" class="btn btn-salvar-premium" style="background: linear-gradient(135deg, #6ccffb 0%, #1eaed4 100%) !important; color: #FFFFFF !important; font-weight: 800 !important; font-size: 0.9rem !important; letter-spacing: 0.3px !important; padding: 15px 32px !important; border: none !important; border-radius: 18px !important; box-shadow: 0 8px 24px rgba(30, 174, 212, 0.3), inset 0 1px 0 rgba(255,255,255,0.25) !important; flex: 1; max-width: 210px; cursor: pointer !important;">
             SALVAR ITEM
           </button>
 
-          <button type="button" class="btn btn-cancelar" data-bs-dismiss="modal">
+          <button type="button" class="btn btn-cancelar-premium" data-bs-dismiss="modal" style="background: rgba(255, 255, 255, 0.85) !important; color: rgba(11, 58, 74, 0.7) !important; border: 1.5px solid rgba(11, 58, 74, 0.1) !important; font-weight: 700 !important; font-size: 0.9rem !important; padding: 15px 32px !important; border-radius: 18px !important; flex: 1; max-width: 210px; box-shadow: 0 2px 8px rgba(11, 58, 74, 0.04) !important; cursor: pointer !important;">
             CANCELAR
           </button>
         </div>
@@ -106,3 +205,238 @@
     </div>
   </div>
 </div>
+
+<!-- Cropper.js Script -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
+
+<script>
+// Função de seleção de chips de status
+function updateChipSelection(radioInput) {
+  const row = radioInput.closest('.options-row');
+  if (!row) return;
+  row.querySelectorAll('.option-chip').forEach(chip => {
+    chip.classList.remove('selected');
+  });
+  if (radioInput.checked) {
+    radioInput.closest('.option-chip').classList.add('selected');
+  }
+}
+
+// Lógica de corte, compressão e sincronização em tempo real do preview
+(function() {
+  let cropperInstance = null;
+  const fileInput = document.getElementById('itemImageInput');
+  const cropperContainer = document.getElementById('cropperContainer');
+  const cropperImage = document.getElementById('cropperImage');
+  const form = document.getElementById('formNovoItem');
+  
+  const defaultImgUrl = "{% static 'mainpage/img/item-default.png' %}";
+  
+  // Elementos do Preview
+  const previewImg = document.getElementById('previewImg');
+  const previewTitle = document.getElementById('previewTitle');
+  const previewDesc = document.getElementById('previewDesc');
+  const previewCategory = document.getElementById('previewCategory');
+  const previewLocal = document.getElementById('previewLocal');
+  const previewDate = document.getElementById('previewDate');
+  const previewStatusBadge = document.getElementById('previewStatusBadge');
+
+  if (!fileInput || !form) return;
+
+  // 1. Sincronização em tempo real de inputs textuais
+  form.querySelector('input[name="titulo"]').addEventListener('input', function() {
+    previewTitle.textContent = this.value.trim() || 'Título do Item';
+  });
+
+  form.querySelector('textarea[name="descricao"]').addEventListener('input', function() {
+    previewDesc.textContent = this.value.trim() || 'A descrição detalhada do item aparecerá aqui conforme você digita.';
+  });
+
+  form.querySelector('input[name="local"]').addEventListener('input', function() {
+    previewLocal.textContent = this.value.trim() || '---';
+  });
+
+  // 2. Sincronização de data
+  form.querySelector('input[name="data"]').addEventListener('change', function() {
+    if (this.value) {
+      const parts = this.value.split('-');
+      if (parts.length === 3) {
+        previewDate.textContent = `${parts[2]}/${parts[1]}/${parts[0]}`;
+      } else {
+        previewDate.textContent = this.value;
+      }
+    } else {
+      previewDate.textContent = '---';
+    }
+  });
+
+  // 3. Sincronização de categoria
+  form.querySelector('select[name="categoria"]').addEventListener('change', function() {
+    const selectedText = this.options[this.selectedIndex].text;
+    previewCategory.textContent = this.value ? selectedText : 'Sem categoria';
+  });
+
+  // 4. Sincronização de Status (perdido / achado)
+  function updatePreviewStatus() {
+    const checkedRadio = form.querySelector('input[name="status"]:checked');
+    if (checkedRadio && checkedRadio.value === 'achado') {
+      previewStatusBadge.className = 'status-square status-green';
+      previewStatusBadge.title = 'Achado';
+      previewStatusBadge.innerHTML = '<i class="bi bi-check-circle-fill"></i>';
+    } else {
+      previewStatusBadge.className = 'status-square status-red';
+      previewStatusBadge.title = 'Perdido';
+      previewStatusBadge.innerHTML = '<i class="bi bi-exclamation-triangle-fill"></i>';
+    }
+  }
+
+  form.querySelectorAll('input[name="status"]').forEach(radio => {
+    radio.addEventListener('change', function() {
+      updatePreviewStatus();
+    });
+  });
+  updatePreviewStatus(); // Executa estado inicial
+
+  // 5. Função de atualização da imagem de Preview com o canvas atual do Cropper
+  function updatePreviewImage() {
+    if (!cropperInstance) return;
+    const previewCanvas = cropperInstance.getCroppedCanvas({
+      width: 350,
+      height: 200,
+      imageSmoothingEnabled: true
+    });
+    if (previewCanvas) {
+      previewImg.src = previewCanvas.toDataURL('image/jpeg', 0.75);
+    }
+  }
+
+  fileInput.addEventListener('change', function(e) {
+    const files = e.target.files;
+    if (files && files.length > 0) {
+      const file = files[0];
+      
+      if (!file.type.startsWith('image/')) {
+        alert('Por favor, selecione um arquivo de imagem válido.');
+        fileInput.value = '';
+        cropperContainer.classList.add('d-none');
+        previewImg.src = defaultImgUrl;
+        if (cropperInstance) {
+          cropperInstance.destroy();
+          cropperInstance = null;
+        }
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        cropperContainer.classList.remove('d-none');
+        
+        if (cropperInstance) {
+          cropperInstance.destroy();
+        }
+        
+        cropperImage.src = evt.target.result;
+        
+        cropperInstance = new Cropper(cropperImage, {
+          aspectRatio: 1.77, // Proporção padrão 16:9 ideal para o card
+          viewMode: 1,
+          autoCropArea: 0.9,
+          responsive: true,
+          ready: function() {
+            updatePreviewImage();
+          },
+          cropend: function() {
+            updatePreviewImage();
+          }
+        });
+      };
+      reader.readAsDataURL(file);
+    } else {
+      cropperContainer.classList.add('d-none');
+      previewImg.src = defaultImgUrl;
+      if (cropperInstance) {
+        cropperInstance.destroy();
+        cropperInstance = null;
+      }
+    }
+  });
+
+  document.getElementById('btnRotateLeft')?.addEventListener('click', function(e) {
+    e.preventDefault();
+    if (cropperInstance) {
+      cropperInstance.rotate(-90);
+      updatePreviewImage();
+    }
+  });
+
+  document.getElementById('btnResetCrop')?.addEventListener('click', function(e) {
+    e.preventDefault();
+    if (cropperInstance) {
+      cropperInstance.reset();
+      updatePreviewImage();
+    }
+  });
+
+  // Interceptar envio do formulário para aplicar corte e compressão de tamanho
+  form.addEventListener('submit', function(e) {
+    if (!fileInput.files || fileInput.files.length === 0 || !cropperInstance) {
+      return; 
+    }
+    
+    e.preventDefault();
+    
+    const submitBtn = form.querySelector('.btn-salvar-premium');
+    const originalBtnHtml = submitBtn.innerHTML;
+    
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Enviando...';
+    
+    const canvas = cropperInstance.getCroppedCanvas({
+      maxWidth: 900,
+      maxHeight: 900,
+      imageSmoothingEnabled: true,
+      imageSmoothingQuality: 'high'
+    });
+    
+    if (!canvas) {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = originalBtnHtml;
+      form.submit();
+      return;
+    }
+
+    canvas.toBlob(function(blob) {
+      if (!blob) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalBtnHtml;
+        form.submit();
+        return;
+      }
+      
+      const formData = new FormData(form);
+      formData.set('imagem', blob, 'cropped_image.jpg');
+      
+      fetch(form.action || window.location.href, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest'
+        }
+      })
+      .then(response => {
+        if (response.redirected) {
+          window.location.href = response.url;
+        } else {
+          window.location.reload();
+        }
+      })
+      .catch(error => {
+        console.error('Erro no envio da imagem processada:', error);
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalBtnHtml;
+        form.submit(); 
+      });
+    }, 'image/jpeg', 0.8);
+  });
+})();
+</script>

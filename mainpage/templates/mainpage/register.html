@@ -4,218 +4,216 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Find - Cadastro</title>
+    <title>FIND — Cadastro</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Crie sua conta FIND — plataforma de achados e perdidos.">
     <link rel="stylesheet" href="{% static 'mainpage/css/register.css' %}">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded" />
-    <link rel="icon" type="image/png" href="{% static 'mainpage/img/find.png' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="icon" type="image/webp" href="{% static 'mainpage/img/find.webp' %}">
 </head>
 <body>
 
-<div class="container d-flex justify-content-center align-items-center min-vh-100 py-4">
-    <div class="card shadow-none login-card" role="main">
+<!-- Decorative blobs -->
+<div class="blob blob-1"></div>
+<div class="blob blob-2"></div>
+<div class="blob blob-3"></div>
+<div class="dot-grid"></div>
+
+<!-- Page Wrapper -->
+<div class="page-wrapper">
+
+    <!-- Top mini bar -->
+    <header class="top-bar">
+        <a href="{% url 'home' %}" class="top-bar-back">
+            <span class="material-symbols-rounded">arrow_back_ios</span>
+            <span>Voltar ao início</span>
+        </a>
+        <a href="{% url 'login' %}" class="top-bar-register">
+            Entrar
+            <span class="material-symbols-rounded">arrow_forward</span>
+        </a>
+    </header>
+
+    <!-- Main card -->
+    <main class="login-main">
 
         <!-- Logo -->
-        <div class="image-logo text-center mb-2">
-            <img src="{% static 'mainpage/img/logo-find.png' %}"
-                 alt="Find – página inicial"
-                 class="mx-auto d-block"
-                 style="width: 140px; height: auto;">
+        <div class="logo-wrap">
+            <img src="{% static 'mainpage/img/logo-find.png' %}" alt="FIND" class="logo-img">
         </div>
 
-        <hr class="hr-custom" aria-hidden="true">
+        <!-- Card glassmorphic -->
+        <div class="login-card" role="main">
 
-        <h1 class="text-center title-gradient mb-3">Criar conta</h1>
+            <!-- Header do card -->
+            <div class="card-header-block">
+                <h1 class="card-title">Criar conta</h1>
+                <p class="card-subtitle">Preencha os dados abaixo para se cadastrar</p>
+            </div>
 
-        <!-- Alerta de erro do Django -->
-        {% if messages %}
-            {% for message in messages %}
-                {% if 'error' in message.tags %}
-                    <div class="alert alert-danger"
-                         role="alert"
-                         aria-live="assertive"
-                         aria-atomic="true"
-                         id="django-error-alert">
-                        <span class="alert-icon" aria-hidden="true">error</span>
-                        <span>{{ message }}</span>
+            <!-- Alerta de erro Django -->
+            {% if messages %}
+                {% for message in messages %}
+                    {% if 'error' in message.tags %}
+                        <div class="error-banner" id="django-error-alert" role="alert" aria-live="assertive">
+                            <span class="material-symbols-rounded error-banner-icon">error</span>
+                            <span>{{ message }}</span>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+
+            <!-- Formulário -->
+            <form method="POST" action="{% url 'register' %}" id="register-form" novalidate>
+                {% csrf_token %}
+
+                <!-- Nome completo -->
+                <div class="field-group" id="field-group-full-name">
+                    <label for="id_full_name" class="field-lbl">Nome completo</label>
+                    <div class="field-input-wrap" id="group-full-name">
+                        <span class="field-icon material-symbols-rounded">badge</span>
+                        <input type="text"
+                               id="id_full_name"
+                               name="full_name"
+                               class="field-input"
+                               placeholder="Seu nome completo"
+                               autocomplete="name"
+                               autofocus
+                               required
+                               aria-required="true">
                     </div>
-                {% endif %}
-            {% endfor %}
-        {% endif %}
-
-        <form method="POST" action="{% url 'register' %}" id="register-form" novalidate>
-            {% csrf_token %}
-
-            <!-- Nome completo -->
-            <div class="field-wrapper">
-                <label for="id_full_name" class="field-label">Nome completo</label>
-                <div class="input-group" id="group-full-name">
-                    <span class="input-group-text border-0 bg-transparent" aria-hidden="true">
-                        <span class="material-symbols-rounded">badge</span>
-                    </span>
-                    <input type="text"
-                           id="id_full_name"
-                           name="full_name"
-                           class="form-control"
-                           placeholder="Seu nome completo"
-                           autocomplete="name"
-                           autofocus
-                           required
-                           aria-required="true"
-                           aria-describedby="error-full-name">
+                    <span class="field-error" id="error-full-name" role="alert"></span>
                 </div>
-                <span id="error-full-name" class="field-error-msg" style="display:none;" role="alert"></span>
-            </div>
 
-            <!-- Nome de usuário -->
-            <div class="field-wrapper">
-                <label for="id_username" class="field-label">Nome de usuário</label>
-                <div class="input-group" id="group-username">
-                    <span class="input-group-text border-0 bg-transparent" aria-hidden="true">
-                        <span class="material-symbols-rounded">person</span>
-                    </span>
-                    <input type="text"
-                           id="id_username"
-                           name="username"
-                           class="form-control"
-                           placeholder="seunome123"
-                           autocomplete="username"
-                           autocapitalize="none"
-                           spellcheck="false"
-                           required
-                           aria-required="true"
-                           aria-describedby="error-username">
-                </div>
-                <span id="error-username" class="field-error-msg" style="display:none;" role="alert"></span>
-            </div>
-
-            <!-- Data de nascimento -->
-            <div class="field-wrapper">
-                <label for="id_data_nascimento" class="field-label">Data de nascimento</label>
-                <div class="input-group" id="group-data">
-                    <span class="input-group-text border-0 bg-transparent" aria-hidden="true">
-                        <span class="material-symbols-rounded">cake</span>
-                    </span>
-                    <input type="date"
-                           id="id_data_nascimento"
-                           name="data_nascimento"
-                           class="form-control"
-                           required
-                           aria-required="true"
-                           aria-describedby="error-data">
-                </div>
-                <span id="error-data" class="field-error-msg" style="display:none;" role="alert"></span>
-            </div>
-
-            <!-- Email -->
-            <div class="field-wrapper">
-                <label for="id_email" class="field-label">Email</label>
-                <div class="input-group" id="group-email">
-                    <span class="input-group-text border-0 bg-transparent" aria-hidden="true">
-                        <span class="material-symbols-rounded">email</span>
-                    </span>
-                    <input type="email"
-                           id="id_email"
-                           name="email"
-                           class="form-control"
-                           placeholder="seu@email.com"
-                           autocomplete="email"
-                           spellcheck="false"
-                           required
-                           aria-required="true"
-                           aria-describedby="error-email">
-                </div>
-                <span id="error-email" class="field-error-msg" style="display:none;" role="alert"></span>
-            </div>
-
-            <!-- Senha -->
-            <div class="field-wrapper">
-                <label for="id_password" class="field-label">Senha</label>
-                <div class="input-group" id="group-password">
-                    <span class="input-group-text border-0 bg-transparent" aria-hidden="true">
-                        <span class="material-symbols-rounded">lock</span>
-                    </span>
-                    <input type="password"
-                           id="id_password"
-                           name="password"
-                           class="form-control"
-                           placeholder="Mínimo 8 caracteres"
-                           autocomplete="new-password"
-                           required
-                           aria-required="true"
-                           aria-describedby="error-password password-strength-label">
-                    <button type="button"
-                            class="btn-toggle-password"
-                            data-target="id_password"
-                            aria-label="Mostrar senha"
-                            aria-pressed="false">
-                        <span class="material-symbols-rounded" aria-hidden="true">visibility</span>
-                    </button>
-                </div>
-                <!-- Barra de força da senha -->
-                <div class="password-strength" id="password-strength" aria-live="polite">
-                    <div class="strength-bar">
-                        <div class="strength-segment"></div>
-                        <div class="strength-segment"></div>
-                        <div class="strength-segment"></div>
-                        <div class="strength-segment"></div>
+                <!-- Nome de usuário -->
+                <div class="field-group" id="field-group-username">
+                    <label for="id_username" class="field-lbl">Nome de usuário</label>
+                    <div class="field-input-wrap" id="group-username">
+                        <span class="field-icon material-symbols-rounded">person</span>
+                        <input type="text"
+                               id="id_username"
+                               name="username"
+                               class="field-input"
+                               placeholder="seunome123"
+                               autocomplete="username"
+                               autocapitalize="none"
+                               spellcheck="false"
+                               required
+                               aria-required="true">
                     </div>
-                    <span class="strength-label" id="password-strength-label"></span>
+                    <span class="field-error" id="error-username" role="alert"></span>
                 </div>
-                <span id="error-password" class="field-error-msg" style="display:none;" role="alert"></span>
-            </div>
 
-            <!-- Confirmar senha -->
-            <div class="field-wrapper">
-                <label for="id_confirm_password" class="field-label">Confirmar senha</label>
-                <div class="input-group" id="group-confirm">
-                    <span class="input-group-text border-0 bg-transparent" aria-hidden="true">
-                        <span class="material-symbols-rounded">lock</span>
+                <!-- Data de nascimento -->
+                <div class="field-group" id="field-group-data">
+                    <label for="id_data_nascimento" class="field-lbl">Data de nascimento</label>
+                    <div class="field-input-wrap" id="group-data">
+                        <span class="field-icon material-symbols-rounded">cake</span>
+                        <input type="date"
+                               id="id_data_nascimento"
+                               name="data_nascimento"
+                               class="field-input"
+                               required
+                               aria-required="true">
+                    </div>
+                    <span class="field-error" id="error-data" role="alert"></span>
+                </div>
+
+                <!-- Email -->
+                <div class="field-group" id="field-group-email">
+                    <label for="id_email" class="field-lbl">Email</label>
+                    <div class="field-input-wrap" id="group-email">
+                        <span class="field-icon material-symbols-rounded">email</span>
+                        <input type="email"
+                               id="id_email"
+                               name="email"
+                               class="field-input"
+                               placeholder="seu@email.com"
+                               autocomplete="email"
+                               spellcheck="false"
+                               required
+                               aria-required="true">
+                    </div>
+                    <span class="field-error" id="error-email" role="alert"></span>
+                </div>
+
+                <!-- Senha -->
+                <div class="field-group" id="field-group-password">
+                    <label for="id_password" class="field-lbl">Senha</label>
+                    <div class="field-input-wrap" id="group-password">
+                        <span class="field-icon material-symbols-rounded">lock</span>
+                        <input type="password"
+                               id="id_password"
+                               name="password"
+                               class="field-input"
+                               placeholder="Mínimo 8 caracteres"
+                               autocomplete="new-password"
+                               required
+                               aria-required="true">
+                        <button type="button" class="eye-btn btn-toggle-password" data-target="id_password" aria-label="Mostrar senha" aria-pressed="false">
+                            <span class="material-symbols-rounded">visibility</span>
+                        </button>
+                    </div>
+                    <!-- Barra de força da senha -->
+                    <div class="password-strength" id="password-strength" aria-live="polite">
+                        <div class="strength-bar">
+                            <div class="strength-segment"></div>
+                            <div class="strength-segment"></div>
+                            <div class="strength-segment"></div>
+                            <div class="strength-segment"></div>
+                        </div>
+                        <span class="strength-label" id="password-strength-label"></span>
+                    </div>
+                    <span class="field-error" id="error-password" role="alert"></span>
+                </div>
+
+                <!-- Confirmar senha -->
+                <div class="field-group" id="field-group-confirm">
+                    <label for="id_confirm_password" class="field-lbl">Confirmar senha</label>
+                    <div class="field-input-wrap" id="group-confirm">
+                        <span class="field-icon material-symbols-rounded">lock</span>
+                        <input type="password"
+                               id="id_confirm_password"
+                               name="confirm_password"
+                               class="field-input"
+                               placeholder="Repita a senha"
+                               autocomplete="new-password"
+                               required
+                               aria-required="true">
+                        <button type="button" class="eye-btn btn-toggle-password" data-target="id_confirm_password" aria-label="Mostrar confirmação de senha" aria-pressed="false">
+                            <span class="material-symbols-rounded">visibility</span>
+                        </button>
+                    </div>
+                    <span class="field-error" id="error-confirm" role="alert"></span>
+                </div>
+
+                <!-- Botão cadastrar -->
+                <button type="submit" id="btn-registrar" class="btn-submit" aria-label="Criar conta">
+                    <span class="btn-text">
+                        <span class="material-symbols-rounded">person_add</span>
+                        Criar conta
                     </span>
-                    <input type="password"
-                           id="id_confirm_password"
-                           name="confirm_password"
-                           class="form-control"
-                           placeholder="Repita a senha"
-                           autocomplete="new-password"
-                           required
-                           aria-required="true"
-                           aria-describedby="error-confirm">
-                    <button type="button"
-                            class="btn-toggle-password"
-                            data-target="id_confirm_password"
-                            aria-label="Mostrar confirmação de senha"
-                            aria-pressed="false">
-                        <span class="material-symbols-rounded" aria-hidden="true">visibility</span>
-                    </button>
-                </div>
-                <span id="error-confirm" class="field-error-msg" style="display:none;" role="alert"></span>
-            </div>
+                    <span class="btn-spinner" aria-hidden="true">
+                        <span class="dot"></span>
+                        <span class="dot"></span>
+                        <span class="dot"></span>
+                    </span>
+                </button>
 
-            <!-- Botão -->
-            <button class="btn btn-primary w-100 mt-2"
-                    type="submit"
-                    id="btn-registrar"
-                    aria-label="Criar conta">
-                <span class="btn-text">CRIAR CONTA</span>
-                <span class="btn-spinner" aria-hidden="true">
-                    <span class="spinner-dot"></span>
-                    <span class="spinner-dot"></span>
-                    <span class="spinner-dot"></span>
-                </span>
-            </button>
-        </form>
+                <!-- Link login -->
+                <p class="register-prompt">
+                    Já tem uma conta?
+                    <a href="{% url 'login' %}" class="register-link">Entre aqui</a>
+                </p>
 
-        <p class="small-password-login text-center">
-            Já tem uma conta?
-            <a href="{% url 'login' %}" class="small-password-link">Entre aqui</a>
-        </p>
+            </form>
+        </div>
 
-    </div>
+    </main>
+
 </div>
 
 <script>
@@ -242,18 +240,18 @@
 
     /* ── Auto-dismiss alerta Django ── */
     if (djangoAlert) {
+        Object.keys(fields).forEach(key => fields[key].group.classList.add('has-error'));
         setTimeout(() => {
-            djangoAlert.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
             djangoAlert.style.opacity = '0';
-            djangoAlert.style.transform = 'translateX(-50%) translateY(-8px)';
+            djangoAlert.style.transform = 'translateY(-6px)';
             setTimeout(() => djangoAlert.remove(), 400);
         }, 5000);
     }
 
     /* ── Helpers: mostrar/limpar erro e sucesso ── */
     function showError(f, msg) {
-        f.group.classList.add('input-error');
-        f.group.classList.remove('input-success');
+        f.group.classList.add('has-error');
+        f.group.classList.remove('has-success');
         f.err.textContent = msg;
         f.err.style.display = 'flex';
         // Remove sucesso se existir
@@ -262,14 +260,14 @@
     }
 
     function clearError(f) {
-        f.group.classList.remove('input-error');
+        f.group.classList.remove('has-error');
         f.err.textContent = '';
         f.err.style.display = 'none';
     }
 
     function showSuccess(f, msg) {
-        f.group.classList.add('input-success');
-        f.group.classList.remove('input-error');
+        f.group.classList.add('has-success');
+        f.group.classList.remove('has-error');
         f.err.style.display = 'none';
         let ok = f.group.parentElement.querySelector('.field-success-msg');
         if (!ok) {
@@ -283,7 +281,7 @@
     }
 
     function clearSuccess(f) {
-        f.group.classList.remove('input-success');
+        f.group.classList.remove('has-success');
         const ok = f.group.parentElement.querySelector('.field-success-msg');
         if (ok) ok.remove();
     }

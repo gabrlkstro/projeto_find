@@ -14,7 +14,7 @@
   --blue-1:   #1eaed4;   /* azul primário / botão */
   --blue-2:   #0e8ab0;   /* azul mais escuro hover */
   --blue-3:   #065f7a;   /* azul profundo */
-  --bg:       #e4f5fb;   /* fundo suave azul céu */
+  --bg:       #D3F0FC;   /* fundo suave azul céu um pouco mais forte */
   --surface:  #ffffff;
   --text:     #06101f;
   --muted:    #5a7a8d;
@@ -40,10 +40,7 @@ html { height: 100%; }
 body {
   min-height: 100%;
   font-family: var(--font-body);
-  background-color: var(--bg);
-  background-image:
-    radial-gradient(ellipse 80% 55% at 15% 8%, rgba(30,174,212,0.22) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 45% at 85% 90%, rgba(14,100,140,0.16) 0%, transparent 55%);
+  background-color: #ffffff;
   color: var(--text);
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
@@ -176,12 +173,10 @@ body {
 /* ─── LOGIN CARD ─────────────────────────────────────────────────────────────── */
 .login-card {
   width: 100%;
-  background: rgba(255,255,255,0.82);
-  backdrop-filter: blur(28px) saturate(1.6);
-  -webkit-backdrop-filter: blur(28px) saturate(1.6);
+  background: var(--bg);
   border-radius: var(--radius-card);
-  border: 1px solid rgba(255,255,255,0.95);
-  box-shadow: var(--shadow-card);
+  border: 1.5px solid rgba(30,174,212,0.14);
+  box-shadow: 0 24px 60px rgba(14,100,140,0.06);
   padding: 2.75rem 2.5rem;
   position: relative;
   overflow: hidden;
