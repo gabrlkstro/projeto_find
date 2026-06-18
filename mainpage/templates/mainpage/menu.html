@@ -248,9 +248,7 @@
                   </div>
 
                   <div class="menu-item-actions">
-                    <a href="{% url 'item_detail' item.slug %}" class="btn-ver-item">
-                      VER ITEM
-                    </a>
+                    <span class="btn-ver-item">VER ITEM</span>
 
                     {% if item.status == "achado" %}
                       <span class="status-square status-green" title="Achado">
@@ -346,7 +344,35 @@
 
                 <div class="menu-item-body">
                   <h6 class="menu-item-title">{{ item.titulo }}</h6>
-                  <p class="menu-item-desc">{{ item.descricao|truncatechars:85 }}</p>
+                  <p class="menu-item-desc">
+                    {{ item.descricao|truncatechars:85 }}
+                  </p>
+
+                  <div class="menu-item-meta">
+                    <div class="menu-item-meta-line">
+                      <span class="meta-left">
+                        <i class="bi bi-tag"></i>
+                        {{ item.categoria.nome|default:"Sem categoria" }}
+                      </span>
+
+                      <span class="meta-right">
+                        <i class="bi bi-geo-alt"></i>
+                        {{ item.local|default:"---" }}
+                      </span>
+                    </div>
+
+                    <div class="menu-item-meta-line">
+                      <span class="meta-left">
+                        <i class="bi bi-calendar3"></i>
+                        {{ item.criado_em|date:"d/m/Y" }}
+                      </span>
+
+                      <span class="meta-right">
+                        <i class="bi bi-clock"></i>
+                        {{ item.criado_em|time:"H:i" }}
+                      </span>
+                    </div>
+                  </div>
 
                   <div class="menu-item-actions">
                     <span class="btn-ver-item">VER ITEM</span>
@@ -356,7 +382,7 @@
                         <i class="bi bi-check-circle-fill"></i>
                       </span>
                     {% elif item.status == "devolvido" %}
-                      <span class="status-square" style="background:rgba(96,202,255,0.12);color:#60caff;" title="Devolvido">
+                      <span class="status-square" style="background:#60caff;color: #fff;" title="Devolvido">
                         <i class="bi bi-arrow-repeat"></i>
                       </span>
                     {% else %}
@@ -404,31 +430,58 @@
 
           {% for item in itens_devolvidos %}
             <div class="swiper-slide">
-              <div class="menu-item-card">
-                <a href="{% url 'item_detail' item.slug %}" class="menu-item-card-link">
-                <div class="menu-item-img">
-                  {% if item.imagem %}
-                    <img src="{{ item.imagem.url }}" alt="{{ item.titulo }}" onerror="this.onerror=null; this.src='{% static 'mainpage/img/item-default.png' %}';">
-                  {% else %}
-                    <img src="{% static 'mainpage/img/item-default.png' %}">
-                  {% endif %}
-                </div>
+              <a href="{% url 'item_detail' item.slug %}" class="menu-item-card-link">
+                <div class="menu-item-card">
+                  <div class="menu-item-img">
+                    {% if item.imagem %}
+                      <img src="{{ item.imagem.url }}" alt="{{ item.titulo }}" onerror="this.onerror=null; this.src='{% static 'mainpage/img/item-default.png' %}';">
+                    {% else %}
+                      <img src="{% static 'mainpage/img/item-default.png' %}" alt="Imagem padrão">
+                    {% endif %}
+                  </div>
 
-                <div class="menu-item-body">
-                  <h6 class="menu-item-title">{{ item.titulo }}</h6>
+                  <div class="menu-item-body">
+                    <h6 class="menu-item-title">{{ item.titulo }}</h6>
 
-                  <div class="menu-item-actions">
-                    <a href="{% url 'item_detail' item.slug %}" class="btn-ver-item">
-                      VER ITEM
-                    </a>
+                    <p class="menu-item-desc">
+                      {{ item.descricao|truncatechars:85 }}
+                    </p>
 
-                    <span class="status-square"
-                          style="background:#60caff;color:#fff;">
-                      <i class="bi bi-arrow-repeat"></i>
-                    </span>
+                    <div class="menu-item-meta">
+                      <div class="menu-item-meta-line">
+                        <span class="meta-left">
+                          <i class="bi bi-tag"></i>
+                          {{ item.categoria.nome|default:"Sem categoria" }}
+                        </span>
+
+                        <span class="meta-right">
+                          <i class="bi bi-geo-alt"></i>
+                          {{ item.local|default:"---" }}
+                        </span>
+                      </div>
+
+                      <div class="menu-item-meta-line">
+                        <span class="meta-left">
+                          <i class="bi bi-calendar3"></i>
+                          {{ item.criado_em|date:"d/m/Y" }}
+                        </span>
+
+                        <span class="meta-right">
+                          <i class="bi bi-clock"></i>
+                          {{ item.criado_em|time:"H:i" }}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div class="menu-item-actions">
+                      <span class="btn-ver-item">VER ITEM</span>
+
+                      <span class="status-square" style="background:#60caff;color:#fff;" title="Devolvido">
+                        <i class="bi bi-arrow-repeat"></i>
+                      </span>
+                    </div>
                   </div>
                 </div>
-              </div>
               </a>
             </div>
           {% endfor %}
