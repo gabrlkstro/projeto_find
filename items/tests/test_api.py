@@ -214,12 +214,18 @@ class TestApiDeleteItem:
 # ──────────────────────────────────────────────────────────────
 class TestApiChangeItemStatus:
 
-    def test_mudar_status_para_devolvido(self, auth_client, item):
+    def test_mudar_status_para_achado_dono(self, auth_client, item):
+        resp = auth_client.post(f"/api/items/{item.id}/status/", {
+            "status": "achado",
+        }, format="json")
+        assert resp.status_code == 200
+        assert resp.data["data"]["status"] == "achado"
+
+    def test_mudar_status_para_devolvido_dono_barrado(self, auth_client, item):
         resp = auth_client.post(f"/api/items/{item.id}/status/", {
             "status": "devolvido",
         }, format="json")
-        assert resp.status_code == 200
-        assert resp.data["data"]["status"] == "devolvido"
+        assert resp.status_code == 403
 
     def test_mudar_status_invalido(self, auth_client, item):
         resp = auth_client.post(f"/api/items/{item.id}/status/", {
@@ -232,6 +238,22 @@ class TestApiChangeItemStatus:
             "status": "devolvido",
         }, format="json")
         assert resp.status_code == 404
+
+    def test_mudar_status_bolsista_pode_devolver(self, api_client, other_user, item):
+        from django.contrib.auth.models import Group
+        grupo_bolsistas, _ = Group.objects.get_or_create(name="Bolsistas")
+        other_user.groups.add(grupo_bolsistas)
+        
+        # Authenticate other_user
+        resp = api_client.post("/api/token/", {"username": other_user.username, "password": "Str0ngP@ss!"})
+        api_client.credentials(HTTP_AUTHORIZATION=f"Bearer {resp.data['access']}")
+        
+        resp = api_client.post(f"/api/items/{item.id}/status/", {
+            "status": "devolvido",
+            "nome_recebedor": "Maria Silva"
+        }, format="json")
+        assert resp.status_code == 200
+        assert resp.data["data"]["status"] == "devolvido"
 
 
 # ──────────────────────────────────────────────────────────────

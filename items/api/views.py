@@ -6,6 +6,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from items.models import Item, Categoria
+from accounts.permissoes import IsBolsistaOuAdmin
 
 
 def _item_to_dict(item, request=None):
@@ -137,15 +138,71 @@ def api_delete_item(request, item_id):
     return Response({"ok": True, "detail": "Item deletado com sucesso."})
 
 
-@api_view(["POST"])
+@api_view(["POST", "PATCH"])
 @permission_classes([IsAuthenticated])
 def api_change_item_status(request, item_id):
-    item = get_object_or_404(Item, id=item_id, usuario=request.user)
+    from items.models import AcaoLog
+    
+    item = get_object_or_404(Item, id=item_id)
+    is_admin = request.user.groups.filter(name="Administradores").exists() or request.user.is_staff
+    is_bolsista = request.user.groups.filter(name="Bolsistas").exists()
+    is_owner = item.usuario == request.user
+
+    if not (is_admin or is_bolsista or is_owner):
+        return Response({"ok": False, "detail": "Item não encontrado."}, status=404)
+
     novo_status = (request.data.get("status") or "").strip().lower()
-    if novo_status not in ["perdido", "achado", "devolvido"]:
+    valid_statuses = ["perdido", "achado", "devolvido", "confirmado", "pendente_confirmacao"]
+    if novo_status not in valid_statuses:
         return Response({"ok": False, "detail": "Status inválido."}, status=400)
+
+    # Lógica para Usuário comum (dono)
+    if not is_admin and not is_bolsista:
+        if novo_status not in ["achado", "perdido"]:
+            return Response({
+                "ok": False,
+                "detail": "Usuários comuns só podem alterar o status de seus próprios itens para 'achado' ou 'perdido'."
+            }, status=403)
+
+    # Lógica para Bolsista
+    elif is_bolsista and not is_admin:
+        if novo_status not in ["confirmado", "devolvido"]:
+            if is_owner and novo_status in ["achado", "perdido"]:
+                pass
+            else:
+                return Response({
+                    "ok": False,
+                    "detail": "Bolsistas só podem alterar o status para 'confirmado' ou 'devolvido'."
+                }, status=403)
+
+    # Administrador pode tudo.
+
+    observacao = request.data.get("observacao", "").strip()
+    nome_recebedor = request.data.get("nome_recebedor", "").strip()
+    
+    if novo_status == "devolvido":
+        observacao_log = f"Status alterado para devolvido"
+        if nome_recebedor:
+            observacao_log += f". Recebedor: {nome_recebedor}"
+        if observacao:
+            observacao_log += f" | Obs: {observacao}"
+    else:
+        observacao_log = observacao or f"Status alterado para {novo_status}"
+
     item.status = novo_status
     item.save(update_fields=["status", "atualizado_em"])
+
+    # Cria AcaoLog se for alterado por bolsista/admin para confirmado ou devolvido
+    if (is_bolsista or is_admin) and novo_status in ["confirmado", "devolvido"]:
+        acao_tipo = "confirmou" if novo_status == "confirmado" else "devolveu"
+        AcaoLog.objects.create(
+            bolsista=request.user,
+            item=item,
+            acao=acao_tipo,
+            observacao=observacao_log,
+            ip_origem=_get_client_ip(request)
+        )
+
     return Response({"ok": True, "data": _item_to_dict(item, request)})
 
 
@@ -207,3 +264,160 @@ def api_search_by_image(request):
         })
     except Exception as e:
         return Response({"ok": False, "detail": f"Erro ao processar imagem: {str(e)}"}, status=500)
+
+
+def _get_client_ip(request):
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0].strip()
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    return ip
+
+
+@api_view(["GET"])
+@permission_classes([AllowAny])
+def api_item_qr_image(request, slug):
+    from django.http import HttpResponse
+    from items.models import ArquivoMidia
+    nome_qr = f"qr_{slug}.png"
+    try:
+        arquivo = ArquivoMidia.objects.get(nome=nome_qr)
+        return HttpResponse(arquivo.conteudo, content_type=arquivo.content_type)
+    except ArquivoMidia.DoesNotExist:
+        return Response({"ok": False, "detail": "Imagem de QR Code não encontrada para este item."}, status=404)
+
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated, IsBolsistaOuAdmin])
+def api_item_qr_scan(request, slug):
+    from accounts.permissoes import IsBolsistaOuAdmin
+    from items.models import AcaoLog
+    
+    item = get_object_or_404(Item, slug=slug)
+    observacao = request.data.get("observacao", "").strip() or "Item físico conferido no balcão"
+
+    item.status = "confirmado"
+    item.save(update_fields=["status", "atualizado_em"])
+
+    AcaoLog.objects.create(
+        bolsista=request.user,
+        item=item,
+        acao="confirmou",
+        observacao=observacao,
+        ip_origem=_get_client_ip(request)
+    )
+
+    return Response({
+        "ok": True,
+        "detail": f"Item '{item.titulo}' confirmado com sucesso no balcão.",
+        "item": _item_to_dict(item, request)
+    })
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated, IsBolsistaOuAdmin])
+def api_bolsista_pendentes(request):
+    from accounts.permissoes import IsBolsistaOuAdmin
+    try:
+        page = max(1, int(request.GET.get("page", 1)))
+        per_page = min(100, max(1, int(request.GET.get("per_page", 20))))
+    except (TypeError, ValueError):
+        page, per_page = 1, 20
+
+    qs = Item.objects.filter(status__in=["achado", "pendente_confirmacao"]).select_related("usuario", "categoria").order_by("-id")
+    
+    start = (page - 1) * per_page
+    items_page = list(qs[start:start + per_page + 1])
+    has_more = len(items_page) > per_page
+    items_page = items_page[:per_page]
+
+    return Response({
+        "ok": True,
+        "results": [_item_to_dict(i, request) for i in items_page],
+        "page": page,
+        "has_more": has_more
+    })
+
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated, IsBolsistaOuAdmin])
+def api_bolsista_confirmar(request, item_id):
+    from accounts.permissoes import IsBolsistaOuAdmin
+    from items.models import AcaoLog
+    
+    item = get_object_or_404(Item, id=item_id)
+    observacao = request.data.get("observacao", "").strip() or "Confirmado fisicamente no balcão"
+
+    item.status = "confirmado"
+    item.save(update_fields=["status", "atualizado_em"])
+
+    AcaoLog.objects.create(
+        bolsista=request.user,
+        item=item,
+        acao="confirmou",
+        observacao=observacao,
+        ip_origem=_get_client_ip(request)
+    )
+
+    return Response({
+        "ok": True,
+        "detail": f"Item '{item.titulo}' confirmado com sucesso.",
+        "item": _item_to_dict(item, request)
+    })
+
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated, IsBolsistaOuAdmin])
+def api_bolsista_devolver(request, item_id):
+    from accounts.permissoes import IsBolsistaOuAdmin
+    from items.models import AcaoLog
+    
+    item = get_object_or_404(Item, id=item_id)
+    nome_recebedor = request.data.get("nome_recebedor", "").strip()
+    if not nome_recebedor:
+        return Response({"ok": False, "detail": "O campo 'nome_recebedor' é obrigatório."}, status=400)
+
+    obs_extra = request.data.get("observacao", "").strip()
+    observacao_log = f"Recebedor: {nome_recebedor}"
+    if obs_extra:
+        observacao_log += f" | Obs: {obs_extra}"
+
+    item.status = "devolvido"
+    item.save(update_fields=["status", "atualizado_em"])
+
+    AcaoLog.objects.create(
+        bolsista=request.user,
+        item=item,
+        acao="devolveu",
+        observacao=observacao_log,
+        ip_origem=_get_client_ip(request)
+    )
+
+    return Response({
+        "ok": True,
+        "detail": f"Devolução do item '{item.titulo}' registrada com sucesso para {nome_recebedor}.",
+        "item": _item_to_dict(item, request)
+    })
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated, IsBolsistaOuAdmin])
+def api_bolsista_meu_log(request):
+    from accounts.permissoes import IsBolsistaOuAdmin
+    from items.models import AcaoLog
+    
+    logs = AcaoLog.objects.filter(bolsista=request.user).select_related("item").order_by("-timestamp")[:50]
+    results = []
+    for log in logs:
+        results.append({
+            "id": log.id,
+            "item_id": log.item_id,
+            "item_titulo": log.item.titulo if log.item else "Item removido",
+            "acao": log.acao,
+            "acao_display": log.get_acao_display(),
+            "timestamp": log.timestamp.isoformat(),
+            "observacao": log.observacao,
+            "ip_origem": log.ip_origem
+        })
+    return Response({"ok": True, "results": results})

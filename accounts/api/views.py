@@ -6,6 +6,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from accounts.models import Profile
+from accounts.permissoes import IsAdministrador
 
 
 @api_view(["POST"])
@@ -213,3 +214,149 @@ def api_photo_sizes(request):
         "ok": True,
         "data": {nome: {"label": nome.capitalize(), "pixels": px} for nome, px in Profile.TAMANHOS_VALIDOS.items()}
     })
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated, IsAdministrador])
+def api_admin_bolsistas(request):
+    from django.contrib.auth.models import Group
+    from accounts.permissoes import IsAdministrador
+
+    try:
+        grupo_bolsistas = Group.objects.get(name="Bolsistas")
+        users = grupo_bolsistas.user_set.all().order_by("username")
+    except Group.DoesNotExist:
+        users = User.objects.none()
+
+    results = []
+    for u in users:
+        results.append({
+            "id": u.id,
+            "username": u.username,
+            "email": u.email,
+            "full_name": f"{u.first_name} {u.last_name}".strip()
+        })
+    return Response({"ok": True, "results": results})
+
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated, IsAdministrador])
+def api_admin_bolsistas_adicionar(request):
+    from django.contrib.auth.models import Group
+    from accounts.permissoes import IsAdministrador
+
+    email = (request.data.get("email") or "").strip()
+    if not email:
+        return Response({"ok": False, "detail": "O campo 'email' é obrigatório."}, status=400)
+
+    try:
+        user = User.objects.get(email=email)
+    except User.DoesNotExist:
+        return Response({"ok": False, "detail": "Usuário não encontrado com este e-mail."}, status=404)
+
+    grupo_bolsistas, _ = Group.objects.get_or_create(name="Bolsistas")
+    if user.groups.filter(name="Bolsistas").exists():
+        return Response({"ok": True, "detail": "Usuário já é bolsista."})
+
+    user.groups.add(grupo_bolsistas)
+    return Response({"ok": True, "detail": f"Usuário {user.username} adicionado ao grupo de Bolsistas com sucesso."})
+
+
+@api_view(["DELETE"])
+@permission_classes([IsAuthenticated, IsAdministrador])
+def api_admin_bolsistas_remover(request, user_id):
+    from django.contrib.auth.models import Group
+    from accounts.permissoes import IsAdministrador
+
+    user = get_object_or_404(User, id=user_id)
+    try:
+        grupo_bolsistas = Group.objects.get(name="Bolsistas")
+        if not user.groups.filter(name="Bolsistas").exists():
+            return Response({"ok": False, "detail": "Usuário não faz parte do grupo de Bolsistas."}, status=400)
+        user.groups.remove(grupo_bolsistas)
+        return Response({"ok": True, "detail": f"Usuário {user.username} removido do grupo de Bolsistas."})
+    except Group.DoesNotExist:
+        return Response({"ok": False, "detail": "Grupo Bolsistas não existe."}, status=400)
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated, IsAdministrador])
+def api_admin_relatorio(request):
+    import datetime
+    from items.models import Item
+    from accounts.permissoes import IsAdministrador
+
+    data_inicio = request.GET.get("data_inicio")
+    data_fim = request.GET.get("data_fim")
+    status_filter = request.GET.get("status")
+
+    qs = Item.objects.all()
+
+    if data_inicio:
+        qs = qs.filter(data__gte=data_inicio)
+    if data_fim:
+        qs = qs.filter(data__lte=data_fim)
+    if status_filter:
+        qs = qs.filter(status=status_filter)
+
+    total = qs.count()
+    por_status = {
+        "achado": qs.filter(status="achado").count(),
+        "perdido": qs.filter(status="perdido").count(),
+        "confirmado": qs.filter(status="confirmado").count(),
+        "devolvido": qs.filter(status="devolvido").count(),
+        "pendente_confirmacao": qs.filter(status="pendente_confirmacao").count(),
+    }
+
+    periodo_inicio = data_inicio or (str(Item.objects.order_by("data").first().data) if Item.objects.exists() else "")
+    periodo_fim = data_fim or str(datetime.date.today())
+
+    return Response({
+        "ok": True,
+        "data": {
+            "total": total,
+            "por_status": por_status,
+            "periodo": {"inicio": periodo_inicio, "fim": periodo_fim}
+        }
+    })
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated, IsAdministrador])
+def api_admin_log(request):
+    from items.models import AcaoLog
+    from accounts.permissoes import IsAdministrador
+
+    bolsista_id = request.GET.get("bolsista_id")
+    acao_filter = request.GET.get("acao")
+
+    qs = AcaoLog.objects.select_related("bolsista", "item").order_by("-timestamp")
+
+    if bolsista_id:
+        qs = qs.filter(bolsista_id=bolsista_id)
+    if acao_filter:
+        qs = qs.filter(acao=acao_filter)
+
+    logs = qs[:100]
+    results = []
+    for log in logs:
+        results.append({
+            "id": log.id,
+            "bolsista": {
+                "id": log.bolsista.id,
+                "username": log.bolsista.username,
+                "email": log.bolsista.email
+            } if log.bolsista else None,
+            "item": {
+                "id": log.item.id,
+                "titulo": log.item.titulo,
+                "slug": log.item.slug
+            } if log.item else None,
+            "acao": log.acao,
+            "acao_display": log.get_acao_display(),
+            "timestamp": log.timestamp.isoformat(),
+            "observacao": log.observacao,
+            "ip_origem": log.ip_origem
+        })
+
+    return Response({"ok": True, "results": results})

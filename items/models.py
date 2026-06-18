@@ -36,6 +36,8 @@ class Item(models.Model):
         ('achado', 'Achado'),
         ('perdido', 'Perdido'),
         ('devolvido', 'Devolvido'),
+        ('pendente_confirmacao', 'Pendente de Confirmação'),
+        ('confirmado', 'Confirmado no Balcão'),
     ]
 
     titulo = models.CharField(max_length=45)
@@ -65,6 +67,7 @@ class Item(models.Model):
             self.slug = slug
         super().save(*args, **kwargs)
         self._gerar_image_hash()
+        self._gerar_qrcode()
 
     def _gerar_image_hash(self):
         """Gera pHash da imagem para busca visual (compatível com DatabaseStorage)."""
@@ -89,6 +92,40 @@ class Item(models.Model):
                 self.imagem.close()
             except Exception:
                 pass
+
+    def _gerar_qrcode(self):
+        """Gera o QR Code para o item se ainda não existir e salva no banco de dados."""
+        if not self.slug:
+            return
+        
+        nome_qr = f"qr_{self.slug}.png"
+        if ArquivoMidia.objects.filter(nome=nome_qr).exists():
+            return
+
+        try:
+            import qrcode
+            from io import BytesIO
+
+            url = f"https://find.ifrn.edu.br/item/{self.slug}/"
+            qr = qrcode.QRCode(version=1, box_size=10, border=5)
+            qr.add_data(url)
+            qr.make(fit=True)
+            img = qr.make_image(fill_color="black", back_color="white")
+
+            buffer = BytesIO()
+            img.save(buffer, format="PNG")
+            conteudo_png = buffer.getvalue()
+
+            ArquivoMidia.objects.update_or_create(
+                nome=nome_qr,
+                defaults={
+                    'conteudo': conteudo_png,
+                    'content_type': 'image/png',
+                    'tamanho': len(conteudo_png),
+                }
+            )
+        except Exception:
+            pass
 
     @staticmethod
     def buscar_por_imagem(imagem_file, limite=20):
@@ -227,3 +264,25 @@ class Item(models.Model):
 
     def __str__(self):
         return self.titulo
+
+
+class AcaoLog(models.Model):
+    ACAO_CHOICES = [
+        ('confirmou', 'Confirmou item no balcão'),
+        ('devolveu', 'Registrou devolução'),
+        ('editou', 'Editou item'),
+        ('status_alterado', 'Alterou status'),
+    ]
+    bolsista = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='acoes_log')
+    item = models.ForeignKey('Item', on_delete=models.SET_NULL, null=True, related_name='logs')
+    acao = models.CharField(max_length=30, choices=ACAO_CHOICES)
+    timestamp = models.DateTimeField(auto_now_add=True)
+    observacao = models.TextField(blank=True)
+    ip_origem = models.GenericIPAddressField(null=True, blank=True)
+
+    class Meta:
+        db_table = 'find_acaolog'
+        ordering = ['-timestamp']
+
+    def __str__(self):
+        return f"{self.bolsista} → {self.acao} em {self.item} ({self.timestamp})"

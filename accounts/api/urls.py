@@ -11,4 +11,11 @@ urlpatterns = [
     path("profile/update/", views.api_update_profile, name="api_update_profile"),
     path("profile/resize-photo/", views.api_resize_photo, name="api_resize_photo"),
     path("profile/photo-sizes/", views.api_photo_sizes, name="api_photo_sizes"),
+
+    # Admin Panel
+    path("admin/bolsistas/", views.api_admin_bolsistas, name="api_admin_bolsistas"),
+    path("admin/bolsistas/adicionar/", views.api_admin_bolsistas_adicionar, name="api_admin_bolsistas_adicionar"),
+    path("admin/bolsistas/<int:user_id>/remover/", views.api_admin_bolsistas_remover, name="api_admin_bolsistas_remover"),
+    path("admin/relatorio/", views.api_admin_relatorio, name="api_admin_relatorio"),
+    path("admin/log/", views.api_admin_log, name="api_admin_log"),
 ]
