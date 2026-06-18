@@ -803,3 +803,145 @@ def busca_visual(request):
         "resultados": resultados,
         "imagem_preview": imagem_base64,
     })
+
+
+@login_required(login_url="login")
+def bolsista_dashboard(request):
+    from accounts.permissoes import bolsista_required
+    from items.models import AcaoLog
+    from django.core.exceptions import PermissionDenied
+
+    # Decorator-like behavior inline or check permission
+    from accounts.permissoes import check_bolsista_ou_admin
+    if not check_bolsista_ou_admin(request.user):
+        raise PermissionDenied
+
+    if request.method == "POST":
+        action = request.POST.get("action")
+        item_id = request.POST.get("item_id")
+        
+        if action == "confirmar" and item_id:
+            item = get_object_or_404(Item, id=item_id)
+            item.status = "confirmado"
+            item.save(update_fields=["status", "atualizado_em"])
+            
+            from items.api.views import _get_client_ip
+            AcaoLog.objects.create(
+                bolsista=request.user,
+                item=item,
+                acao="confirmou",
+                observacao="Confirmado via Painel Web do Bolsista.",
+                ip_origem=_get_client_ip(request)
+            )
+            messages.success(request, f"Item '{item.titulo}' confirmado com sucesso!")
+            return redirect("bolsista_dashboard")
+            
+        elif action == "devolver" and item_id:
+            nome_recebedor = request.POST.get("nome_recebedor", "").strip()
+            observacao = request.POST.get("observacao", "").strip()
+            
+            if not nome_recebedor:
+                messages.error(request, "O nome do recebedor é obrigatório para devoluções.")
+            else:
+                item = get_object_or_404(Item, id=item_id)
+                item.status = "devolvido"
+                item.save(update_fields=["status", "atualizado_em"])
+                
+                obs_log = f"Status alterado para devolvido. Recebedor: {nome_recebedor}"
+                if observacao:
+                    obs_log += f" | Obs: {observacao}"
+                    
+                from items.api.views import _get_client_ip
+                AcaoLog.objects.create(
+                    bolsista=request.user,
+                    item=item,
+                    acao="devolveu",
+                    observacao=obs_log,
+                    ip_origem=_get_client_ip(request)
+                )
+                messages.success(request, f"Item '{item.titulo}' devolvido para {nome_recebedor}!")
+                return redirect("bolsista_dashboard")
+
+    pendentes = Item.objects.filter(status__in=["achado", "pendente_confirmacao"]).order_by("-criado_em")
+    recent_actions = AcaoLog.objects.filter(bolsista=request.user).select_related("item").order_by("-timestamp")[:50]
+    
+    return render(request, "mainpage/bolsista_dashboard.html", {
+        "pendentes": pendentes,
+        "recent_actions": recent_actions,
+    })
+
+
+@login_required(login_url="login")
+def admin_dashboard(request):
+    from accounts.permissoes import check_admin
+    from items.models import AcaoLog, Item
+    from django.contrib.auth.models import Group, User
+    from django.core.exceptions import PermissionDenied
+
+    if not check_admin(request.user):
+        raise PermissionDenied
+
+    if request.method == "POST":
+        action = request.POST.get("action")
+        
+        if action == "adicionar_bolsista":
+            email = request.POST.get("email", "").strip()
+            try:
+                user = User.objects.get(email=email)
+                grupo, _ = Group.objects.get_or_create(name="Bolsistas")
+                user.groups.add(grupo)
+                messages.success(request, f"Usuário {user.username} adicionado ao grupo de Bolsistas!")
+            except User.DoesNotExist:
+                messages.error(request, "Nenhum usuário encontrado com esse e-mail.")
+            return redirect("admin_dashboard")
+            
+        elif action == "remover_bolsista":
+            user_id = request.POST.get("user_id")
+            user = get_object_or_404(User, id=user_id)
+            try:
+                grupo = Group.objects.get(name="Bolsistas")
+                user.groups.remove(grupo)
+                messages.success(request, f"Usuário {user.username} removido dos Bolsistas.")
+            except Group.DoesNotExist:
+                messages.error(request, "Grupo Bolsistas não existe.")
+            return redirect("admin_dashboard")
+
+    try:
+        grupo_bolsistas = Group.objects.get(name="Bolsistas")
+        bolsistas = grupo_bolsistas.user_set.all().order_by("username")
+    except Group.DoesNotExist:
+        bolsistas = User.objects.none()
+
+    data_inicio = request.GET.get("data_inicio")
+    data_fim = request.GET.get("data_fim")
+    status_filter = request.GET.get("status")
+
+    qs = Item.objects.all()
+
+    if data_inicio:
+        qs = qs.filter(data__gte=data_inicio)
+    if data_fim:
+        qs = qs.filter(data__lte=data_fim)
+    if status_filter:
+        qs = qs.filter(status=status_filter)
+
+    total = qs.count()
+    por_status = {
+        "achado": qs.filter(status="achado").count(),
+        "perdido": qs.filter(status="perdido").count(),
+        "confirmado": qs.filter(status="confirmado").count(),
+        "devolvido": qs.filter(status="devolvido").count(),
+        "pendente_confirmacao": qs.filter(status="pendente_confirmacao").count(),
+    }
+
+    logs = AcaoLog.objects.select_related("bolsista", "item").order_by("-timestamp")[:100]
+
+    return render(request, "mainpage/admin_dashboard.html", {
+        "bolsistas": bolsistas,
+        "total": total,
+        "por_status": por_status,
+        "logs": logs,
+        "data_inicio": data_inicio,
+        "data_fim": data_fim,
+        "status_filter": status_filter,
+    })

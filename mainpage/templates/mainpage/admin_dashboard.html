@@ -1,0 +1,312 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Painel do Administrador - FIND{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row mb-4">
+        <div class="col-12 text-center text-md-start">
+            <h1 class="fw-bold text-primary"><i class="bi bi-shield-lock-fill me-2"></i>Painel do Administrador</h1>
+            <p class="text-muted">Gestão estratégica de bolsistas, relatórios de produtividade e logs de auditoria.</p>
+        </div>
+    </div>
+
+    <!-- MENSAGENS -->
+    {% if messages %}
+    <div class="row">
+        <div class="col-12">
+            {% for msg in messages %}
+            <div class="alert alert-{% if msg.tags == 'error' %}danger{% else %}{{ msg.tags }}{% endif %} alert-dismissible fade show" role="alert">
+                {{ msg }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- CARDS DE METRICAS E FILTROS -->
+    <div class="row g-4 mb-4">
+        <!-- FILTRO DE RELATÓRIO -->
+        <div class="col-12">
+            <div class="card border-0 shadow-sm rounded-4 p-4">
+                <h5 class="fw-bold text-dark mb-3"><i class="bi bi-funnel-fill me-2"></i>Filtro do Relatório</h5>
+                <form method="GET" class="row g-3 align-items-end">
+                    <div class="col-md-3">
+                        <label for="data_inicio" class="form-label small fw-bold">Data Início</label>
+                        <input type="date" class="form-control rounded-3" id="data_inicio" name="data_inicio" value="{{ data_inicio|default:'' }}">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="data_fim" class="form-label small fw-bold">Data Fim</label>
+                        <input type="date" class="form-control rounded-3" id="data_fim" name="data_fim" value="{{ data_fim|default:'' }}">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="status" class="form-label small fw-bold">Status</label>
+                        <select class="form-select rounded-3" id="status" name="status">
+                            <option value="" {% if not status_filter %}selected{% endif %}>Todos os Status</option>
+                            <option value="achado" {% if status_filter == 'achado' %}selected{% endif %}>Achado</option>
+                            <option value="perdido" {% if status_filter == 'perdido' %}selected{% endif %}>Perdido</option>
+                            <option value="confirmado" {% if status_filter == 'confirmado' %}selected{% endif %}>Confirmado</option>
+                            <option value="devolvido" {% if status_filter == 'devolvido' %}selected{% endif %}>Devolvido</option>
+                            <option value="pendente_confirmacao" {% if status_filter == 'pendente_confirmacao' %}selected{% endif %}>Pendente Confirmação</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <button type="submit" class="btn btn-primary rounded-pill w-100 py-2">
+                            <i class="bi bi-search me-2"></i>Filtrar Relatório
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- TABELA DE STATUS E GRÁFICO -->
+    <div class="row g-4 mb-4">
+        <!-- QUANTIDADES POR STATUS -->
+        <div class="col-lg-6">
+            <div class="card border-0 shadow-sm rounded-4 p-4 h-100">
+                <h5 class="fw-bold mb-4 text-dark"><i class="bi bi-bar-chart-fill me-2"></i>Quantidades por Status</h5>
+                <div class="row g-3">
+                    <div class="col-6 col-md-4">
+                        <div class="p-3 bg-light rounded-3 text-center border">
+                            <h3 class="fw-bold text-primary mb-1">{{ total }}</h3>
+                            <span class="small text-muted">Total Filtrado</span>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-4">
+                        <div class="p-3 bg-success-subtle rounded-3 text-center border border-success-subtle">
+                            <h3 class="fw-bold text-success mb-1">{{ por_status.achado }}</h3>
+                            <span class="small text-muted">Achado</span>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-4">
+                        <div class="p-3 bg-danger-subtle rounded-3 text-center border border-danger-subtle">
+                            <h3 class="fw-bold text-danger mb-1">{{ por_status.perdido }}</h3>
+                            <span class="small text-muted">Perdido</span>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-4">
+                        <div class="p-3 bg-warning-subtle rounded-3 text-center border border-warning-subtle">
+                            <h3 class="fw-bold text-warning mb-1">{{ por_status.confirmado }}</h3>
+                            <span class="small text-muted">Confirmado</span>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-4">
+                        <div class="p-3 bg-info-subtle rounded-3 text-center border border-info-subtle">
+                            <h3 class="fw-bold text-info mb-1">{{ por_status.devolvido }}</h3>
+                            <span class="small text-muted">Devolvido</span>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-4">
+                        <div class="p-3 bg-secondary-subtle rounded-3 text-center border border-secondary-subtle">
+                            <h3 class="fw-bold text-secondary mb-1">{{ por_status.pendente_confirmacao }}</h3>
+                            <span class="small text-muted">Pendente Conf.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- GRÁFICO DISTRIBUIÇÃO -->
+        <div class="col-lg-6">
+            <div class="card border-0 shadow-sm rounded-4 p-4 h-100 text-center">
+                <h5 class="fw-bold mb-3 text-dark text-start"><i class="bi bi-pie-chart-fill me-2"></i>Distribuição Visual</h5>
+                <div style="max-height: 220px; position: relative;" class="mx-auto my-auto w-100">
+                    <canvas id="statusChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TABS PRINCIPAIS DO ADMIN -->
+    <div class="row">
+        <div class="col-12">
+            <ul class="nav nav-pills mb-3 bg-white p-2 rounded-4 shadow-sm" id="pills-tab-admin" role="tablist">
+                <li class="nav-item flex-fill text-center" role="presentation">
+                    <button class="nav-link active rounded-3 w-100 fw-bold" id="pills-bolsistas-tab" data-bs-toggle="pill" data-bs-target="#pills-bolsistas" type="button" role="tab" aria-controls="pills-bolsistas" aria-selected="true">
+                        <i class="bi bi-people-fill me-2"></i>Bolsistas ({{ bolsistas.count }})
+                    </button>
+                </li>
+                <li class="nav-item flex-fill text-center" role="presentation">
+                    <button class="nav-link rounded-3 w-100 fw-bold" id="pills-logs-tab" data-bs-toggle="pill" data-bs-target="#pills-logs" type="button" role="tab" aria-controls="pills-logs" aria-selected="false">
+                        <i class="bi bi-journal-text me-2"></i>Logs Globais de Ações ({{ logs.count }})
+                    </button>
+                </li>
+            </ul>
+
+            <div class="tab-content" id="pills-tabContent-admin">
+                <!-- TAB: BOLSISTAS -->
+                <div class="tab-pane fade show active" id="pills-bolsistas" role="tabpanel" aria-labelledby="pills-bolsistas-tab">
+                    <div class="row g-4">
+                        <!-- ADICIONAR BOLSISTA -->
+                        <div class="col-lg-4">
+                            <div class="card border-0 shadow-sm rounded-4 p-4">
+                                <h5 class="fw-bold text-primary mb-3"><i class="bi bi-person-plus-fill me-2"></i>Adicionar Bolsista</h5>
+                                <form method="POST">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="action" value="adicionar_bolsista">
+                                    <div class="mb-3">
+                                        <label for="email" class="form-label small fw-bold">E-mail do Usuário <span class="text-danger">*</span></label>
+                                        <input type="email" class="form-control rounded-3" id="email" name="email" required placeholder="Ex: nome@ifrn.edu.br">
+                                        <div class="form-text small">O usuário já deve estar cadastrado no FIND para ser promovido a Bolsista.</div>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary rounded-pill w-100 py-2">
+                                        <i class="bi bi-plus-lg me-2"></i>Promover a Bolsista
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+
+                        <!-- LISTA DE BOLSISTAS -->
+                        <div class="col-lg-8">
+                            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
+                                <h5 class="fw-bold mb-4 text-dark"><i class="bi bi-people-fill me-2"></i>Bolsistas Ativos</h5>
+                                {% if bolsistas %}
+                                <div class="table-responsive">
+                                    <table class="table table-hover align-middle">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Username</th>
+                                                <th>Nome Completo</th>
+                                                <th>E-mail</th>
+                                                <th class="text-center">Ações</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for b in bolsistas %}
+                                            <tr>
+                                                <td class="fw-bold">@{{ b.username }}</td>
+                                                <td>{{ b.first_name }} {{ b.last_name }}</td>
+                                                <td>{{ b.email }}</td>
+                                                <td class="text-center">
+                                                    <form method="POST" onsubmit="return confirm('Deseja realmente remover o usuário @{{ b.username }} do grupo Bolsistas?');">
+                                                        {% csrf_token %}
+                                                        <input type="hidden" name="action" value="remover_bolsista">
+                                                        <input type="hidden" name="user_id" value="{{ b.id }}">
+                                                        <button type="submit" class="btn btn-outline-danger btn-sm rounded-pill px-3">
+                                                            <i class="bi bi-trash3 me-1"></i>Remover
+                                                        </button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                {% else %}
+                                <p class="text-center text-muted py-4 mb-0">Nenhum bolsista cadastrado ainda.</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB: AUDIT LOGS -->
+                <div class="tab-pane fade" id="pills-logs" role="tabpanel" aria-labelledby="pills-logs-tab">
+                    <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
+                        <h5 class="fw-bold mb-4 text-primary"><i class="bi bi-journal-text me-2"></i>Histórico Completo de Auditoria</h5>
+                        {% if logs %}
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Bolsista / Admin</th>
+                                        <th>Ação</th>
+                                        <th>Item</th>
+                                        <th>Data/Hora</th>
+                                        <th>Observações</th>
+                                        <th>IP Origem</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for log in logs %}
+                                    <tr>
+                                        <td>
+                                            <span class="fw-bold text-dark">@{{ log.bolsista.username }}</span>
+                                            <br><span class="small text-muted">{{ log.bolsista.email }}</span>
+                                        </td>
+                                        <td>
+                                            {% if log.acao == 'confirmou' %}
+                                            <span class="badge bg-success-subtle text-success rounded-pill px-3 py-1">Confirmou</span>
+                                            {% else %}
+                                            <span class="badge bg-info-subtle text-info rounded-pill px-3 py-1">Devolveu</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <a href="{% url 'item_detail' log.item.slug %}" class="fw-bold text-decoration-none text-primary" target="_blank">
+                                                {{ log.item.titulo }}
+                                            </a>
+                                        </td>
+                                        <td class="small text-muted">
+                                            {{ log.timestamp|date:"d/m/Y H:i" }}
+                                        </td>
+                                        <td class="small text-muted">
+                                            {{ log.observacao }}
+                                        </td>
+                                        <td class="small text-muted">
+                                            {{ log.ip_origem|default:"---" }}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {% else %}
+                        <p class="text-center text-muted py-4 mb-0">Nenhum log de auditoria disponível.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CHART JS PARA RELATÓRIO PREMIUM -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const ctx = document.getElementById('statusChart').getContext('2d');
+    
+    const data = {
+        labels: ['Achados', 'Perdidos', 'Confirmados', 'Devolvidos', 'Pendentes'],
+        datasets: [{
+            data: [
+                {{ por_status.achado }},
+                {{ por_status.perdido }},
+                {{ por_status.confirmado }},
+                {{ por_status.devolvido }},
+                {{ por_status.pendente_confirmacao }}
+            ],
+            backgroundColor: [
+                '#198754', // Green
+                '#dc3545', // Red
+                '#ffc107', // Warning
+                '#0dcaf0', // Info
+                '#6c757d'  // Gray
+            ],
+            borderWidth: 1
+        }]
+    };
+
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: data,
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'right',
+                    labels: {
+                        boxWidth: 12,
+                        font: { size: 11 }
+                    }
+                }
+            }
+        }
+    });
+});
+</script>
+{% endblock %}

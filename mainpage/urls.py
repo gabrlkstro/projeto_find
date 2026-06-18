@@ -76,4 +76,7 @@ urlpatterns = [
     path('chats/<int:chat_id>/enviar/', views.chat_send_message, name='chat_send_message'),
     path('chats/<int:chat_id>/fechar/', views.chat_close, name='chat_close'),
 
+    # Painéis de controle
+    path('painel/bolsista/', views.bolsista_dashboard, name='bolsista_dashboard'),
+    path('painel/admin/', views.admin_dashboard, name='admin_dashboard'),
 ]

@@ -51,3 +51,23 @@ def bolsista_required(view_func):
             return view_func(request, *args, **kwargs)
         raise PermissionDenied
     return _wrapped_view
+
+
+def check_admin(user):
+    if not user.is_authenticated:
+        return False
+    return user.groups.filter(name="Administradores").exists() or user.is_staff
+
+
+def admin_required(view_func):
+    """
+    Decorator para views Django tradicionais.
+    Exige que o usuário seja administrador.
+    """
+    def _wrapped_view(request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect_to_login(request.get_full_path(), login_url='login')
+        if check_admin(request.user):
+            return view_func(request, *args, **kwargs)
+        raise PermissionDenied
+    return _wrapped_view

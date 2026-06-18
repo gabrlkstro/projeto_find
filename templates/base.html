@@ -114,6 +114,26 @@
             </a>
           </li>
 
+          {% if is_bolsista_user %}
+          <li>
+            <a href="{% url 'bolsista_dashboard' %}"
+               class="find-nav-link {% if request.resolver_match.url_name == 'bolsista_dashboard' %}active{% endif %}">
+              <i class="bi bi-person-workspace nav-ico" style="font-size: 16px;"></i>
+              Bolsista
+            </a>
+          </li>
+          {% endif %}
+
+          {% if is_admin_user %}
+          <li>
+            <a href="{% url 'admin_dashboard' %}"
+               class="find-nav-link {% if request.resolver_match.url_name == 'admin_dashboard' %}active{% endif %}">
+              <i class="bi bi-shield-lock-fill nav-ico" style="font-size: 16px;"></i>
+              Admin
+            </a>
+          </li>
+          {% endif %}
+
         </ul>
       </div>
 
@@ -255,6 +275,26 @@
           Chat
         </div>
       </a>
+
+      {% if is_bolsista_user %}
+      <a href="{% url 'bolsista_dashboard' %}"
+         class="drawer-link {% if request.resolver_match.url_name == 'bolsista_dashboard' %}active{% endif %}">
+        <div class="drawer-link-left">
+          <i class="bi bi-person-workspace nav-ico" style="font-size: 16px; margin-right: 12px;"></i>
+          Bolsista
+        </div>
+      </a>
+      {% endif %}
+
+      {% if is_admin_user %}
+      <a href="{% url 'admin_dashboard' %}"
+         class="drawer-link {% if request.resolver_match.url_name == 'admin_dashboard' %}active{% endif %}">
+        <div class="drawer-link-left">
+          <i class="bi bi-shield-lock-fill nav-ico" style="font-size: 16px; margin-right: 12px;"></i>
+          Admin
+        </div>
+      </a>
+      {% endif %}
 
     </nav>
 
