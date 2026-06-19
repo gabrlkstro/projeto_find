@@ -12,11 +12,11 @@
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content border-0 shadow-lg">
       <!-- HEADER -->
-      <div class="modal-header border-0 text-white">
+      <div class="modal-header border-0" style="color: #0B3A4A;">
         <h5 class="modal-title fw-bold">Editar Perfil</h5>
         <button
           type="button"
-          class="btn-close btn-close-white"
+          class="btn-close"
           data-bs-dismiss="modal"
         ></button>
       </div>
@@ -51,17 +51,32 @@
             </div>
           </div>
 
-          <!-- NOME -->
-          <div class="mb-3">
-            <label class="form-label fw-bold small text-muted text-uppercase">
-              Nome Completo
-            </label>
-            <input
-              type="text"
-              name="nome"
-              class="form-control border-info-subtle shadow-sm edit-profile-input"
-              value="{{ user.first_name }}"
-            />
+          <!-- NOME E SOBRENOME -->
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label fw-bold small text-muted text-uppercase">
+                Nome
+              </label>
+              <input
+                type="text"
+                name="first_name"
+                class="form-control border-info-subtle shadow-sm edit-profile-input"
+                value="{{ user.first_name }}"
+                required
+              />
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label fw-bold small text-muted text-uppercase">
+                Sobrenome
+              </label>
+              <input
+                type="text"
+                name="last_name"
+                class="form-control border-info-subtle shadow-sm edit-profile-input"
+                value="{{ user.last_name }}"
+                required
+              />
+            </div>
           </div>
 
           <!-- EMAIL -->

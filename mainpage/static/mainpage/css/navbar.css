@@ -542,3 +542,37 @@
 @media (max-width: 400px) {
   .find-navbar { padding: 0 16px; }
 }
+
+/* ── Dropdown Gestão Premium (Azul Bebê) ────────────────── */
+.dropdown-menu {
+  background-color: #DDF2FC !important;
+  border: 1px solid rgba(144, 219, 244, 0.4) !important;
+  border-radius: 20px !important;
+  box-shadow: 0 16px 40px rgba(11, 58, 74, 0.15) !important;
+  padding: 12px !important;
+}
+
+.dropdown-item {
+  border-radius: 12px !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  color: #0B3A4A !important;
+  font-weight: 700 !important;
+  font-size: 0.9rem !important;
+  margin-bottom: 2px;
+}
+
+.dropdown-item:hover, .dropdown-item:focus {
+  background-color: #90dbf4 !important;
+  color: #0B3A4A !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(144, 219, 244, 0.35);
+}
+
+.dropdown-item i {
+  color: #1eaed4 !important;
+}
+
+.dropdown-divider {
+  border-top-color: rgba(144, 219, 244, 0.6) !important;
+  margin: 8px 0 !important;
+}

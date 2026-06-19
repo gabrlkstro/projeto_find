@@ -3,129 +3,168 @@
 
 {% block title %}Painel do Bolsista - FIND{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'mainpage/css/bolsista_dashboard.css' %}?v=7">
+{% endblock %}
+
 {% block content %}
-<div class="container py-5">
-    <div class="row mb-4">
-        <div class="col-12 text-center text-md-start">
-            <h1 class="fw-bold text-primary"><i class="bi bi-person-workspace me-2"></i>Painel do Bolsista</h1>
-            <p class="text-muted">Espaço reservado para validação de entrega e confirmação de objetos achados ou perdidos.</p>
-        </div>
-    </div>
-
-    <!-- MENSAGENS -->
-    {% if messages %}
-    <div class="row">
-        <div class="col-12">
-            {% for msg in messages %}
-            <div class="alert alert-{% if msg.tags == 'error' %}danger{% else %}{{ msg.tags }}{% endif %} alert-dismissible fade show" role="alert">
-                {{ msg }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-            {% endfor %}
-        </div>
-    </div>
-    {% endif %}
-
+<div class="container-fluid py-5 px-md-5">
     <div class="row g-4">
-        <!-- COLUNA ESQUERDA: CÂMERA DE ESCANEAMENTO DE QR CODE -->
-        <div class="col-lg-4">
-            <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4">
-                <div class="card-header bg-primary text-white p-3 border-0">
-                    <h5 class="mb-0 fw-bold"><i class="bi bi-qr-code-scan me-2"></i>Escanear QR Code</h5>
-                </div>
-                <div class="card-body text-center bg-light p-4">
-                    <p class="small text-muted mb-3">Aponte a câmera para o QR Code gerado pelo item para realizar a confirmação rápida.</p>
-                    
-                    <div id="reader-wrapper" class="mx-auto bg-white rounded-3 overflow-hidden shadow-sm border" style="max-width: 300px; display: none;">
-                        <div id="reader" style="width: 100%;"></div>
+        <!-- ══════════════════════════════════════════════════════
+             SIDEBAR LATERAL
+             ══════════════════════════════════════════════════════ -->
+        <div class="col-lg-3">
+            <div class="sidebar-wrapper">
+                <!-- Profile Header -->
+                <div class="sidebar-profile text-center">
+                    <div class="profile-avatar-container mx-auto">
+                        <div class="profile-avatar-glow"></div>
+                        <div class="profile-avatar-circle d-flex align-items-center justify-content-center">
+                            <i class="bi bi-person-fill-check"></i>
+                        </div>
                     </div>
+                    <h5 class="profile-name">{{ request.user.first_name }} {{ request.user.last_name }}</h5>
+                    <p class="profile-username">@{{ request.user.username }}</p>
+                    <span class="profile-badge badge-bolsista">Bolsista</span>
+                </div>
 
-                    <div id="scanner-controls" class="mt-3">
-                        <button id="btn-start-scan" class="btn btn-primary rounded-pill w-100 py-2">
-                            <i class="bi bi-camera-fill me-2"></i>Iniciar Câmera
+                <!-- Navigation Menu -->
+                <div class="sidebar-menu-section">
+                    <p class="menu-section-title">Workspace</p>
+                    <div class="nav flex-column sidebar-nav" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                        <button class="nav-link active text-start border-0" id="v-pills-pendentes-tab" data-bs-toggle="pill" data-bs-target="#v-pills-pendentes" type="button" role="tab" aria-controls="v-pills-pendentes" aria-selected="true">
+                            <i class="bi bi-hourglass-split"></i>
+                            <span>Validar Pendentes</span>
+                            <span class="badge bg-danger ms-auto rounded-pill">{{ pendentes.count }}</span>
                         </button>
-                        <button id="btn-stop-scan" class="btn btn-outline-danger rounded-pill w-100 py-2 mt-2" style="display: none;">
-                            <i class="bi bi-camera-video-off-fill me-2"></i>Parar Câmera
+                        
+                        <button class="nav-link text-start border-0" id="v-pills-etiquetas-tab" data-bs-toggle="pill" data-bs-target="#v-pills-etiquetas" type="button" role="tab" aria-controls="v-pills-etiquetas" aria-selected="false">
+                            <i class="bi bi-printer"></i>
+                            <span>Imprimir Etiquetas</span>
+                        </button>
+
+                        <button class="nav-link text-start border-0" id="v-pills-scan-tab" data-bs-toggle="pill" data-bs-target="#v-pills-scan" type="button" role="tab" aria-controls="v-pills-scan" aria-selected="false">
+                            <i class="bi bi-qr-code-scan"></i>
+                            <span>Escanear QR Code</span>
+                        </button>
+                        
+                        <button class="nav-link text-start border-0" id="v-pills-historico-tab" data-bs-toggle="pill" data-bs-target="#v-pills-historico" type="button" role="tab" aria-controls="v-pills-historico" aria-selected="false">
+                            <i class="bi bi-clock-history"></i>
+                            <span>Meu Histórico</span>
                         </button>
                     </div>
-
-                    <div id="scan-feedback" class="mt-3 alert alert-info py-2" style="display: none;"></div>
                 </div>
-            </div>
-
-            <!-- PERFIL RESUMIDO DO BOLSISTA -->
-            <div class="card border-0 shadow-sm rounded-4 p-4 text-center">
-                <div class="mx-auto mb-3 bg-primary-subtle text-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 70px; height: 70px;">
-                    <i class="bi bi-person-fill-check fs-2"></i>
-                </div>
-                <h5 class="fw-bold mb-1">{{ request.user.first_name }} {{ request.user.last_name }}</h5>
-                <p class="text-muted small mb-2">@{{ request.user.username }}</p>
-                <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-3 py-2">Grupo: Bolsistas</span>
             </div>
         </div>
 
-        <!-- COLUNA DIREITA: ITENS PENDENTES E LOG DE AÇÕES -->
-        <div class="col-lg-8">
-            <!-- TABS -->
-            <ul class="nav nav-pills mb-3 bg-white p-2 rounded-4 shadow-sm" id="pills-tab" role="tablist">
-                <li class="nav-item flex-fill text-center" role="presentation">
-                    <button class="nav-link active rounded-3 w-100 fw-bold" id="pills-pendentes-tab" data-bs-toggle="pill" data-bs-target="#pills-pendentes" type="button" role="tab" aria-controls="pills-pendentes" aria-selected="true">
-                        <i class="bi bi-hourglass-split me-2"></i>Pendentes ({{ pendentes.count }})
-                    </button>
-                </li>
-                <li class="nav-item flex-fill text-center" role="presentation">
-                    <button class="nav-link rounded-3 w-100 fw-bold" id="pills-historico-tab" data-bs-toggle="pill" data-bs-target="#pills-historico" type="button" role="tab" aria-controls="pills-historico" aria-selected="false">
-                        <i class="bi bi-clock-history me-2"></i>Meu Histórico ({{ recent_actions.count }})
-                    </button>
-                </li>
-            </ul>
+        <!-- ══════════════════════════════════════════════════════
+             ÁREA DE CONTEÚDO PRINCIPAL
+             ══════════════════════════════════════════════════════ -->
+        <div class="col-lg-9">
+            <!-- MENSAGENS -->
+            {% if messages %}
+            <div class="row mb-3">
+                <div class="col-12">
+                    {% for msg in messages %}
+                    <div class="alert alert-{% if msg.tags == 'error' %}danger{% else %}{{ msg.tags }}{% endif %} alert-dismissible fade show" role="alert">
+                        {{ msg }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
 
-            <div class="tab-content" id="pills-tabContent">
-                <!-- TAB: ITENS PENDENTES -->
-                <div class="tab-pane fade show active" id="pills-pendentes" role="tabpanel" aria-labelledby="pills-pendentes-tab">
+            <!-- WIDGET DE PROGRESSO E CONQUISTAS -->
+            <div class="progresso-card mb-4">
+                <div class="row align-items-center g-4">
+                    <div class="col-md-7">
+                        <div class="gamified-header">
+                            <div>
+                                <h4 style="font-family:var(--font-display);font-size:1.35rem;font-weight:800;letter-spacing:-0.03em;margin:0 0 4px;">
+                                    <i class="bi bi-trophy-fill" style="color:#f59e0b;"></i>
+                                    Nível <span id="lbl-level-num">1</span>
+                                </h4>
+                                <p style="font-size:0.82rem;color:var(--text-muted);margin:0;" id="lbl-level-name">Cadete do Balcão</p>
+                            </div>
+                            <span class="level-badge-glow" id="lbl-xp-status">0 / 100 XP</span>
+                        </div>
+                        <div class="progresso-barra-container">
+                            <div class="progresso-barra-glow" id="bar-xp"></div>
+                        </div>
+                        <div class="d-flex justify-content-between" style="font-size:0.78rem;color:var(--text-muted);">
+                            <span id="lbl-xp-total">Total: 0 XP acumulados</span>
+                            <span id="lbl-next-level" style="color:var(--brand-400);">Carregando...</span>
+                        </div>
+                    </div>
+                    <div class="col-md-5" style="border-left:1px solid var(--bd);padding-left:24px;">
+                        <div class="conquistas-section-title"><i class="bi bi-award"></i> Medalhas Conquistadas</div>
+                        <div class="conquistas-grid">
+                            <span class="conquista-badge locked" id="badge-1" title="Primeiro Passo: 1 ação."><i class="bi bi-flag-fill"></i> Primeiro Passo</span>
+                            <span class="conquista-badge locked" id="badge-2" title="Organizador: 5 itens."><i class="bi bi-search"></i> Organizador</span>
+                            <span class="conquista-badge locked" id="badge-3" title="Salvador: 5 devoluções."><i class="bi bi-arrow-return-left"></i> Salvador</span>
+                            <span class="conquista-badge locked" id="badge-4" title="Campeão: 15 ações."><i class="bi bi-shield-fill-check"></i> Campeão</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="v-pills-tabContent">
+                <!-- TAB 1: VALIDAR PENDENTES -->
+                <div class="tab-pane fade show active" id="v-pills-pendentes" role="tabpanel" aria-labelledby="v-pills-pendentes-tab">
+                    <div class="page-header">
+                        <h2 class="page-title">Validar Pendentes</h2>
+                        <p class="page-subtitle">Confirme objetos encontrados ou registre a entrega definitiva ao dono.</p>
+                    </div>
+
                     {% if pendentes %}
                     <div class="row g-3">
                         {% for item in pendentes %}
                         <div class="col-12">
-                            <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                            <div class="validation-card overflow-hidden">
                                 <div class="row g-0">
-                                    <div class="col-md-3 bg-light d-flex align-items-center justify-content-center p-3" style="min-height: 120px;">
+                                    <div class="col-md-3 bg-light d-flex align-items-center justify-content-center p-3 border-end" style="min-height: 140px;">
                                         {% if item.imagem %}
-                                        <img src="{{ item.imagem.url }}" class="img-fluid rounded-3" style="max-height: 100px; object-fit: cover;" alt="{{ item.titulo }}">
+                                        <div class="validation-img-container rounded-3 w-100 h-100">
+                                            <img src="{{ item.imagem.url }}" alt="{{ item.titulo }}">
+                                        </div>
                                         {% else %}
-                                        <i class="bi bi-box-seam text-secondary fs-1"></i>
+                                        <div class="d-flex flex-column align-items-center">
+                                            <i class="bi bi-box-seam validation-placeholder-ico"></i>
+                                            <span class="text-muted small mt-1">Sem Imagem</span>
+                                        </div>
                                         {% endif %}
                                     </div>
                                     <div class="col-md-9">
-                                        <div class="card-body d-flex flex-column h-100 justify-content-between">
+                                        <div class="card-body p-4 d-flex flex-column h-100 justify-content-between">
                                             <div>
-                                                <div class="d-flex justify-content-between align-items-start">
-                                                    <h5 class="fw-bold mb-1">{{ item.titulo }}</h5>
-                                                    <span class="badge {% if item.status == 'pendente_confirmacao' %}bg-warning-subtle text-warning{% else %}bg-info-subtle text-info{% endif %} rounded-pill px-2 py-1">
-                                                        {{ item.get_status_display }}
+                                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                                    <h5 class="fw-bold mb-0 text-dark">{{ item.titulo }}</h5>
+                                                    <span class="badge {% if item.status == 'pendente_confirmacao' %}bg-warning-subtle{% else %}bg-info-subtle{% endif %}">
+                                                        <i class="bi bi-dot me-1"></i>{{ item.get_status_display }}
                                                     </span>
                                                 </div>
-                                                <p class="text-muted small mb-2">{{ item.descricao|truncatechars:120 }}</p>
+                                                <p class="text-muted small mb-3">{{ item.descricao|truncatechars:180 }}</p>
                                                 <div class="d-flex flex-wrap gap-3 mb-3 text-muted small">
-                                                    <span><i class="bi bi-geo-alt me-1"></i>{{ item.local|default:"Não informado" }}</span>
-                                                    <span><i class="bi bi-person me-1"></i>Dono: {{ item.usuario.username }}</span>
-                                                    <span><i class="bi bi-calendar-event me-1"></i>{{ item.data|date:"d/m/Y" }}</span>
+                                                    <span><i class="bi bi-geo-alt-fill me-1 text-danger"></i>{{ item.local|default:"Não informado" }}</span>
+                                                    <span><i class="bi bi-person-fill me-1 text-primary"></i>Dono: {{ item.usuario.username }}</span>
+                                                    <span><i class="bi bi-calendar-event me-1 text-info"></i>{{ item.data|date:"d/m/Y" }}</span>
                                                 </div>
                                             </div>
-                                            <div class="d-flex gap-2">
+                                            <div class="d-flex gap-2 border-top pt-3">
                                                 {% if item.status == 'pendente_confirmacao' %}
                                                 <form method="POST" class="d-inline">
                                                     {% csrf_token %}
                                                     <input type="hidden" name="action" value="confirmar">
                                                     <input type="hidden" name="item_id" value="{{ item.id }}">
-                                                    <button type="submit" class="btn btn-success btn-sm rounded-pill px-3">
-                                                        <i class="bi bi-check-circle-fill me-1"></i>Confirmar
+                                                    <button type="submit" class="btn btn-success btn-sm px-4">
+                                                        <i class="bi bi-check-circle-fill me-1"></i>Confirmar Entrada
                                                     </button>
                                                 </form>
                                                 {% endif %}
                                                 
-                                                <button type="button" class="btn btn-primary btn-sm rounded-pill px-3" data-bs-toggle="modal" data-bs-target="#devolverModal{{ item.id }}">
-                                                    <i class="bi bi-arrow-return-left me-1"></i>Marcar Devolvido
+                                                <button type="button" class="btn btn-outline-primary btn-sm px-4" data-bs-toggle="modal" data-bs-target="#devolverModal{{ item.id }}">
+                                                    <i class="bi bi-arrow-return-left me-1"></i>Registrar Entrega
                                                 </button>
                                             </div>
                                         </div>
@@ -137,9 +176,9 @@
                         <!-- MODAL DE DEVOLUÇÃO -->
                         <div class="modal fade" id="devolverModal{{ item.id }}" tabindex="-1" aria-labelledby="devolverModalLabel{{ item.id }}" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered">
-                                <div class="modal-content border-0 rounded-4 shadow-lg">
-                                    <div class="modal-header border-0 bg-primary text-white p-3">
-                                        <h5 class="modal-title fw-bold" id="devolverModalLabel{{ item.id }}">Registrar Devolução</h5>
+                                <div class="modal-content border-0 rounded-4 shadow-lg overflow-hidden">
+                                    <div class="modal-header border-0 bg-primary text-white p-4">
+                                        <h5 class="modal-title fw-bold" id="devolverModalLabel{{ item.id }}"><i class="bi bi-arrow-return-left me-2"></i>Registrar Devolução</h5>
                                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <form method="POST">
@@ -147,19 +186,21 @@
                                         <input type="hidden" name="action" value="devolver">
                                         <input type="hidden" name="item_id" value="{{ item.id }}">
                                         <div class="modal-body p-4">
-                                            <p class="text-muted small">Por favor, informe quem está recebendo o objeto e faça observações caso seja necessário.</p>
-                                            <div class="mb-3">
-                                                <label for="nome_recebedor{{ item.id }}" class="form-label fw-bold">Nome do Recebedor <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control rounded-3" id="nome_recebedor{{ item.id }}" name="nome_recebedor" required placeholder="Nome completo de quem recebeu">
+                                            <div class="alert alert-info py-2 mb-3">
+                                                <i class="bi bi-info-circle-fill me-2"></i>Garanta a validação do documento de estudante antes de entregar.
                                             </div>
                                             <div class="mb-3">
-                                                <label for="observacao{{ item.id }}" class="form-label fw-bold">Observações Adicionais</label>
-                                                <textarea class="form-control rounded-3" id="observacao{{ item.id }}" name="observacao" rows="3" placeholder="Ex: Devolvido mediante apresentação de documento."></textarea>
+                                                <label for="nome_recebedor{{ item.id }}" class="form-label fw-bold small">Nome do Recebedor <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control rounded-3" id="nome_recebedor{{ item.id }}" name="nome_recebedor" required placeholder="Nome completo do estudante">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="observacao{{ item.id }}" class="form-label fw-bold small">Observações Adicionais</label>
+                                                <textarea class="form-control rounded-3" id="observacao{{ item.id }}" name="observacao" rows="3" placeholder="Ex: Matrícula validada. Assinou termo de entrega físico."></textarea>
                                             </div>
                                         </div>
-                                        <div class="modal-footer border-0 p-3">
-                                            <button type="button" class="btn btn-light rounded-pill px-3" data-bs-dismiss="modal">Cancelar</button>
-                                            <button type="submit" class="btn btn-primary rounded-pill px-4">Salvar Devolução</button>
+                                        <div class="modal-footer border-0 p-3 bg-light d-flex justify-content-between">
+                                            <button type="button" class="btn btn-link text-decoration-none text-muted rounded-pill px-3" data-bs-dismiss="modal">Cancelar</button>
+                                            <button type="submit" class="btn btn-primary rounded-pill px-4">Concluir Devolução</button>
                                         </div>
                                     </form>
                                 </div>
@@ -170,55 +211,156 @@
                     {% else %}
                     <div class="card border-0 shadow-sm rounded-4 p-5 text-center bg-white">
                         <i class="bi bi-check2-circle text-success fs-1 mb-3"></i>
-                        <h5 class="fw-bold">Nenhum item pendente!</h5>
+                        <h5 class="fw-bold text-dark">Nenhum item pendente!</h5>
                         <p class="text-muted mb-0">Tudo limpo por aqui. Não há nenhum objeto aguardando confirmação ou entrega no momento.</p>
                     </div>
                     {% endif %}
                 </div>
 
-                <!-- TAB: HISTÓRICO DO BOLSISTA -->
-                <div class="tab-pane fade" id="pills-historico" role="tabpanel" aria-labelledby="pills-historico-tab">
-                    <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
-                        <h5 class="fw-bold mb-4 text-primary"><i class="bi bi-clock-history me-2"></i>Suas Ações Recentes</h5>
-                        
+                <!-- TAB 2: IMPRIMIR ETIQUETAS (QR CODE) -->
+                <div class="tab-pane fade" id="v-pills-etiquetas" role="tabpanel" aria-labelledby="v-pills-etiquetas-tab">
+                    <div class="page-header">
+                        <h2 class="page-title">Imprimir Etiquetas</h2>
+                        <p class="page-subtitle">Gere etiquetas físicas com QR Code para fixar nos objetos da prateleira.</p>
+                    </div>
+
+                    <div class="dashboard-card p-4 mb-4">
+                        <div class="input-group">
+                            <span class="input-group-text bg-white border-end-0 rounded-start-3"><i class="bi bi-search text-muted"></i></span>
+                            <input type="text" id="search-etiquetas-input" class="form-control border-start-0 rounded-end-3 py-2" placeholder="Buscar por título do item, ID, local ou dono...">
+                            <span class="input-group-text bg-white border-start-0 text-muted d-none d-md-inline-block"><span class="shortcut-badge">Buscar</span></span>
+                        </div>
+                    </div>
+
+                    <div class="row g-3" id="etiquetas-items-list">
+                        {% for item in todos_itens %}
+                        <div class="col-12 etiqueta-item-card" data-titulo="{{ item.titulo|lower }}" data-slug="{{ item.slug|lower }}" data-desc="{{ item.descricao|lower }}" data-local="{{ item.local|default:''|lower }}" data-dono="{{ item.usuario.username|lower }}">
+                            <div class="card border-0 shadow-sm rounded-4 p-3 bg-white">
+                                <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+                                    <div>
+                                        <h6 class="fw-bold mb-1 text-dark">{{ item.titulo }}</h6>
+                                        <div class="d-flex flex-wrap gap-3 text-muted small">
+                                            <span><strong>ID:</strong> {{ item.slug }}</span>
+                                            <span><strong>Dono:</strong> {{ item.usuario.username }}</span>
+                                            <span><strong>Status:</strong> 
+                                                <span class="badge {% if item.status == 'confirmado' %}bg-success-subtle{% elif item.status == 'devolvido' %}bg-secondary-subtle{% else %}bg-warning-subtle{% endif %}">
+                                                    {{ item.get_status_display }}
+                                                </span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <button type="button" class="btn btn-outline-primary btn-sm px-4" onclick="showEtiquetaModal('{{ item.titulo|escapejs }}', '{{ item.slug|escapejs }}', '{{ item.categoria.nome|default:'Sem categoria'|escapejs }}', '{{ item.data|date:'d/m/Y' }}', '/api/items/qr/{{ item.slug }}/imagem/')">
+                                            <i class="bi bi-printer me-1"></i>Gerar Etiqueta
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- MODAL DE PREVIEW E IMPRESSÃO DE ETIQUETA -->
+                <div class="modal fade" id="etiquetaPrintModal" tabindex="-1" aria-labelledby="etiquetaPrintModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content border-0 rounded-4 shadow-lg overflow-hidden">
+                            <div class="modal-header border-0 bg-dark text-white p-4">
+                                <h5 class="modal-title fw-bold" id="etiquetaPrintModalLabel"><i class="bi bi-printer-fill me-2"></i>Etiqueta do Objeto</h5>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body p-4 text-center">
+                                <p class="text-muted small mb-4">Cole esta etiqueta adesiva no objeto físico correspondente para controle fácil de prateleira.</p>
+                                
+                                <div class="preview-label-card mb-4" id="label-print-area">
+                                    <div class="text-primary fw-bold small text-uppercase mb-2" style="letter-spacing: 1.5px; font-size: 10px;">SISTEMA FIND - IFRN</div>
+                                    <h5 class="fw-bold mb-1 text-dark" id="lbl-title">Título do Item</h5>
+                                    <span class="badge bg-light text-secondary border mb-3 small" id="lbl-slug">ID: slug-do-item</span>
+                                    <div class="my-3">
+                                        <img src="" id="lbl-qr-img" class="img-fluid border p-2 bg-white rounded-3 shadow-sm" style="width: 140px; height: 140px;" alt="QR Code">
+                                    </div>
+                                    <div class="text-muted small fw-medium" id="lbl-meta">Cat: Chaves | Data: 18/06/2026</div>
+                                    <div class="small text-muted mt-2 border-top pt-2" style="font-size: 9px; opacity: 0.8;">Escaneie no balcão para atualizar devolução</div>
+                                </div>
+                            </div>
+                            <div class="modal-footer border-0 p-3 bg-light d-flex justify-content-between">
+                                <button type="button" class="btn btn-link text-decoration-none text-muted rounded-pill px-3" data-bs-dismiss="modal">Fechar</button>
+                                <button type="button" class="btn btn-primary rounded-pill px-4" id="btn-trigger-print">
+                                    <i class="bi bi-printer me-2"></i>Imprimir Etiqueta
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 3: ESCANEAR QR CODE -->
+                <div class="tab-pane fade" id="v-pills-scan" role="tabpanel" aria-labelledby="v-pills-scan-tab">
+                    <div class="page-header">
+                        <h2 class="page-title">Escanear QR Code</h2>
+                        <p class="page-subtitle">Use a câmera para ler o QR Code e confirmar a entrega do item.</p>
+                    </div>
+
+                    <div class="dashboard-card p-4 text-center">
+                        <div id="reader-wrapper" class="mx-auto bg-white rounded-4 overflow-hidden border mb-4" style="max-width: 380px; display: none; position: relative;">
+                            <!-- Futuristic HUD overlays -->
+                            <div class="scanner-hud-overlay">
+                                <div class="hud-corner corner-tl"></div>
+                                <div class="hud-corner corner-tr"></div>
+                                <div class="hud-corner corner-bl"></div>
+                                <div class="hud-corner corner-br"></div>
+                                <div class="hud-scan-line"></div>
+                            </div>
+                            <div id="reader" style="width: 100%;"></div>
+                        </div>
+
+                        <div id="scanner-controls" class="mx-auto" style="max-width: 380px;">
+                            <button id="btn-start-scan" class="btn btn-primary w-100 py-3 fw-bold rounded-pill">
+                                <i class="bi bi-camera-fill me-2"></i>Iniciar Câmera de Leitura
+                            </button>
+                            <button id="btn-stop-scan" class="btn btn-outline-danger w-100 py-3 fw-bold mt-2 rounded-pill" style="display: none;">
+                                <i class="bi bi-camera-video-off-fill me-2"></i>Parar Leitura
+                            </button>
+                        </div>
+
+                        <div id="scan-feedback" class="mt-4 mx-auto alert alert-info py-3" style="display: none; max-width: 380px;"></div>
+                    </div>
+                </div>
+
+                <!-- TAB 4: MEU HISTÓRICO -->
+                <div class="tab-pane fade" id="v-pills-historico" role="tabpanel" aria-labelledby="v-pills-historico-tab">
+                    <div class="page-header">
+                        <h2 class="page-title">Meu Histórico</h2>
+                        <p class="page-subtitle">Suas ações e devoluções registradas recentemente.</p>
+                    </div>
+
+                    <div class="dashboard-card p-4">
                         {% if recent_actions %}
-                        <div class="table-responsive">
-                            <table class="table table-hover align-middle">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>Ação</th>
-                                        <th>Item</th>
-                                        <th>Data/Hora</th>
-                                        <th>Observação</th>
-                                        <th>IP</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for log in recent_actions %}
-                                    <tr>
-                                        <td>
+                        <!-- HISTÓRICO EM TIMELINE GAMIFICADA E ELEGANTE -->
+                        <div class="timeline-container">
+                            {% for log in recent_actions %}
+                            <div class="timeline-item">
+                                <div class="timeline-badge {% if log.acao == 'confirmou' %}confirmou{% else %}devolveu{% endif %}"></div>
+                                <div class="timeline-content">
+                                    <div class="timeline-meta">
+                                        <span class="timeline-title">
                                             {% if log.acao == 'confirmou' %}
-                                            <span class="badge bg-success-subtle text-success rounded-pill px-3 py-1">Confirmou</span>
+                                            <span class="badge bg-success-subtle me-1"><i class="bi bi-check-circle-fill"></i> Confirmou</span>
                                             {% else %}
-                                            <span class="badge bg-info-subtle text-info rounded-pill px-3 py-1">Devolveu</span>
+                                            <span class="badge bg-info-subtle me-1"><i class="bi bi-arrow-return-left"></i> Devolveu</span>
                                             {% endif %}
-                                        </td>
-                                        <td>
-                                            <span class="fw-bold text-dark">{{ log.item.titulo }}</span>
-                                        </td>
-                                        <td class="small text-muted">
-                                            {{ log.timestamp|date:"d/m/Y H:i" }}
-                                        </td>
-                                        <td class="small text-muted">
-                                            {{ log.observacao|truncatechars:45 }}
-                                        </td>
-                                        <td class="small text-muted">
-                                            {{ log.ip_origem|default:"---" }}
-                                        </td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
+                                        </span>
+                                        <span class="timeline-time"><i class="bi bi-clock me-1"></i>{{ log.timestamp|date:"d/m/Y H:i" }}</span>
+                                    </div>
+                                    <p class="timeline-desc">
+                                        O item <strong class="text-dark">{{ log.item.titulo }}</strong> foi {% if log.acao == 'confirmou' %}confirmado para entrada no depósito{% else %}entregue definitivamente{% endif %}.
+                                    </p>
+                                    <span class="timeline-item-detail">
+                                        <i class="bi bi-card-text me-1"></i>{{ log.observacao }} 
+                                        {% if log.ip_origem %} | <i class="bi bi-globe2 me-1"></i>IP: {{ log.ip_origem }}{% endif %}
+                                    </span>
+                                </div>
+                            </div>
+                            {% endfor %}
                         </div>
                         {% else %}
                         <p class="text-center text-muted py-4 mb-0">Nenhuma ação registrada por você ainda.</p>
@@ -233,7 +375,243 @@
 <!-- LEITOR DE QR CODE E SCRIPTS -->
 <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 <script>
+// Variáveis para guardar dados do modal ativo de impressão
+let currentLabelData = {};
+
+function showEtiquetaModal(titulo, slug, categoria, data, qrUrl) {
+    currentLabelData = { titulo, slug, categoria, data, qrUrl };
+    
+    // Atualiza modal de visualização
+    document.getElementById("lbl-title").innerText = titulo;
+    document.getElementById("lbl-slug").innerText = "ID: " + slug;
+    document.getElementById("lbl-qr-img").src = qrUrl;
+    document.getElementById("lbl-meta").innerText = "Cat: " + categoria + " | Data: " + data;
+    
+    // Abre o modal
+    const modal = new bootstrap.Modal(document.getElementById('etiquetaPrintModal'));
+    modal.show();
+}
+
+function printLabelWindow(titulo, slug, categoria, data, qrUrl) {
+    const printWindow = window.open('', '_blank', 'width=600,height=600');
+    printWindow.document.write(`
+        <html>
+        <head>
+            <title>Imprimir Etiqueta - ${titulo}</title>
+            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+            <style>
+                body {
+                    font-family: 'Plus Jakarta Sans', sans-serif;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    height: 100vh;
+                    margin: 0;
+                    background-color: #fff;
+                }
+                .label-card {
+                    border: 3px dashed #333;
+                    padding: 24px;
+                    width: 320px;
+                    text-align: center;
+                    border-radius: 16px;
+                }
+                .system-title {
+                    font-size: 11px;
+                    font-weight: 800;
+                    letter-spacing: 2px;
+                    color: #0d6efd;
+                    margin-bottom: 12px;
+                    text-transform: uppercase;
+                }
+                .item-title {
+                    font-size: 18px;
+                    font-weight: 700;
+                    margin-bottom: 6px;
+                    color: #000;
+                }
+                .item-slug {
+                    font-family: monospace;
+                    background-color: #f8f9fa;
+                    padding: 3px 8px;
+                    border-radius: 6px;
+                    font-size: 12px;
+                    color: #6c757d;
+                    border: 1px solid #eee;
+                    display: inline-block;
+                    margin-bottom: 12px;
+                }
+                .qr-image {
+                    width: 140px;
+                    height: 140px;
+                    margin: 10px auto;
+                    display: block;
+                }
+                .footer-text {
+                    font-size: 9px;
+                    color: #6c757d;
+                    margin-top: 12px;
+                    border-top: 1px solid #eee;
+                    padding-top: 8px;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="label-card">
+                <div class="system-title">SISTEMA FIND - IFRN</div>
+                <div class="item-title">${titulo}</div>
+                <div class="item-slug">ID: ${slug}</div>
+                <img class="qr-image" src="${qrUrl}" alt="QR Code">
+                <div class="small text-muted mb-1" style="font-size: 11px; font-weight: 500;">Cat: ${categoria} | Data: ${data}</div>
+                <div class="footer-text">Escaneie no balcão para atualizar devolução</div>
+            </div>
+            <script>
+                window.onload = function() {
+                    window.print();
+                    setTimeout(function() { window.close(); }, 500);
+                };
+            <\/script>
+        </body>
+        </html>
+    `);
+    printWindow.document.close();
+}
+
 document.addEventListener("DOMContentLoaded", function() {
+    // ══════════════════════════════════════════════════════
+    // Sistema Dinâmico de Gamificação (Bolsistas)
+    // ══════════════════════════════════════════════════════
+    // O histórico recent_actions contém o número de validações concluídas.
+    // Usamos esse total para calcular XP e Conquistas de forma interativa.
+    const totalAcoes = {{ recent_actions|length }};
+    const xpPorAcao = 15;
+    const totalXP = totalAcoes * xpPorAcao;
+    
+    let level = 1;
+    let levelName = "Cadete do Balcão";
+    let nextLevelActions = 5;
+    let currentLevelXPStart = 0;
+    let nextLevelXPEnd = 5 * xpPorAcao; // 75 XP
+    
+    if (totalAcoes >= 5 && totalAcoes < 15) {
+        level = 2;
+        levelName = "Guardião de Achados";
+        nextLevelActions = 15;
+        currentLevelXPStart = 5 * xpPorAcao;
+        nextLevelXPEnd = 15 * xpPorAcao;
+    } else if (totalAcoes >= 15 && totalAcoes < 30) {
+        level = 3;
+        levelName = "Especialista em Entregas";
+        nextLevelActions = 30;
+        currentLevelXPStart = 15 * xpPorAcao;
+        nextLevelXPEnd = 30 * xpPorAcao;
+    } else if (totalAcoes >= 30) {
+        level = 4;
+        levelName = "Mestre do Reencontro 🌟";
+        nextLevelActions = "Max";
+        currentLevelXPStart = 30 * xpPorAcao;
+        nextLevelXPEnd = 30 * xpPorAcao;
+    }
+    
+    // Atualização visual do painel de conquistas
+    document.getElementById("lbl-level-num").innerText = level;
+    document.getElementById("lbl-level-name").innerText = levelName;
+    document.getElementById("lbl-xp-total").innerText = `Total: ${totalXP} XP acumulados`;
+    
+    if (nextLevelActions === "Max") {
+        document.getElementById("lbl-xp-status").innerText = `${totalXP} XP`;
+        document.getElementById("bar-xp").style.width = "100%";
+        document.getElementById("lbl-next-level").innerText = "Nível Máximo Alcançado! 🎉";
+    } else {
+        const progressInLevelXP = totalXP - currentLevelXPStart;
+        const totalLevelXPNeeded = nextLevelXPEnd - currentLevelXPStart;
+        const pct = Math.min(100, Math.max(0, (progressInLevelXP / totalLevelXPNeeded) * 100));
+        
+        document.getElementById("lbl-xp-status").innerText = `${totalXP} / ${nextLevelXPEnd} XP`;
+        document.getElementById("bar-xp").style.width = `${pct}%`;
+        
+        const acoesRestantes = nextLevelActions - totalAcoes;
+        document.getElementById("lbl-next-level").innerText = `Próximo Nível em ${acoesRestantes} ações`;
+    }
+    
+    // Desbloquear medalhas com base em conquistas
+    if (totalAcoes >= 1) {
+        const badge = document.getElementById("badge-1");
+        badge.classList.remove("locked");
+        badge.classList.add("unlocked");
+    }
+    if (totalAcoes >= 5) {
+        const badge = document.getElementById("badge-2");
+        badge.classList.remove("locked");
+        badge.classList.add("unlocked");
+    }
+    // Para contar especificamente devoluções
+    // Como simplificação, verificamos se o bolsista fez pelo menos 5 ações no histórico total
+    // Se ele tem ações do tipo devolveu
+    let devolucoesCount = 0;
+    {% for log in recent_actions %}
+        {% if log.acao == 'devolveu' %}
+            devolucoesCount++;
+        {% endif %}
+    {% endfor %}
+    
+    if (devolucoesCount >= 5) {
+        const badge = document.getElementById("badge-3");
+        badge.classList.remove("locked");
+        badge.classList.add("unlocked");
+    }
+    if (totalAcoes >= 15) {
+        const badge = document.getElementById("badge-4");
+        badge.classList.remove("locked");
+        badge.classList.add("unlocked");
+    }
+
+    // Configurar o botão de disparo de impressão no modal
+    document.getElementById("btn-trigger-print").addEventListener("click", function() {
+        if (currentLabelData.titulo) {
+            printLabelWindow(
+                currentLabelData.titulo,
+                currentLabelData.slug,
+                currentLabelData.categoria,
+                currentLabelData.data,
+                currentLabelData.qrUrl
+            );
+        }
+    });
+
+    // Busca rápida de etiquetas via Javascript
+    const searchInput = document.getElementById("search-etiquetas-input");
+    searchInput.addEventListener("input", function() {
+        const query = searchInput.value.toLowerCase().trim();
+        const cards = document.querySelectorAll(".etiqueta-item-card");
+        
+        cards.forEach(card => {
+            const titulo = card.getAttribute("data-titulo") || "";
+            const slug = card.getAttribute("data-slug") || "";
+            const desc = card.getAttribute("data-desc") || "";
+            const local = card.getAttribute("data-local") || "";
+            const dono = card.getAttribute("data-dono") || "";
+            
+            if (titulo.includes(query) || slug.includes(query) || desc.includes(query) || local.includes(query) || dono.includes(query)) {
+                card.style.display = "block";
+            } else {
+                card.style.display = "none";
+            }
+        });
+    });
+
+    // Atalho "/" para focar na pesquisa
+    document.addEventListener("keydown", function(e) {
+        if (e.key === "/" && document.activeElement !== searchInput) {
+            const activeTab = document.querySelector("#v-pills-etiquetas-tab.active");
+            if (activeTab) {
+                e.preventDefault();
+                searchInput.focus();
+            }
+        }
+    });
+
+    // Código do escâner QR
     const btnStart = document.getElementById("btn-start-scan");
     const btnStop = document.getElementById("btn-stop-scan");
     const readerWrapper = document.getElementById("reader-wrapper");
@@ -241,15 +619,35 @@ document.addEventListener("DOMContentLoaded", function() {
     
     let html5QrcodeScanner = null;
 
+    const scanTabButton = document.getElementById("v-pills-scan-tab");
+    const tabLinks = document.querySelectorAll('#v-pills-tab button');
+    
+    tabLinks.forEach(tab => {
+        tab.addEventListener('shown.bs.tab', function (e) {
+            if (e.target !== scanTabButton) {
+                stopScannerSilently();
+            }
+        });
+    });
+
+    function stopScannerSilently() {
+        if (html5QrcodeScanner) {
+            html5QrcodeScanner.clear().then(_ => {
+                btnStart.style.display = "block";
+                btnStop.style.display = "none";
+                readerWrapper.style.display = "none";
+                feedback.style.display = "none";
+                html5QrcodeScanner = null;
+            }).catch(error => {
+                console.error("Failed to clear scanner", error);
+            });
+        }
+    }
+
     function onScanSuccess(decodedText, decodedResult) {
-        console.log(`Scan result: ${decodedText}`, decodedResult);
-        
-        // Exemplo de URL esperada: https://find.ifrn.edu.br/item/slug-do-item/
-        // O slug é a última parte não vazia da URL.
         try {
             const url = new URL(decodedText);
             const pathParts = url.pathname.split("/").filter(Boolean);
-            // Espera 'item' e depois o slug
             const itemIndex = pathParts.indexOf("item");
             if (itemIndex !== -1 && pathParts[itemIndex + 1]) {
                 const slug = pathParts[itemIndex + 1];
@@ -258,7 +656,6 @@ document.addEventListener("DOMContentLoaded", function() {
                 feedback.className = "alert alert-warning py-2";
                 feedback.innerHTML = `<i class="bi bi-hourglass-split me-2"></i>Item detectado! Processando confirmação...`;
                 
-                // Envia para a API de scan
                 fetch(`/api/items/qr/${slug}/scan/`, {
                     method: 'POST',
                     headers: {
@@ -286,7 +683,7 @@ document.addEventListener("DOMContentLoaded", function() {
             } else {
                 feedback.style.display = "block";
                 feedback.className = "alert alert-danger py-2";
-                feedback.innerHTML = `<i class="bi bi-exclamation-triangle-fill me-2"></i>QR Code inválido. Deve apontar para find.ifrn.edu.br.`;
+                feedback.innerHTML = `<i class="bi bi-exclamation-triangle-fill me-2"></i>QR Code inválido. Deve apontar para o site FIND.`;
             }
         } catch(e) {
             feedback.style.display = "block";
@@ -307,18 +704,7 @@ document.addEventListener("DOMContentLoaded", function() {
         html5QrcodeScanner.render(onScanSuccess);
     });
 
-    btnStop.addEventListener("click", function() {
-        if (html5QrcodeScanner) {
-            html5QrcodeScanner.clear().then(_ => {
-                btnStart.style.display = "block";
-                btnStop.style.display = "none";
-                readerWrapper.style.display = "none";
-                feedback.style.display = "none";
-            }).catch(error => {
-                console.error("Failed to clear scanner", error);
-            });
-        }
-    });
+    btnStop.addEventListener("click", stopScannerSilently);
 });
 </script>
 {% endblock %}

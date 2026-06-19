@@ -79,4 +79,5 @@ urlpatterns = [
     # Painéis de controle
     path('painel/bolsista/', views.bolsista_dashboard, name='bolsista_dashboard'),
     path('painel/admin/', views.admin_dashboard, name='admin_dashboard'),
+    path('painel/admin/estatisticas/', views.dashboard_admin, name='dashboard_admin'),
 ]

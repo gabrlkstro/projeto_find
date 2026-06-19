@@ -43,6 +43,13 @@ INSTALLED_APPS = [
     'chats.apps.ChatsConfig',
     # app principal
     'mainpage.apps.MainpageConfig',
+    # allauth (login social)
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.apple',
 ]
 
 SITE_ID = 1
@@ -58,6 +65,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # allauth
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'find.urls'
@@ -175,7 +184,28 @@ DEFAULT_FROM_EMAIL = f'Find App <{EMAIL_HOST_USER}>'
 AUTHENTICATION_BACKENDS = [
     'accounts.backends.EmailOrUsernameModelBackend',
     'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
 ]
+
+# ─── Configurações Allauth ────────────────────────────────────
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
+ACCOUNT_EMAIL_REQUIRED = True
+SOCIALACCOUNT_LOGIN_ON_GET = True
+LOGIN_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = 'login'
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'APPS': [
+            {
+                'client_id': config('GOOGLE_CLIENT_ID', default=''),
+                'secret': config('GOOGLE_CLIENT_SECRET', default=''),
+                'key': ''
+            }
+        ]
+    }
+}
 
 # ─── Gemini API (Busca Visual Inteligente) ──────────────────────
 GEMINI_API_KEY = config('GEMINI_API_KEY', default='')

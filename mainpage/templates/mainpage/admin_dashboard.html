@@ -1,312 +1,496 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Painel do Administrador - FIND{% endblock %}
+{% block title %}Painel do Administrador — FIND{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'mainpage/css/admin_dashboard.css' %}?v=8">
+{% endblock %}
 
 {% block content %}
-<div class="container py-5">
-    <div class="row mb-4">
-        <div class="col-12 text-center text-md-start">
-            <h1 class="fw-bold text-primary"><i class="bi bi-shield-lock-fill me-2"></i>Painel do Administrador</h1>
-            <p class="text-muted">Gestão estratégica de bolsistas, relatórios de produtividade e logs de auditoria.</p>
-        </div>
-    </div>
+<div class="container-fluid py-5 px-md-4 px-lg-5">
+  <div class="row g-4">
 
-    <!-- MENSAGENS -->
-    {% if messages %}
-    <div class="row">
-        <div class="col-12">
-            {% for msg in messages %}
-            <div class="alert alert-{% if msg.tags == 'error' %}danger{% else %}{{ msg.tags }}{% endif %} alert-dismissible fade show" role="alert">
-                {{ msg }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    <!-- ══ SIDEBAR ══════════════════════════════════════════ -->
+    <div class="col-lg-3 col-xl-3">
+      <div class="sidebar-wrapper">
+
+        <!-- Profile -->
+        <div class="sidebar-profile">
+          <div class="profile-avatar-container">
+            <div class="profile-avatar-glow"></div>
+            <div class="profile-avatar-circle">
+              <i class="bi bi-shield-lock-fill"></i>
             </div>
-            {% endfor %}
+          </div>
+          <h5 class="profile-name">{{ request.user.first_name }} {{ request.user.last_name }}</h5>
+          <p class="profile-username">@{{ request.user.username }}</p>
+          <span class="profile-badge">
+            <i class="bi bi-shield-check"></i>
+            Administrador
+          </span>
         </div>
-    </div>
-    {% endif %}
 
-    <!-- CARDS DE METRICAS E FILTROS -->
-    <div class="row g-4 mb-4">
-        <!-- FILTRO DE RELATÓRIO -->
-        <div class="col-12">
-            <div class="card border-0 shadow-sm rounded-4 p-4">
-                <h5 class="fw-bold text-dark mb-3"><i class="bi bi-funnel-fill me-2"></i>Filtro do Relatório</h5>
-                <form method="GET" class="row g-3 align-items-end">
-                    <div class="col-md-3">
-                        <label for="data_inicio" class="form-label small fw-bold">Data Início</label>
-                        <input type="date" class="form-control rounded-3" id="data_inicio" name="data_inicio" value="{{ data_inicio|default:'' }}">
-                    </div>
-                    <div class="col-md-3">
-                        <label for="data_fim" class="form-label small fw-bold">Data Fim</label>
-                        <input type="date" class="form-control rounded-3" id="data_fim" name="data_fim" value="{{ data_fim|default:'' }}">
-                    </div>
-                    <div class="col-md-3">
-                        <label for="status" class="form-label small fw-bold">Status</label>
-                        <select class="form-select rounded-3" id="status" name="status">
-                            <option value="" {% if not status_filter %}selected{% endif %}>Todos os Status</option>
-                            <option value="achado" {% if status_filter == 'achado' %}selected{% endif %}>Achado</option>
-                            <option value="perdido" {% if status_filter == 'perdido' %}selected{% endif %}>Perdido</option>
-                            <option value="confirmado" {% if status_filter == 'confirmado' %}selected{% endif %}>Confirmado</option>
-                            <option value="devolvido" {% if status_filter == 'devolvido' %}selected{% endif %}>Devolvido</option>
-                            <option value="pendente_confirmacao" {% if status_filter == 'pendente_confirmacao' %}selected{% endif %}>Pendente Confirmação</option>
-                        </select>
-                    </div>
-                    <div class="col-md-3">
-                        <button type="submit" class="btn btn-primary rounded-pill w-100 py-2">
-                            <i class="bi bi-search me-2"></i>Filtrar Relatório
-                        </button>
-                    </div>
-                </form>
+        <!-- Quick stats -->
+        <div class="sidebar-stats">
+          <div class="sidebar-stat-chip">
+            <span class="sidebar-stat-val">{{ total }}</span>
+            <span class="sidebar-stat-label">Total</span>
+          </div>
+          <div class="sidebar-stat-chip">
+            <span class="sidebar-stat-val">{{ bolsistas.count }}</span>
+            <span class="sidebar-stat-label">Bolsistas</span>
+          </div>
+        </div>
+
+        <!-- Nav -->
+        <div class="sidebar-menu-section">
+          <p class="menu-section-title">Gestão</p>
+          <div class="nav flex-column sidebar-nav" id="v-pills-tab-admin" role="tablist" aria-orientation="vertical">
+
+            <button class="nav-link active text-start border-0"
+                    id="v-pills-relatorios-tab"
+                    data-bs-toggle="pill"
+                    data-bs-target="#v-pills-relatorios"
+                    type="button" role="tab"
+                    aria-controls="v-pills-relatorios"
+                    aria-selected="true">
+              <i class="bi bi-bar-chart-fill"></i>
+              <span>Relatórios &amp; Métricas</span>
+            </button>
+
+            <button class="nav-link text-start border-0"
+                    id="v-pills-bolsistas-tab"
+                    data-bs-toggle="pill"
+                    data-bs-target="#v-pills-bolsistas"
+                    type="button" role="tab"
+                    aria-controls="v-pills-bolsistas"
+                    aria-selected="false">
+              <i class="bi bi-people-fill"></i>
+              <span>Gerenciar Bolsistas</span>
+              <span class="badge">{{ bolsistas.count }}</span>
+            </button>
+
+            <button class="nav-link text-start border-0"
+                    id="v-pills-logs-tab"
+                    data-bs-toggle="pill"
+                    data-bs-target="#v-pills-logs"
+                    type="button" role="tab"
+                    aria-controls="v-pills-logs"
+                    aria-selected="false">
+              <i class="bi bi-journal-text"></i>
+              <span>Auditoria (Logs)</span>
+            </button>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ CONTENT ══════════════════════════════════════════ -->
+    <div class="col-lg-9 col-xl-9">
+
+      {% if messages %}
+      <div class="mb-4">
+        {% for msg in messages %}
+        <div class="alert alert-{% if msg.tags == 'error' %}danger{% else %}{{ msg.tags }}{% endif %} alert-dismissible fade show" role="alert">
+          {{ msg }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <div class="tab-content" id="v-pills-tabContent-admin">
+
+        <!-- ── TAB 1: RELATÓRIOS ──────────────────────────── -->
+        <div class="tab-pane fade show active" id="v-pills-relatorios" role="tabpanel" aria-labelledby="v-pills-relatorios-tab">
+
+          <!-- Page header -->
+          <div class="admin-page-header">
+            <div>
+              <h2 class="admin-page-title">Relatórios de Produtividade</h2>
+              <p class="admin-page-subtitle">Visualize dados e estatísticas detalhadas de todos os itens registrados</p>
             </div>
-        </div>
-    </div>
+            <a href="{% url 'dashboard_admin' %}" class="btn btn-primary">
+              <i class="bi bi-graph-up-arrow me-2"></i>Gráficos Avançados
+            </a>
+          </div>
 
-    <!-- TABELA DE STATUS E GRÁFICO -->
-    <div class="row g-4 mb-4">
-        <!-- QUANTIDADES POR STATUS -->
-        <div class="col-lg-6">
-            <div class="card border-0 shadow-sm rounded-4 p-4 h-100">
-                <h5 class="fw-bold mb-4 text-dark"><i class="bi bi-bar-chart-fill me-2"></i>Quantidades por Status</h5>
-                <div class="row g-3">
-                    <div class="col-6 col-md-4">
-                        <div class="p-3 bg-light rounded-3 text-center border">
-                            <h3 class="fw-bold text-primary mb-1">{{ total }}</h3>
-                            <span class="small text-muted">Total Filtrado</span>
-                        </div>
-                    </div>
-                    <div class="col-6 col-md-4">
-                        <div class="p-3 bg-success-subtle rounded-3 text-center border border-success-subtle">
-                            <h3 class="fw-bold text-success mb-1">{{ por_status.achado }}</h3>
-                            <span class="small text-muted">Achado</span>
-                        </div>
-                    </div>
-                    <div class="col-6 col-md-4">
-                        <div class="p-3 bg-danger-subtle rounded-3 text-center border border-danger-subtle">
-                            <h3 class="fw-bold text-danger mb-1">{{ por_status.perdido }}</h3>
-                            <span class="small text-muted">Perdido</span>
-                        </div>
-                    </div>
-                    <div class="col-6 col-md-4">
-                        <div class="p-3 bg-warning-subtle rounded-3 text-center border border-warning-subtle">
-                            <h3 class="fw-bold text-warning mb-1">{{ por_status.confirmado }}</h3>
-                            <span class="small text-muted">Confirmado</span>
-                        </div>
-                    </div>
-                    <div class="col-6 col-md-4">
-                        <div class="p-3 bg-info-subtle rounded-3 text-center border border-info-subtle">
-                            <h3 class="fw-bold text-info mb-1">{{ por_status.devolvido }}</h3>
-                            <span class="small text-muted">Devolvido</span>
-                        </div>
-                    </div>
-                    <div class="col-6 col-md-4">
-                        <div class="p-3 bg-secondary-subtle rounded-3 text-center border border-secondary-subtle">
-                            <h3 class="fw-bold text-secondary mb-1">{{ por_status.pendente_confirmacao }}</h3>
-                            <span class="small text-muted">Pendente Conf.</span>
-                        </div>
-                    </div>
+          <!-- KPI strip -->
+          <div class="kpi-strip">
+            <div class="kpi-card" style="--kpi-accent:var(--brand-400); --kpi-bg:var(--brand-50); --kpi-color:var(--brand-500);">
+              <div class="kpi-icon-wrap">
+                <i class="bi bi-collection-fill"></i>
+              </div>
+              <div class="kpi-body">
+                <div class="kpi-value">{{ total }}</div>
+                <div class="kpi-label">Total filtrado</div>
+              </div>
+            </div>
+            <div class="kpi-card" style="--kpi-accent:var(--color-success); --kpi-bg:var(--color-success-bg); --kpi-color:var(--color-success);">
+              <div class="kpi-icon-wrap">
+                <i class="bi bi-check-circle-fill"></i>
+              </div>
+              <div class="kpi-body">
+                <div class="kpi-value">{{ por_status.achado }}</div>
+                <div class="kpi-label">Achados</div>
+              </div>
+            </div>
+            <div class="kpi-card" style="--kpi-accent:var(--color-danger); --kpi-bg:var(--color-danger-bg); --kpi-color:var(--color-danger);">
+              <div class="kpi-icon-wrap">
+                <i class="bi bi-exclamation-circle-fill"></i>
+              </div>
+              <div class="kpi-body">
+                <div class="kpi-value">{{ por_status.perdido }}</div>
+                <div class="kpi-label">Perdidos</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Filter -->
+          <div class="dashboard-card mb-4">
+            <div class="card-header-band">
+              <div>
+                <h5><i class="bi bi-funnel-fill"></i> Filtro do Relatório</h5>
+                <p>Refine os dados por período e status do item</p>
+              </div>
+            </div>
+            <div class="p-4">
+              <form method="GET" class="row g-3 align-items-end">
+                <div class="col-md-3">
+                  <label for="data_inicio" class="form-label">Data Início</label>
+                  <input type="date" class="form-control" id="data_inicio" name="data_inicio"
+                         value="{{ data_inicio|default:'' }}">
                 </div>
+                <div class="col-md-3">
+                  <label for="data_fim" class="form-label">Data Fim</label>
+                  <input type="date" class="form-control" id="data_fim" name="data_fim"
+                         value="{{ data_fim|default:'' }}">
+                </div>
+                <div class="col-md-3">
+                  <label for="status" class="form-label">Status</label>
+                  <select class="form-select" id="status" name="status">
+                    <option value="" {% if not status_filter %}selected{% endif %}>Todos os Status</option>
+                    <option value="achado"       {% if status_filter == 'achado' %}selected{% endif %}>Achado</option>
+                    <option value="perdido"      {% if status_filter == 'perdido' %}selected{% endif %}>Perdido</option>
+                    <option value="confirmado"   {% if status_filter == 'confirmado' %}selected{% endif %}>Confirmado</option>
+                    <option value="devolvido"    {% if status_filter == 'devolvido' %}selected{% endif %}>Devolvido</option>
+                    <option value="pendente_confirmacao" {% if status_filter == 'pendente_confirmacao' %}selected{% endif %}>Pendente Confirmação</option>
+                  </select>
+                </div>
+                <div class="col-md-3">
+                  <button type="submit" class="btn btn-primary w-100">
+                    <i class="bi bi-search me-2"></i>Filtrar
+                  </button>
+                </div>
+              </form>
             </div>
-        </div>
+          </div>
 
-        <!-- GRÁFICO DISTRIBUIÇÃO -->
-        <div class="col-lg-6">
-            <div class="card border-0 shadow-sm rounded-4 p-4 h-100 text-center">
-                <h5 class="fw-bold mb-3 text-dark text-start"><i class="bi bi-pie-chart-fill me-2"></i>Distribuição Visual</h5>
-                <div style="max-height: 220px; position: relative;" class="mx-auto my-auto w-100">
+          <!-- Metrics + Chart -->
+          <div class="row g-4">
+            <div class="col-xl-7">
+              <div class="dashboard-card h-100">
+                <div class="card-header-band">
+                  <div>
+                    <h5><i class="bi bi-calculator"></i> Quantidades por Status</h5>
+                  </div>
+                </div>
+                <div class="p-4">
+                  <div class="row g-3">
+                    <div class="col-6 col-sm-4">
+                      <div class="metric-summary-box status-total bg-light-glow">
+                        <h3>{{ total }}</h3>
+                        <span class="small">Total Filtrado</span>
+                      </div>
+                    </div>
+                    <div class="col-6 col-sm-4">
+                      <div class="metric-summary-box status-achado bg-light-glow">
+                        <h3>{{ por_status.achado }}</h3>
+                        <span class="small">Achado</span>
+                      </div>
+                    </div>
+                    <div class="col-6 col-sm-4">
+                      <div class="metric-summary-box status-perdido bg-light-glow">
+                        <h3>{{ por_status.perdido }}</h3>
+                        <span class="small">Perdido</span>
+                      </div>
+                    </div>
+                    <div class="col-6 col-sm-4">
+                      <div class="metric-summary-box status-confirmado bg-light-glow">
+                        <h3>{{ por_status.confirmado }}</h3>
+                        <span class="small">Confirmado</span>
+                      </div>
+                    </div>
+                    <div class="col-6 col-sm-4">
+                      <div class="metric-summary-box status-devolvido bg-light-glow">
+                        <h3>{{ por_status.devolvido }}</h3>
+                        <span class="small">Devolvido</span>
+                      </div>
+                    </div>
+                    <div class="col-6 col-sm-4">
+                      <div class="metric-summary-box status-pendente bg-light-glow">
+                        <h3>{{ por_status.pendente_confirmacao }}</h3>
+                        <span class="small">Pendente Conf.</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-xl-5">
+              <div class="dashboard-card h-100">
+                <div class="card-header-band">
+                  <div>
+                    <h5><i class="bi bi-pie-chart-fill"></i> Distribuição Visual</h5>
+                  </div>
+                </div>
+                <div class="p-4 d-flex align-items-center justify-content-center" style="min-height:260px;">
+                  <div style="max-height:240px; width:100%; position:relative;">
                     <canvas id="statusChart"></canvas>
+                  </div>
                 </div>
+              </div>
             </div>
+          </div>
         </div>
-    </div>
 
-    <!-- TABS PRINCIPAIS DO ADMIN -->
-    <div class="row">
-        <div class="col-12">
-            <ul class="nav nav-pills mb-3 bg-white p-2 rounded-4 shadow-sm" id="pills-tab-admin" role="tablist">
-                <li class="nav-item flex-fill text-center" role="presentation">
-                    <button class="nav-link active rounded-3 w-100 fw-bold" id="pills-bolsistas-tab" data-bs-toggle="pill" data-bs-target="#pills-bolsistas" type="button" role="tab" aria-controls="pills-bolsistas" aria-selected="true">
-                        <i class="bi bi-people-fill me-2"></i>Bolsistas ({{ bolsistas.count }})
-                    </button>
-                </li>
-                <li class="nav-item flex-fill text-center" role="presentation">
-                    <button class="nav-link rounded-3 w-100 fw-bold" id="pills-logs-tab" data-bs-toggle="pill" data-bs-target="#pills-logs" type="button" role="tab" aria-controls="pills-logs" aria-selected="false">
-                        <i class="bi bi-journal-text me-2"></i>Logs Globais de Ações ({{ logs.count }})
-                    </button>
-                </li>
-            </ul>
+        <!-- ── TAB 2: BOLSISTAS ───────────────────────────── -->
+        <div class="tab-pane fade" id="v-pills-bolsistas" role="tabpanel" aria-labelledby="v-pills-bolsistas-tab">
 
-            <div class="tab-content" id="pills-tabContent-admin">
-                <!-- TAB: BOLSISTAS -->
-                <div class="tab-pane fade show active" id="pills-bolsistas" role="tabpanel" aria-labelledby="pills-bolsistas-tab">
-                    <div class="row g-4">
-                        <!-- ADICIONAR BOLSISTA -->
-                        <div class="col-lg-4">
-                            <div class="card border-0 shadow-sm rounded-4 p-4">
-                                <h5 class="fw-bold text-primary mb-3"><i class="bi bi-person-plus-fill me-2"></i>Adicionar Bolsista</h5>
-                                <form method="POST">
-                                    {% csrf_token %}
-                                    <input type="hidden" name="action" value="adicionar_bolsista">
-                                    <div class="mb-3">
-                                        <label for="email" class="form-label small fw-bold">E-mail do Usuário <span class="text-danger">*</span></label>
-                                        <input type="email" class="form-control rounded-3" id="email" name="email" required placeholder="Ex: nome@ifrn.edu.br">
-                                        <div class="form-text small">O usuário já deve estar cadastrado no FIND para ser promovido a Bolsista.</div>
-                                    </div>
-                                    <button type="submit" class="btn btn-primary rounded-pill w-100 py-2">
-                                        <i class="bi bi-plus-lg me-2"></i>Promover a Bolsista
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
+          <div class="admin-page-header">
+            <div>
+              <h2 class="admin-page-title">Gerenciar Bolsistas</h2>
+              <p class="admin-page-subtitle">Promova ou remova usuários do grupo de bolsistas</p>
+            </div>
+          </div>
 
-                        <!-- LISTA DE BOLSISTAS -->
-                        <div class="col-lg-8">
-                            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
-                                <h5 class="fw-bold mb-4 text-dark"><i class="bi bi-people-fill me-2"></i>Bolsistas Ativos</h5>
-                                {% if bolsistas %}
-                                <div class="table-responsive">
-                                    <table class="table table-hover align-middle">
-                                        <thead class="table-light">
-                                            <tr>
-                                                <th>Username</th>
-                                                <th>Nome Completo</th>
-                                                <th>E-mail</th>
-                                                <th class="text-center">Ações</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {% for b in bolsistas %}
-                                            <tr>
-                                                <td class="fw-bold">@{{ b.username }}</td>
-                                                <td>{{ b.first_name }} {{ b.last_name }}</td>
-                                                <td>{{ b.email }}</td>
-                                                <td class="text-center">
-                                                    <form method="POST" onsubmit="return confirm('Deseja realmente remover o usuário @{{ b.username }} do grupo Bolsistas?');">
-                                                        {% csrf_token %}
-                                                        <input type="hidden" name="action" value="remover_bolsista">
-                                                        <input type="hidden" name="user_id" value="{{ b.id }}">
-                                                        <button type="submit" class="btn btn-outline-danger btn-sm rounded-pill px-3">
-                                                            <i class="bi bi-trash3 me-1"></i>Remover
-                                                        </button>
-                                                    </form>
-                                                </td>
-                                            </tr>
-                                            {% endfor %}
-                                        </tbody>
-                                    </table>
-                                </div>
-                                {% else %}
-                                <p class="text-center text-muted py-4 mb-0">Nenhum bolsista cadastrado ainda.</p>
-                                {% endif %}
-                            </div>
-                        </div>
-                    </div>
+          <div class="row g-4">
+            <!-- Add -->
+            <div class="col-md-5 col-xl-4">
+              <div class="dashboard-card">
+                <div class="card-header-band">
+                  <div>
+                    <h5><i class="bi bi-person-plus-fill"></i> Adicionar Bolsista</h5>
+                  </div>
                 </div>
+                <div class="p-4">
+                  <form method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="adicionar_bolsista">
+                    <div class="mb-3">
+                      <label for="email" class="form-label">E-mail do Usuário <span class="text-danger">*</span></label>
+                      <input type="email" class="form-control" id="email" name="email"
+                             required placeholder="estudante@ifrn.edu.br">
+                      <div class="form-text">O estudante já deve estar cadastrado no FIND.</div>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">
+                      <i class="bi bi-plus-lg me-2"></i>Promover a Bolsista
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
 
-                <!-- TAB: AUDIT LOGS -->
-                <div class="tab-pane fade" id="pills-logs" role="tabpanel" aria-labelledby="pills-logs-tab">
-                    <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
-                        <h5 class="fw-bold mb-4 text-primary"><i class="bi bi-journal-text me-2"></i>Histórico Completo de Auditoria</h5>
-                        {% if logs %}
-                        <div class="table-responsive">
-                            <table class="table table-hover align-middle">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>Bolsista / Admin</th>
-                                        <th>Ação</th>
-                                        <th>Item</th>
-                                        <th>Data/Hora</th>
-                                        <th>Observações</th>
-                                        <th>IP Origem</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for log in logs %}
-                                    <tr>
-                                        <td>
-                                            <span class="fw-bold text-dark">@{{ log.bolsista.username }}</span>
-                                            <br><span class="small text-muted">{{ log.bolsista.email }}</span>
-                                        </td>
-                                        <td>
-                                            {% if log.acao == 'confirmou' %}
-                                            <span class="badge bg-success-subtle text-success rounded-pill px-3 py-1">Confirmou</span>
-                                            {% else %}
-                                            <span class="badge bg-info-subtle text-info rounded-pill px-3 py-1">Devolveu</span>
-                                            {% endif %}
-                                        </td>
-                                        <td>
-                                            <a href="{% url 'item_detail' log.item.slug %}" class="fw-bold text-decoration-none text-primary" target="_blank">
-                                                {{ log.item.titulo }}
-                                            </a>
-                                        </td>
-                                        <td class="small text-muted">
-                                            {{ log.timestamp|date:"d/m/Y H:i" }}
-                                        </td>
-                                        <td class="small text-muted">
-                                            {{ log.observacao }}
-                                        </td>
-                                        <td class="small text-muted">
-                                            {{ log.ip_origem|default:"---" }}
-                                        </td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
+            <!-- List -->
+            <div class="col-md-7 col-xl-8">
+              <div class="dashboard-card">
+                <div class="card-header-band">
+                  <div>
+                    <h5><i class="bi bi-people-fill"></i> Bolsistas Ativos</h5>
+                    <p>{{ bolsistas.count }} bolsista{% if bolsistas.count != 1 %}s{% endif %} cadastrado{% if bolsistas.count != 1 %}s{% endif %}</p>
+                  </div>
+                </div>
+                <div class="p-0">
+                  {% if bolsistas %}
+                  <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                      <thead>
+                        <tr>
+                          <th>Usuário</th>
+                          <th>Nome</th>
+                          <th class="text-center">Ação</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for b in bolsistas %}
+                        <tr>
+                          <td>
+                            <div class="d-flex align-items-center gap-2">
+                              <div class="avatar-fallback">{{ b.username|slice:":1"|upper }}</div>
+                              <span class="fw-semibold" style="font-size:.88rem;">@{{ b.username }}</span>
+                            </div>
+                          </td>
+                          <td style="color:var(--text-muted); font-size:.86rem;">{{ b.first_name }} {{ b.last_name }}</td>
+                          <td class="text-center">
+                            <form method="POST"
+                                  onsubmit="return confirm('Deseja realmente remover @{{ b.username }} do grupo Bolsistas?');"
+                                  class="m-0">
+                              {% csrf_token %}
+                              <input type="hidden" name="action" value="remover_bolsista">
+                              <input type="hidden" name="user_id" value="{{ b.id }}">
+                              <button type="submit" class="btn btn-outline-danger btn-sm">
+                                <i class="bi bi-trash3 me-1"></i>Remover
+                              </button>
+                            </form>
+                          </td>
+                        </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                  {% else %}
+                  <div class="text-center py-5 px-4">
+                    <i class="bi bi-people fs-1 d-block mb-3" style="color:var(--text-faint);"></i>
+                    <p class="mb-0" style="color:var(--text-muted);">Nenhum bolsista cadastrado ainda.</p>
+                  </div>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── TAB 3: LOGS ────────────────────────────────── -->
+        <div class="tab-pane fade" id="v-pills-logs" role="tabpanel" aria-labelledby="v-pills-logs-tab">
+
+          <div class="admin-page-header">
+            <div>
+              <h2 class="admin-page-title">Histórico de Auditoria</h2>
+              <p class="admin-page-subtitle">Rastreamento completo de ações efetuadas por bolsistas e administradores</p>
+            </div>
+          </div>
+
+          <div class="dashboard-card">
+            <div class="card-header-band">
+              <div>
+                <h5><i class="bi bi-journal-text"></i> Log de Atividades</h5>
+                <p>Registro cronológico de todas as operações realizadas</p>
+              </div>
+            </div>
+            <div class="p-0">
+              {% if logs %}
+              <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                  <thead>
+                    <tr>
+                      <th>Bolsista / Admin</th>
+                      <th>Ação</th>
+                      <th>Item</th>
+                      <th>Data/Hora</th>
+                      <th>Observações</th>
+                      <th>IP Origem</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for log in logs %}
+                    <tr>
+                      <td>
+                        <div class="d-flex align-items-center gap-2">
+                          <div class="avatar-fallback" style="width:30px;height:30px;font-size:.75rem;">{{ log.bolsista.username|slice:":1"|upper }}</div>
+                          <div>
+                            <div class="fw-semibold" style="font-size:.85rem;">@{{ log.bolsista.username }}</div>
+                            <div style="font-size:.75rem;color:var(--text-muted);">{{ log.bolsista.email }}</div>
+                          </div>
                         </div>
+                      </td>
+                      <td>
+                        {% if log.acao == 'confirmou' %}
+                        <span class="badge bg-success-subtle">
+                          <i class="bi bi-check-circle-fill me-1"></i>Confirmou
+                        </span>
                         {% else %}
-                        <p class="text-center text-muted py-4 mb-0">Nenhum log de auditoria disponível.</p>
+                        <span class="badge bg-info-subtle">
+                          <i class="bi bi-arrow-return-left me-1"></i>Devolveu
+                        </span>
                         {% endif %}
-                    </div>
-                </div>
+                      </td>
+                      <td>
+                        <a href="{% url 'item_detail' log.item.slug %}"
+                           class="fw-semibold text-decoration-none"
+                           style="color:var(--brand-400); font-size:.86rem;"
+                           target="_blank">
+                          {{ log.item.titulo }}
+                        </a>
+                      </td>
+                      <td style="font-size:.8rem;color:var(--text-muted);">
+                        <i class="bi bi-clock me-1"></i>{{ log.timestamp|date:"d/m/Y H:i" }}
+                      </td>
+                      <td style="font-size:.8rem;color:var(--text-muted);">{{ log.observacao }}</td>
+                      <td>
+                        <span class="badge bg-secondary-subtle" style="font-family:monospace;">
+                          {{ log.ip_origem|default:"—" }}
+                        </span>
+                      </td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+              {% else %}
+              <div class="text-center py-5 px-4">
+                <i class="bi bi-journal-x fs-1 d-block mb-3" style="color:var(--text-faint);"></i>
+                <p class="mb-0" style="color:var(--text-muted);">Nenhum log de auditoria disponível.</p>
+              </div>
+              {% endif %}
             </div>
+          </div>
         </div>
-    </div>
+
+      </div><!-- /tab-content -->
+    </div><!-- /col -->
+  </div><!-- /row -->
 </div>
 
-<!-- CHART JS PARA RELATÓRIO PREMIUM -->
+<!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-document.addEventListener("DOMContentLoaded", function() {
-    const ctx = document.getElementById('statusChart').getContext('2d');
-    
-    const data = {
-        labels: ['Achados', 'Perdidos', 'Confirmados', 'Devolvidos', 'Pendentes'],
-        datasets: [{
-            data: [
-                {{ por_status.achado }},
-                {{ por_status.perdido }},
-                {{ por_status.confirmado }},
-                {{ por_status.devolvido }},
-                {{ por_status.pendente_confirmacao }}
-            ],
-            backgroundColor: [
-                '#198754', // Green
-                '#dc3545', // Red
-                '#ffc107', // Warning
-                '#0dcaf0', // Info
-                '#6c757d'  // Gray
-            ],
-            borderWidth: 1
-        }]
-    };
+document.addEventListener("DOMContentLoaded", function () {
+  const ctx = document.getElementById('statusChart');
+  if (!ctx) return;
 
-    new Chart(ctx, {
-        type: 'doughnut',
-        data: data,
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    position: 'right',
-                    labels: {
-                        boxWidth: 12,
-                        font: { size: 11 }
-                    }
-                }
-            }
+  Chart.defaults.font.family = "'Inter', system-ui, sans-serif";
+  Chart.defaults.color = "#64748b";
+
+  new Chart(ctx.getContext('2d'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Achados', 'Perdidos', 'Confirmados', 'Devolvidos', 'Pendentes'],
+      datasets: [{
+        data: [
+          {{ por_status.achado }},
+          {{ por_status.perdido }},
+          {{ por_status.confirmado }},
+          {{ por_status.devolvido }},
+          {{ por_status.pendente_confirmacao }}
+        ],
+        backgroundColor: ['#10b981','#f43f5e','#f59e0b','#6366f1','#94a3b8'],
+        borderWidth: 0,
+        cutout: '74%',
+        hoverOffset: 6
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: { boxWidth: 10, padding: 16, usePointStyle: true, font: { size: 11, weight: '600' } }
+        },
+        tooltip: {
+          backgroundColor: '#0a0f1e',
+          padding: 12,
+          titleFont: { size: 12, weight: '700' },
+          bodyFont: { size: 11 },
+          cornerRadius: 10,
+          displayColors: false
         }
-    });
+      }
+    }
+  });
 });
 </script>
 {% endblock %}

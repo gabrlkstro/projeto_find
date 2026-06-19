@@ -7,7 +7,7 @@
     <title>FIND — Cadastro</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Crie sua conta FIND — plataforma de achados e perdidos.">
-    <link rel="stylesheet" href="{% static 'mainpage/css/register.css' %}">
+    <link rel="stylesheet" href="{% static 'mainpage/css/register.css' %}?v=3">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -70,22 +70,42 @@
             <form method="POST" action="{% url 'register' %}" id="register-form" novalidate>
                 {% csrf_token %}
 
-                <!-- Nome completo -->
-                <div class="field-group" id="field-group-full-name">
-                    <label for="id_full_name" class="field-lbl">Nome completo</label>
-                    <div class="field-input-wrap" id="group-full-name">
-                        <span class="field-icon material-symbols-rounded">badge</span>
-                        <input type="text"
-                               id="id_full_name"
-                               name="full_name"
-                               class="field-input"
-                               placeholder="Seu nome completo"
-                               autocomplete="name"
-                               autofocus
-                               required
-                               aria-required="true">
+                <!-- Nome e Sobrenome -->
+                <div class="field-group-row" style="display:flex; flex-wrap: wrap; gap: 1rem; width: 100%; margin-bottom: 1.2rem;">
+                    <!-- Nome -->
+                    <div class="field-group" id="field-group-first-name" style="flex: 1 1 calc(50% - 0.5rem); min-width: 140px; margin-bottom: 0;">
+                        <label for="id_first_name" class="field-lbl">Nome</label>
+                        <div class="field-input-wrap" id="group-first-name">
+                            <input type="text"
+                                   id="id_first_name"
+                                   name="first_name"
+                                   class="field-input"
+                                   placeholder="Seu nome"
+                                   autocomplete="given-name"
+                                   autofocus
+                                   required
+                                   aria-required="true"
+                                   style="padding-left: 14px;">
+                        </div>
+                        <span class="field-error" id="error-first-name" role="alert"></span>
                     </div>
-                    <span class="field-error" id="error-full-name" role="alert"></span>
+
+                    <!-- Sobrenome -->
+                    <div class="field-group" id="field-group-last-name" style="flex: 1 1 calc(50% - 0.5rem); min-width: 140px; margin-bottom: 0;">
+                        <label for="id_last_name" class="field-lbl">Sobrenome</label>
+                        <div class="field-input-wrap" id="group-last-name">
+                            <input type="text"
+                                   id="id_last_name"
+                                   name="last_name"
+                                   class="field-input"
+                                   placeholder="Seu sobrenome"
+                                   autocomplete="family-name"
+                                   required
+                                   aria-required="true"
+                                   style="padding-left: 14px;">
+                        </div>
+                        <span class="field-error" id="error-last-name" role="alert"></span>
+                    </div>
                 </div>
 
                 <!-- Nome de usuário -->
@@ -226,7 +246,8 @@
     const djangoAlert = document.getElementById('django-error-alert');
 
     const fields = {
-        fullName : { input: document.getElementById('id_full_name'),        group: document.getElementById('group-full-name'), err: document.getElementById('error-full-name') },
+        firstName : { input: document.getElementById('id_first_name'),        group: document.getElementById('group-first-name'), err: document.getElementById('error-first-name') },
+        lastName  : { input: document.getElementById('id_last_name'),         group: document.getElementById('group-last-name'),  err: document.getElementById('error-last-name') },
         username : { input: document.getElementById('id_username'),          group: document.getElementById('group-username'),  err: document.getElementById('error-username') },
         data     : { input: document.getElementById('id_data_nascimento'),   group: document.getElementById('group-data'),      err: document.getElementById('error-data') },
         email    : { input: document.getElementById('id_email'),             group: document.getElementById('group-email'),     err: document.getElementById('error-email') },
@@ -367,7 +388,7 @@
     fields.confirm.input.addEventListener('input', validateConfirm);
 
     /* ── Limpa erros ao digitar (outros campos) ── */
-    [fields.fullName, fields.username, fields.email, fields.password].forEach(f => {
+    [fields.firstName, fields.lastName, fields.username, fields.email, fields.password].forEach(f => {
         f.input.addEventListener('input', () => clearError(f));
     });
 
@@ -376,10 +397,16 @@
         let valid = true;
         let firstInvalid = null;
 
-        if (!fields.fullName.input.value.trim()) {
-            showError(fields.fullName, 'Informe seu nome completo.');
+        if (!fields.firstName.input.value.trim()) {
+            showError(fields.firstName, 'Informe seu nome.');
             valid = false;
-            if (!firstInvalid) firstInvalid = fields.fullName.input;
+            if (!firstInvalid) firstInvalid = fields.firstName.input;
+        }
+
+        if (!fields.lastName.input.value.trim()) {
+            showError(fields.lastName, 'Informe seu sobrenome.');
+            valid = false;
+            if (!firstInvalid) firstInvalid = fields.lastName.input;
         }
 
         if (!fields.username.input.value.trim()) {

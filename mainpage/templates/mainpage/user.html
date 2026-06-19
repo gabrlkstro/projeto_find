@@ -4,7 +4,7 @@
 {% block title %}Perfil do Usuário{% endblock %}
 
 {% block extra_css %}
-  <link rel="stylesheet" href="{% static 'mainpage/css/user.css' %}">
+  <link rel="stylesheet" href="{% static 'mainpage/css/user.css' %}?v=3">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css">
 {% endblock %}
 
@@ -17,38 +17,40 @@
 
     <!-- PERFIL -->
     <div class="col-lg-4 col-md-5">
-      <div class="card shadow-sm text-center p-4 user-card border-0 h-100">
+      <div class="profile-section-card h-100">
+        <div class="profile-hero mb-4 text-center" style="background: rgba(144, 219, 244, 0.85); border-radius: 20px; padding: 2rem; color: #0B3A4A; position: relative; overflow: hidden; border: 1px solid rgba(144, 219, 244, 0.4);">
 
-        <div class="avatar mx-auto mb-3 position-relative">
+          
+          <div class="avatar mx-auto mb-3 position-relative" style="width:80px; height:80px;">
+            {# Foto do perfil com fallback #}
+            {% if user.is_authenticated and user.profile and user.profile.image %}
+              <img src="{{ user.profile.image.url }}" class="profile-avatar" alt="Foto de perfil" onerror="this.onerror=null; this.src='{% static 'mainpage/img/user.webp' %}';" style="width:80px; height:80px; border-radius:50%; border: 3px solid rgba(255,255,255,1); object-fit:cover; box-shadow: 0 4px 12px rgba(11,58,74,0.1);">
+            {% else %}
+              <img src="{% static 'mainpage/img/user.webp' %}" class="profile-avatar" alt="Foto de perfil" style="width:80px; height:80px; border-radius:50%; border: 3px solid rgba(255,255,255,1); object-fit:cover; box-shadow: 0 4px 12px rgba(11,58,74,0.1);">
+            {% endif %}
 
-          {# Foto do perfil com fallback #}
-          {% if user.is_authenticated and user.profile and user.profile.image %}
-            <img src="{{ user.profile.image.url }}" class="profile-pic" alt="Foto de perfil" onerror="this.onerror=null; this.src='{% static 'mainpage/img/user.webp' %}';">
-          {% else %}
-            <img src="{% static 'mainpage/img/user.webp' %}" class="profile-pic" alt="Foto de perfil">
-          {% endif %}
-
-          <form action="{% url 'upload_photo' %}" method="POST" enctype="multipart/form-data" id="form-foto">
-            {% csrf_token %}
-            <label for="input-foto" class="upload-badge shadow">
-              <i class="bi bi-camera-fill"></i>
-            </label>
-            <input
-              type="file"
-              name="image"
-              id="input-foto"
-              hidden
-              onchange="document.getElementById('form-foto').submit();"
-            >
-          </form>
+            <form action="{% url 'upload_photo' %}" method="POST" enctype="multipart/form-data" id="form-foto">
+              {% csrf_token %}
+              <label for="input-foto" class="upload-badge shadow" style="position: absolute; bottom: 0; right: 0; background: white; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; cursor: pointer; border: 1px solid rgba(0,0,0,0.1);">
+                <i class="bi bi-camera-fill text-dark" style="font-size: 14px;"></i>
+              </label>
+              <input
+                type="file"
+                name="image"
+                id="input-foto"
+                hidden
+                onchange="document.getElementById('form-foto').submit();"
+              >
+            </form>
+          </div>
+          
+          <h2 style="margin-top: 12px; font-weight:700; font-size: 1.5rem; word-break: break-word;">{{ user.first_name }} {{ user.last_name }}</h2>
+          <p style="opacity:0.8; font-size:14px; margin-bottom: 0; word-break: break-all;">{{ email }}</p>
         </div>
 
-        <h4 class="fw-bold mb-0">{{ nome }}</h4>
-        <p class="text-muted small mb-2">{{ email }}</p>
-
-        <div class="row small text-start g-1 mt-3 px-3">
-          <div class="col-5 text-muted">Telefone:</div>
-          <div class="col-7">
+        <div class="row small text-start g-1 px-3">
+          <div class="col-5 text-muted fw-semibold">Telefone:</div>
+          <div class="col-7 text-dark fw-bold">
             {% if user.profile and user.profile.telefone %}
               {{ user.profile.telefone }}
             {% else %}
@@ -56,8 +58,8 @@
             {% endif %}
           </div>
 
-          <div class="col-5 text-muted">CEP:</div>
-          <div class="col-7">
+          <div class="col-5 text-muted fw-semibold">CEP:</div>
+          <div class="col-7 text-dark fw-bold">
             {% if user.profile and user.profile.cep %}
               {{ user.profile.cep }}
             {% else %}
@@ -65,8 +67,8 @@
             {% endif %}
           </div>
 
-          <div class="col-5 text-muted">Localização:</div>
-          <div class="col-7">
+          <div class="col-5 text-muted fw-semibold">Localização:</div>
+          <div class="col-7 text-dark fw-bold">
             {% if user.profile and user.profile.cidade %}
               {{ user.profile.cidade }}{% if user.profile.estado %} - {{ user.profile.estado }}{% endif %}
             {% else %}
@@ -75,14 +77,17 @@
           </div>
         </div>
 
-        <button
-          class="btn btn-primary w-100 rounded-pill mt-4"
-          data-bs-toggle="modal"
-          data-bs-target="#modalEditarPerfil"
-          type="button"
-        >
-          <i class="bi bi-pencil-square me-2"></i> Editar perfil
-        </button>
+        <div class="px-3">
+          <button
+            class="btn btn-primary w-100 rounded-pill mt-4 py-2"
+            data-bs-toggle="modal"
+            data-bs-target="#modalEditarPerfil"
+            type="button"
+            style="background: rgba(144, 219, 244, 0.85); color: #0B3A4A; border: none; font-weight: 600;"
+          >
+            <i class="bi bi-pencil-square me-2"></i> Editar perfil
+          </button>
+        </div>
 
       </div>
     </div>
@@ -92,10 +97,10 @@
       <div class="card shadow-sm items-card border-0 h-100">
 
         <div class="card-header d-flex justify-content-between align-items-center border-0 py-3">
-          <h5 class="fw-bold mb-0 text-white">Meus itens</h5>
+          <h5 class="fw-bold mb-0" style="color: #0B3A4A;">Meus itens</h5>
 
           <button
-            class="btn btn-light btn-sm rounded-pill"
+            class="btn btn-light btn-sm rounded-pill shadow-sm"
             data-bs-toggle="modal"
             data-bs-target="#modalNovoItem"
             type="button"

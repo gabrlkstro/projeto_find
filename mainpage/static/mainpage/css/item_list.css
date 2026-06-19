@@ -16,25 +16,38 @@
 
 /* ================= CARD FILTRO ================= */
 .item-filter-card {
-    background: rgba(255, 255, 255, 0.55);
-    border-radius: 18px;
+    background: transparent;
+    border: 1px solid rgba(0,0,0,0.08);
+    border-radius: 12px;
+    box-shadow: none !important;
 }
 
 .item-filter-card .form-control,
 .item-filter-card .form-select {
     border-radius: 30px;
-    border: 1px solid #004254;
+    border: 1px solid #dce3eb;
+    padding: 8px 16px;
+}
+
+.item-filter-card .form-control:focus,
+.item-filter-card .form-select:focus {
+    border-color: #1eaed4;
+    box-shadow: 0 0 0 3px rgba(30, 174, 212, 0.15);
 }
 
 .item-filter-card .btn {
     border-radius: 30px;
-    background: linear-gradient(90deg, #002a35, #01627ad3);
+    background: linear-gradient(90deg, #0B3A4A, #1eaed4);
     border: none;
     color: #fff;
+    font-weight: 600;
+    transition: all 0.2s;
 }
 
 .item-filter-card .btn:hover {
-    background: linear-gradient(90deg, #001f24, #01404ad3);
+    opacity: 0.95;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(30, 174, 212, 0.2);
 }
 
 /* ================= LISTA DE ITENS ================= */
@@ -52,6 +65,25 @@
     display: flex;
     align-items: center;
     gap: 14px;
+    border-top: 4px solid #dee2e6;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.item-lista-horizontal:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+.item-lista-horizontal.item-card-perdido {
+    border-top-color: #E24B4A;
+}
+
+.item-lista-horizontal.item-card-achado {
+    border-top-color: #378ADD;
+}
+
+.item-lista-horizontal.item-card-devolvido {
+    border-top-color: #639922;
 }
 
 /* ================= BOTÃO VOLTAR ================= */
@@ -90,9 +122,20 @@
 
 /* ================= EMPTY STATE ================= */
 .item-empty {
-    padding: 40px 0;
-    color: #003a49;
-    font-style: italic;
+    padding: 50px 20px;
+    color: #6c757d;
+}
+
+.empty-icon i {
+    color: rgba(11, 58, 74, 0.2);
+    display: inline-block;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-8px); }
+    100% { transform: translateY(0px); }
 }
 
 .status-devolvido {

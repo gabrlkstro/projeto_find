@@ -1,61 +1,94 @@
 .edit-profile-modal .modal-content {
   border-radius: 20px;
   overflow: hidden;
+  border: 1px solid rgba(11, 58, 74, 0.09);
 }
 
 .edit-profile-modal .modal-header {
-  background: linear-gradient(135deg, #0d4e5d 0%, #1a7a8c 100%);
+  background: rgba(144, 219, 244, 0.85);
   padding: 1.5rem;
+  color: #0B3A4A;
+  border-bottom: 1px solid rgba(144, 219, 244, 0.4);
 }
 
 .edit-profile-modal .modal-body {
-  background: #f8fdff;
+  background: #DDF2FC;
   padding: 1.5rem;
 }
 
 .edit-profile-modal .modal-footer {
-  background: #f8fdff;
+  background: #DDF2FC;
   padding: 1.5rem;
   padding-top: 0;
+  border-top: none;
 }
 
 .edit-profile-avatar {
   width: 100px;
   height: 100px;
   object-fit: cover;
+  border: 3px solid rgba(255,255,255,1) !important;
+  box-shadow: 0 4px 12px rgba(11,58,74,0.1);
 }
 
 .edit-profile-upload-label {
   font-size: 0.75rem;
+  background: #0B3A4A;
+  color: white;
+  border: none;
+  transition: all 0.2s;
 }
 
-.edit-profile-input {
+.edit-profile-upload-label:hover {
+  background: #1eaed4;
+  color: white;
+}
+
+.edit-profile-input, .edit-profile-cep, .edit-profile-cidade, .edit-profile-estado {
   border-radius: 12px;
   padding: 10px 15px;
+  background: #ffffff;
+  border: 1px solid rgba(11, 58, 74, 0.09);
+  color: #1a4558;
+}
+
+.edit-profile-input:focus, .edit-profile-cep:focus, .edit-profile-cidade:focus, .edit-profile-estado:focus {
+  border-color: rgba(30, 174, 212, 0.35);
+  box-shadow: 0 0 0 0.25rem rgba(144, 219, 244, 0.25);
 }
 
 .edit-profile-input-readonly {
   cursor: not-allowed;
+  background: #eef5f9 !important;
 }
 
 .edit-profile-hint {
   font-size: 0.7rem;
-}
-
-.edit-profile-cep,
-.edit-profile-cidade,
-.edit-profile-estado {
-  border-radius: 12px;
+  color: #4d7a8a !important;
 }
 
 .edit-profile-btn-cancel {
   border-radius: 15px;
+  color: #0B3A4A;
+  background: #ffffff;
+  border: 1px solid rgba(11, 58, 74, 0.09);
+}
+
+.edit-profile-btn-cancel:hover {
+  background: #f4f7fa;
 }
 
 .edit-profile-btn-save {
-  background: linear-gradient(to right, #0d4e5d, #1a7a8c);
+  background: rgba(144, 219, 244, 0.85);
   border-radius: 15px;
   border: none;
-  color: white;
+  color: #0B3A4A;
+  font-weight: 700;
+  transition: all 0.2s;
 }
 
+.edit-profile-btn-save:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(11,58,74,0.1);
+  background: #90dbf4;
+}

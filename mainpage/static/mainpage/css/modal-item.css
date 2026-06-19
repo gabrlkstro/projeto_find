@@ -521,3 +521,105 @@
     max-width: none !important;
   }
 }
+/* ===== PREVIEW CARD (MESMO ESTILO DO MENU) ===== */
+.preview-card-wrapper .menu-item-card {
+  background: #DDF2FC;
+  border: 1px solid rgba(11, 58, 74, 0.09);
+  border-radius: 16px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(11,58,74,0.06);
+}
+
+.preview-card-wrapper .menu-item-img {
+  position: relative;
+  width: 100%;
+  padding-top: 58%;
+  background: #ffffff;
+  overflow: hidden;
+  flex-shrink: 0;
+  border-bottom: 1px solid rgba(11, 58, 74, 0.09);
+}
+
+.preview-card-wrapper .menu-item-img img {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+}
+
+.preview-card-wrapper .menu-item-body {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.preview-card-wrapper .menu-item-title {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #0B3A4A;
+  margin-bottom: 6px;
+  line-height: 1.25;
+}
+
+.preview-card-wrapper .menu-item-desc {
+  font-size: 0.85rem;
+  color: #4d7a8a;
+  margin-bottom: 14px;
+  line-height: 1.5;
+  flex-grow: 1;
+}
+
+.preview-card-wrapper .menu-item-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+  padding-top: 14px;
+  border-top: 1px dashed rgba(11, 58, 74, 0.15);
+}
+
+.preview-card-wrapper .menu-item-meta-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.75rem;
+  color: #0B3A4A;
+  font-weight: 600;
+}
+
+.preview-card-wrapper .menu-item-meta-line i {
+  color: #1eaed4;
+  margin-right: 4px;
+}
+
+.preview-card-wrapper .btn-ver-item {
+  background: linear-gradient(135deg, #1eaed4, #0B3A4A);
+  color: white !important;
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 8px 0;
+  border-radius: 8px;
+  text-align: center;
+  text-transform: uppercase;
+  width: 100%;
+  border: none;
+  box-shadow: 0 4px 12px rgba(30, 174, 212, 0.2);
+}
+
+.preview-card-wrapper .status-square {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1rem;
+}
+
+.preview-card-wrapper .status-red { background: #f43f5e; }
+.preview-card-wrapper .status-green { background: #10b981; }

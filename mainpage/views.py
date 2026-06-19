@@ -111,7 +111,8 @@ def logout_view(request):
 
 def register_view(request):
     if request.method == "POST":
-        full_name = request.POST.get("full_name", "").strip()
+        first_name = request.POST.get("first_name", "").strip()
+        last_name = request.POST.get("last_name", "").strip()
         data_nascimento = request.POST.get("data_nascimento")
         username = request.POST.get("username", "").strip()
         email = request.POST.get("email", "").strip()
@@ -151,9 +152,7 @@ def register_view(request):
             messages.error(request, "Esse e-mail já está em uso.")
             return redirect("register")
 
-        name_parts = full_name.split(" ", 1)
-        first_name = name_parts[0] if name_parts else ""
-        last_name = name_parts[1] if len(name_parts) > 1 else ""
+
 
         user = User.objects.create_user(
             username=username,
@@ -270,10 +269,13 @@ def update_profile(request):
         user = request.user
         profile, _ = Profile.objects.get_or_create(user=user)
 
-        nome = request.POST.get("nome")
-        if nome:
-            user.first_name = nome
-            user.save(update_fields=["first_name"])
+        first_name = request.POST.get("first_name")
+        last_name = request.POST.get("last_name")
+        if first_name is not None:
+            user.first_name = first_name
+        if last_name is not None:
+            user.last_name = last_name
+        user.save(update_fields=["first_name", "last_name"])
 
         profile.telefone = request.POST.get("telefone")
         profile.cidade = request.POST.get("cidade")
@@ -864,10 +866,12 @@ def bolsista_dashboard(request):
 
     pendentes = Item.objects.filter(status__in=["achado", "pendente_confirmacao"]).order_by("-criado_em")
     recent_actions = AcaoLog.objects.filter(bolsista=request.user).select_related("item").order_by("-timestamp")[:50]
+    todos_itens = Item.objects.all().order_by("-criado_em")
     
     return render(request, "mainpage/bolsista_dashboard.html", {
         "pendentes": pendentes,
         "recent_actions": recent_actions,
+        "todos_itens": todos_itens,
     })
 
 
@@ -945,3 +949,110 @@ def admin_dashboard(request):
         "data_fim": data_fim,
         "status_filter": status_filter,
     })
+
+
+@login_required(login_url="login")
+def dashboard_admin(request):
+    from accounts.permissoes import check_admin
+    from django.shortcuts import redirect
+    from django.urls import reverse
+    from django.core.exceptions import PermissionDenied
+    import json
+    from django.core.serializers.json import DjangoJSONEncoder
+    from django.db.models.functions import TruncMonth
+    from django.db.models import Count, Avg, ExpressionWrapper, F, DurationField
+    from datetime import date, timedelta
+    from django.utils import timezone
+    from items.models import Item, Categoria
+
+    if not check_admin(request.user):
+        return redirect(f"{reverse('login')}?next={request.path}")
+
+    hoje = timezone.now().date()
+    semana = hoje - timedelta(days=7)
+    seis_meses = hoje - timedelta(days=180)
+
+    # 1. Total e status base
+    total = Item.objects.count()
+    perdidos = Item.objects.filter(status="perdido").count()
+    encontrados = Item.objects.filter(status="achado").count()
+    devolvidos = Item.objects.filter(status="devolvido").count()
+    confirmados = Item.objects.filter(status="confirmado").count()
+    cadastros_hoje = Item.objects.filter(criado_em__date=hoje).count()
+    cadastros_semana = Item.objects.filter(criado_em__date__gte=semana).count()
+
+    stats_dict = {
+        "total": total,
+        "perdidos": perdidos,
+        "encontrados": encontrados,
+        "devolvidos": devolvidos,
+        "confirmados": confirmados,
+        "cadastros_hoje": cadastros_hoje,
+        "cadastros_semana": cadastros_semana,
+    }
+
+    # 2. Evolução mensal
+    evolucao_qs = (
+        Item.objects
+        .filter(criado_em__date__gte=seis_meses)
+        .annotate(mes=TruncMonth('criado_em'))
+        .values('mes', 'status')
+        .annotate(total=Count('id'))
+        .order_by('mes')
+    )
+    evolucao_list = []
+    for e in evolucao_qs:
+        evolucao_list.append({
+            "mes": e['mes'],
+            "status": e['status'],
+            "total": e['total']
+        })
+
+    # 3. Por Categoria (top 6)
+    por_categoria_qs = (
+        Item.objects
+        .values('categoria__nome')
+        .annotate(total=Count('id'))
+        .order_by('-total')[:6]
+    )
+    por_categoria = []
+    for c in por_categoria_qs:
+        por_categoria.append({
+            "categoria__nome": c['categoria__nome'] or "Sem categoria",
+            "total": c['total']
+        })
+
+    # 4. Tempo médio de resolução
+    tempo_qs = (
+        Item.objects
+        .filter(status='devolvido')
+        .annotate(duracao=ExpressionWrapper(
+            F('atualizado_em') - F('criado_em'),
+            output_field=DurationField()
+        ))
+        .values('categoria__nome')
+        .annotate(media_dias=Avg('duracao'))
+        .order_by('categoria__nome')
+    )
+    tempo_list = []
+    for t in tempo_qs:
+        val = t['media_dias']
+        microseconds = 0.0
+        if val is not None:
+            if hasattr(val, 'total_seconds'):
+                microseconds = val.total_seconds() * 1000000.0
+              
+            else:
+                microseconds = float(val)
+        tempo_list.append({
+            "categoria__nome": t['categoria__nome'] or "Sem categoria",
+            "media_dias": microseconds
+        })
+
+    context = {
+        'stats': stats_dict,
+        'evolucao_json': json.dumps(evolucao_list, cls=DjangoJSONEncoder),
+        'categorias_json': json.dumps(por_categoria, cls=DjangoJSONEncoder),
+        'tempo_json': json.dumps(tempo_list, cls=DjangoJSONEncoder),
+    }
+    return render(request, 'mainpage/dashboard_admin.html', context)

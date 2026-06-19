@@ -225,12 +225,78 @@ def api_my_items(request):
 @api_view(["GET"])
 @permission_classes([AllowAny])
 def api_stats(request):
+    from django.db.models.functions import TruncMonth
+    from django.db.models import Count, Avg, ExpressionWrapper, F, DurationField
+    from datetime import date, timedelta
+    from django.utils import timezone
+
+    # 1. Total e status base
     total = Item.objects.count()
+    perdidos = Item.objects.filter(status="perdido").count()
+    encontrados = Item.objects.filter(status="achado").count()
+    devolvidos = Item.objects.filter(status="devolvido").count()
+    confirmados = Item.objects.filter(status="confirmado").count()
+
+    # 2. Novos cadastros hoje e esta semana
+    hoje = timezone.now().date()
+    semana = hoje - timedelta(days=7)
+    cadastros_hoje = Item.objects.filter(criado_em__date=hoje).count()
+    cadastros_semana = Item.objects.filter(criado_em__date__gte=semana).count()
+
+    # 3. Evolução mensal dos últimos 6 meses
+    seis_meses = hoje - timedelta(days=180)
+    evolucao_qs = (
+        Item.objects
+        .filter(criado_em__date__gte=seis_meses)
+        .annotate(mes=TruncMonth('criado_em'))
+        .values('mes', 'status')
+        .annotate(total=Count('id'))
+        .order_by('mes')
+    )
+    evolucao_mensal = list(evolucao_qs)
+
+    # 4. Itens por categoria (top 6)
+    por_categoria = list(
+        Item.objects
+        .values('categoria__nome')
+        .annotate(total=Count('id'))
+        .order_by('-total')[:6]
+    )
+
+    # 5. Tempo médio de resolução por categoria para itens devolvidos
+    tempo_resolucao_qs = (
+        Item.objects
+        .filter(status='devolvido')
+        .annotate(duracao=ExpressionWrapper(
+            F('atualizado_em') - F('criado_em'),
+            output_field=DurationField()
+        ))
+        .values('categoria__nome')
+        .annotate(media_dias=Avg('duracao'))
+        .order_by('categoria__nome')
+    )
+    tempo_resolucao = list(tempo_resolucao_qs)
+    for entry in tempo_resolucao:
+        val = entry.get('media_dias')
+        if val is not None:
+            if hasattr(val, 'total_seconds'):
+                entry['media_dias'] = val.total_seconds() * 1000000.0
+            else:
+                entry['media_dias'] = float(val)
+        else:
+            entry['media_dias'] = 0.0
+
     return Response({"ok": True, "data": {
         "total": total,
-        "perdidos": Item.objects.filter(status="perdido").count(),
-        "encontrados": Item.objects.filter(status="achado").count(),
-        "devolvidos": Item.objects.filter(status="devolvido").count(),
+        "perdidos": perdidos,
+        "encontrados": encontrados,
+        "devolvidos": devolvidos,
+        "confirmados": confirmados,
+        "cadastros_hoje": cadastros_hoje,
+        "cadastros_semana": cadastros_semana,
+        "por_categoria": por_categoria,
+        "evolucao_mensal": evolucao_mensal,
+        "tempo_resolucao": tempo_resolucao,
     }})
 
 

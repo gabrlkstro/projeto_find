@@ -11,6 +11,9 @@ urlpatterns = [
 
     # Site web
     path('', include('mainpage.urls')),
+    
+    # Allauth
+    path('accounts/', include('allauth.urls')),
 ]
 
 # Serve arquivos de mídia do banco de dados (funciona no Render)

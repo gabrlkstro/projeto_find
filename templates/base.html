@@ -18,7 +18,7 @@
   {# CSS base existente do projeto #}
   <link rel="stylesheet" href="{% static 'mainpage/css/base.css' %}">
   {# CSS novo da navbar #}
-  <link rel="stylesheet" href="{% static 'mainpage/css/navbar.css' %}?v=3">
+  <link rel="stylesheet" href="{% static 'mainpage/css/navbar.css' %}?v=5">
 
   <link rel="icon" type="image/webp" href="{% static 'mainpage/img/find.webp' %}">
 
@@ -114,23 +114,37 @@
             </a>
           </li>
 
-          {% if is_bolsista_user %}
-          <li>
-            <a href="{% url 'bolsista_dashboard' %}"
-               class="find-nav-link {% if request.resolver_match.url_name == 'bolsista_dashboard' %}active{% endif %}">
-              <i class="bi bi-person-workspace nav-ico" style="font-size: 16px;"></i>
-              Bolsista
+          {% if is_bolsista_user or is_admin_user %}
+          <li class="nav-item dropdown">
+            <a class="find-nav-link dropdown-toggle {% if 'painel' in request.path %}active{% endif %}" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="bi bi-gear-fill nav-ico" style="font-size: 16px;"></i>
+              Gestão
             </a>
-          </li>
-          {% endif %}
-
-          {% if is_admin_user %}
-          <li>
-            <a href="{% url 'admin_dashboard' %}"
-               class="find-nav-link {% if request.resolver_match.url_name == 'admin_dashboard' %}active{% endif %}">
-              <i class="bi bi-shield-lock-fill nav-ico" style="font-size: 16px;"></i>
-              Admin
-            </a>
+            <ul class="dropdown-menu dropdown-menu-end border-0 shadow rounded-3 mt-2">
+              {% if is_bolsista_user %}
+              <li>
+                <a class="dropdown-item py-2 px-3 fw-medium d-flex align-items-center text-dark" href="{% url 'bolsista_dashboard' %}">
+                  <i class="bi bi-person-workspace text-primary me-2 fs-5"></i>
+                  Painel do Bolsista
+                </a>
+              </li>
+              {% endif %}
+              {% if is_admin_user %}
+              {% if is_bolsista_user %}<li><hr class="dropdown-divider my-1"></li>{% endif %}
+              <li>
+                <a class="dropdown-item py-2 px-3 fw-medium d-flex align-items-center text-dark" href="{% url 'admin_dashboard' %}">
+                  <i class="bi bi-shield-lock-fill text-danger me-2 fs-5"></i>
+                  Painel Geral Admin
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item py-2 px-3 fw-medium d-flex align-items-center text-dark" href="{% url 'dashboard_admin' %}">
+                  <i class="bi bi-pie-chart-fill text-danger me-2 fs-5"></i>
+                  Estatísticas (Gráficos)
+                </a>
+              </li>
+              {% endif %}
+            </ul>
           </li>
           {% endif %}
 
@@ -291,7 +305,14 @@
          class="drawer-link {% if request.resolver_match.url_name == 'admin_dashboard' %}active{% endif %}">
         <div class="drawer-link-left">
           <i class="bi bi-shield-lock-fill nav-ico" style="font-size: 16px; margin-right: 12px;"></i>
-          Admin
+          Painel Geral Admin
+        </div>
+      </a>
+      <a href="{% url 'dashboard_admin' %}"
+         class="drawer-link {% if request.resolver_match.url_name == 'dashboard_admin' %}active{% endif %}">
+        <div class="drawer-link-left">
+          <i class="bi bi-pie-chart-fill nav-ico" style="font-size: 16px; margin-right: 12px;"></i>
+          Estatísticas (Gráficos)
         </div>
       </a>
       {% endif %}
